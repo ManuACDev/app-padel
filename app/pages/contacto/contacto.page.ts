@@ -13,8 +13,6 @@ declare var google;
 })
 export class ContactoPage implements OnInit {
 
-  //AIzaSyA3mLrpJZdM9H6JmGaZZWhtf-Vnb2no3yQ
-
   map = null;
 
   constructor(private toast: InteractionService, private router: Router, private modalController: ModalController) { }
@@ -25,11 +23,11 @@ export class ContactoPage implements OnInit {
 
   loadMap() {
     const mapEle: HTMLElement = document.getElementById('map');
-  const myLatLng = {lat: 40.317347, lng: -3.7243753};
-  this.map = new google.maps.Map(mapEle, {
-    center: myLatLng,
-    zoom: 13.5
-  });
+    const myLatLng = {lat: 40.317347, lng: -3.7243753};
+    this.map = new google.maps.Map(mapEle, {
+      center: myLatLng,
+      zoom: 13.5
+    });
 
   const infoWindow = new google.maps.InfoWindow({
     content: '<div><strong>Padel Center X4</strong><br>Av. de las Ciudades, 10</div>'
