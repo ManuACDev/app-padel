@@ -1,0 +1,42 @@
+<ion-header>
+  
+  <ion-toolbar color="dark">
+    <ion-title id="title">Horarios</ion-title>
+    <ion-buttons>
+      <div class="ion-align-items-center ion-justify-content-between">
+        <ion-back-button defaultHref="" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <div class="lista-pistas">
+    <ion-list>
+
+      <ion-datetime presentation="month-year-date" [(ngModel)]="fechaSeleccionada" (click)="obtenerReservas(fechaSeleccionada)"></ion-datetime>
+      
+      <ion-card-subtitle class="subtitle">Horario mañana</ion-card-subtitle>
+      <ion-row>
+        <ng-container *ngFor="let hora of horas.slice(0, showMore ? horas.length : 4)">
+          <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora), 
+            'hora-no-disponible': horasNoDisponibles.includes(hora),
+            'hora-pasada': horaPasada(hora)}" (click)="reservarHora(hora)">{{ hora }}</ion-col>
+        </ng-container>
+      </ion-row>
+      
+      <ion-card-subtitle class="subtitle">Horario tarde</ion-card-subtitle>
+      <ion-row>
+        <ng-container *ngFor="let hora of horas.slice(4, showMore ? undefined : 12)">
+          <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora), 
+            'hora-no-disponible': horasNoDisponibles.includes(hora),
+            'hora-pasada': horaPasada(hora)}" (click)="reservarHora(hora)">{{ hora }}</ion-col>
+        </ng-container>
+      </ion-row>
+
+    </ion-list>
+  </div>
+
+</ion-content>

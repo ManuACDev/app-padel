@@ -1,0 +1,40 @@
+.subtitle {
+  margin-right: 10px;
+}
+
+.lista-pistas {
+  margin: 5%;
+  padding: 4%;
+}
+
+ion-row {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+ion-col {
+  border: 1px solid #ccc;
+  padding: 1%;
+  margin: 2%;
+  flex-basis: 45%;
+  box-sizing: border-box;
+  font-size: small;
+}
+
+ion-datetime {
+  margin-bottom: 10%;
+}
+
+.hora-disponible {
+  background-color: rgb(36, 200, 36);
+}
+
+.hora-no-disponible {
+  background-color: rgb(251, 47, 47);
+}
+
+.hora-pasada {
+  background-color: grey;
+}
+

@@ -1,0 +1,17 @@
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 100%;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+img {
+    height: 25%;
+    width: 50%;
+}

@@ -1,0 +1,66 @@
+<ion-menu contentId="main-content">
+  <ion-header>
+    <ion-toolbar color="dark">
+      <ion-title id="title">Padel Center X4</ion-title>
+      <ion-buttons>
+        <ion-menu-toggle #menu>
+          <div class="ion-align-items-center ion-justify-content-between">
+            <ion-button fill="clear" id="close">
+              <ion-icon name="close"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-menu-toggle>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="ion-padding">
+
+    <ion-item (click)="cerrarMenu()" routerLink="/perfil" class="perfil-option">
+      <ion-icon name="person-circle-outline"></ion-icon>
+      <ion-label>Perfil</ion-label>
+    </ion-item>
+
+    <ion-item (click)="cerrarMenu()" routerLink="/reservas" class="perfil-option">
+      <ion-icon name="tennisball-outline"></ion-icon> 
+      <ion-label>Mis reservas</ion-label>
+    </ion-item>
+
+    <ion-item (click)="cerrarMenu()" (click)="logout()"  routerLink="/login" class="perfil-option">
+      <ion-icon name="log-out-outline"></ion-icon>
+      <ion-label>Cerrar sesión</ion-label>
+    </ion-item>
+
+  </ion-content>
+</ion-menu>
+
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar color="dark">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title id="title">Padel Center X4</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="ion-padding">
+
+    <ion-card class="ion-card" (click)="navegarComponente('pistas')">
+      <img id="img" src="../../../assets/reserva-pista.jpg" />
+        <div class="card-title">RESERVA DE PISTAS</div>
+    </ion-card>
+
+    <ion-card class="ion-card" (click)="navegarComponente('tienda')">
+      <img id="img" src="../../../assets/productos-padel.jpg"/>
+        <div class="card-title">PRODUCTOS OFICIALES</div>
+    </ion-card>
+
+    <ion-card class="ion-card" (click)="navegarComponente('contacto')">
+      <img id="img" src="../../../assets/contacto-info.png"/>
+        <div class="card-title">INFO | CONTACTO</div>
+    </ion-card>
+
+  </ion-content>
+</div>
+

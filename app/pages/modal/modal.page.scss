@@ -1,0 +1,46 @@
+ion-content ion-toolbar {
+  --background: rgb(0, 0, 0);
+  --color: white;
+}
+
+ion-toolbar ion-title {
+  margin-top: 5%;
+}
+
+ion-toolbar ion-buttons {
+  margin-top: 10%;
+}
+
+ion-card-content {
+  margin-top: -3%;
+}
+
+.m-titulo {
+  margin-top: 2%;
+  margin-left: 3%;
+  font-size: 135%;
+}
+
+.p-precio {
+  font-size: 90%;
+  color: #1f1f1f;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+
+.p-desc {
+  color: #474747;
+  margin-top: 3%;
+}
+
+.p-war {
+  color: #696969;
+  font-weight: bold;
+  margin-top: 3%;
+}
+
+.p-war ion-icon {
+  font-size: 1.1rem;
+  margin-right: 5px;
+  vertical-align: sub;
+}

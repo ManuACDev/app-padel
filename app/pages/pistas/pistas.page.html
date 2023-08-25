@@ -1,0 +1,32 @@
+<ion-header>
+  
+  <ion-toolbar color="dark">
+    <ion-title id="title">Pistas</ion-title>
+    <ion-buttons>
+      <div class="ion-align-items-center ion-justify-content-between">
+        <ion-back-button defaultHref="/home" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-card (click)="navegarHorarios('Pista1')">
+    <img alt="Pista de padel 1" src="../../../assets/pista-de-padel.jpg" />
+    <ion-card-header>
+      <ion-card-title>Pista 1</ion-card-title>
+      <ion-card-subtitle>Pista de Pádel Indoor</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
+  <ion-card (click)="navegarHorarios('Pista2')">
+    <img alt="Pista de padel 2" src="../../../assets/pistas-de-padel.jpg" />
+    <ion-card-header>
+      <ion-card-title>Pista 2</ion-card-title>
+      <ion-card-subtitle>Pista de Pádel</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+  
+</ion-content>

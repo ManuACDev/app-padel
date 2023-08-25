@@ -1,0 +1,21 @@
+<ion-content>
+
+  <ion-toolbar>
+    <ion-title class="toolbar">Producto</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="light" (click)="closeModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <img src="{{ producto.img }}" alt="Pala de padel">
+  <ion-header class="header">
+    <ion-card-title class="m-titulo">{{ producto.titulo }}</ion-card-title>
+  </ion-header>
+        
+  <ion-card-content>
+    <p class="p-precio">Precio: {{ producto.precio }} € </p>
+    <p class="p-desc">{{ producto.desc }}</p>
+    <p class="p-war"><ion-icon name="alert-circle-outline"></ion-icon>Debido a esta versión de la app solo disponible en tienda.</p>
+  </ion-card-content>
+
+</ion-content>

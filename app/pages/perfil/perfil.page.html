@@ -1,0 +1,36 @@
+<ion-header>
+
+  <ion-toolbar color="dark">
+    <ion-title id="title">Perfil</ion-title>
+    <ion-buttons>
+      <div class="ion-align-items-center ion-justify-content-between">
+        <ion-back-button defaultHref="" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content>
+
+  <ion-list *ngIf="datosUser" lines="full">
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <div class="datos">{{ datosUser.nombre }}</div>
+      <ion-icon (click)="editarDatos('Nombre')" slot="end" name="create-outline"></ion-icon>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">DNI</ion-label>
+      <div class="datos">{{ datosUser.dni }}</div>
+      <ion-icon (click)="editarDatos('DNI')" slot="end" name="create-outline"></ion-icon>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="stacked">Correo electrónico</ion-label>
+      <div class="datos">{{ datosUser.correo }}</div>
+      <ion-icon (click)="editarDatos('correo')" slot="end" name="create-outline"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

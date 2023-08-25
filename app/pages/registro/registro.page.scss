@@ -1,0 +1,98 @@
+.login-section{
+    width: 100%;
+    background: #fff;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    margin: auto;
+    border-top-left-radius: 46px;
+    border-top-right-radius: 46px;
+
+    
+    .heading{
+
+        .img{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            img{
+                margin-top: 3%;
+                height: 80%;
+                width: 80%;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        p{
+            margin-top: 1px;
+            font-size: 1rem;
+            color: #7b7b7b;
+        }
+    }
+    
+    .login-form{
+        
+        .form-input{
+            position: relative;
+            margin-bottom: 0.5%;
+            ion-item::part(native) {
+                padding-left: 0;
+            }
+
+            ion-icon{
+                position: absolute;
+                top: 37px;
+                z-index: 2;
+                font-size: 1.2rem;
+                left: 5px;
+            }
+
+            ion-label{
+                position: absolute;
+                margin-left: 35px;
+                font-weight: bolder;
+                font-size: 0.8rem;
+                top: 3px;
+            }
+
+            ion-input{
+                font-size: 0.9rem;
+                --padding-start: 36px;
+                --padding-top: 36px;
+                color: #7b7b7b;
+            }
+        }
+    }
+
+    .action-buttons{
+        text-align: center;
+        .signup-button{
+            --background: #f9b801;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        p{
+            margin-top: 5%;
+            font-size: 1rem;
+            
+            a{
+                color: #7b7b7b;
+            }
+        }
+
+        .login-button{
+            --border-color: #b4b4b4;
+            --color: #000000;
+            font-weight: bold;
+            margin-top: 10px;
+            width: 80%;
+            height: 50px;
+        }
+    }
+}

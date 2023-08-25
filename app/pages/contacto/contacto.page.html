@@ -1,0 +1,63 @@
+<ion-header>
+  
+  <ion-toolbar color="dark">
+    <ion-title id="title">Contacto</ion-title>
+    <ion-buttons>
+      <div class="ion-align-items-center ion-justify-content-between">
+        <ion-back-button defaultHref="/home" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <div id="map-header">
+    <div id="map"></div>
+  </div>
+
+  <div class="icon-container">
+    <div class="icon-wrapper" id="open-modal">
+      <ion-icon name="restaurant-outline"></ion-icon>
+      <span class="icon-label">Cafetería</span>
+    </div>
+
+    <div class="icon-wrapper" (click)="navegarComponente('tienda')">
+      <ion-icon name="pricetags-outline"></ion-icon>
+      <span class="icon-label">Tienda</span>
+    </div>
+  </div>
+
+  <div class="contact-info">
+    <div class="phone">
+      <ion-icon name="call"></ion-icon>
+      <a href="tel:+123456789">+123456789</a>
+    </div>
+
+    <div class="email">
+      <ion-icon name="mail"></ion-icon>
+      <a href="mailto:info@ejemplo.com">padelX4@center.es</a>
+    </div>
+
+    <div class="email">
+      <ion-icon name="logo-instagram"></ion-icon>
+      <a href="https://www.instagram.com/padel_center_x4/">Padel Center X4</a>
+    </div>
+  </div>
+
+  <ion-modal #modal trigger="open-modal">
+    <ng-template>
+      <ion-content>
+        <ion-toolbar>
+          <ion-title>Menú</ion-title>
+          <ion-buttons slot="end">
+            <ion-button color="light" (click)="modal.dismiss()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <img src="../../../assets/menu-padel.PNG" id="menu" alt="Menú de la cafetería">
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

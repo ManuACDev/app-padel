@@ -1,0 +1,50 @@
+<ion-content>
+  <div class="login-section ion-padding">
+    <div class="heading ion-padding">
+        <div class="img">
+          <img src="/assets/logoPadel.PNG" alt="">
+        </div>
+    </div>
+    <div class="login-form ion-padding">
+      <div class="form-input">
+        <ion-icon name="person-outline"></ion-icon>
+        <ion-item>
+          <ion-label position="floating">Nombre</ion-label>
+          <ion-input type="text" [(ngModel)]="datos.nombre" required></ion-input>
+        </ion-item>
+      </div>
+      <div class="form-input">
+        <ion-icon name="document-outline"></ion-icon>
+        <ion-item>
+          <ion-label position="floating">DNI</ion-label>
+          <ion-input type="text" minlength="9" maxlength="9" pattern="[0-9]{8}[A-Za-z]{1}" [(ngModel)]="datos.dni" required></ion-input>
+        </ion-item>
+      </div>
+      <div class="form-input">
+        <ion-icon name="mail-outline"></ion-icon>
+        <ion-item>
+          <ion-label position="floating">Correo electrónico</ion-label>
+          <ion-input type="email" [(ngModel)]="datos.correo" required></ion-input>
+        </ion-item>
+      </div>
+      <div class="form-input">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+        <ion-item>
+          <ion-label position="floating">Contraseña</ion-label>
+          <ion-input type="password" [(ngModel)]="datos.password" required></ion-input>
+        </ion-item>
+      </div>
+      <div class="form-input">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+        <ion-item>
+          <ion-label position="floating">Repite la contraseña</ion-label>
+          <ion-input type="password" [(ngModel)]="password2" required></ion-input>
+        </ion-item>
+      </div>
+    </div>
+    <div class="action-buttons ion-padding">
+      <ion-button type="submit" (click)="register()" size="large" class="signup-button">Registrarse</ion-button>
+      <ion-button class="login-button" size="large" fill="outline" routerLink="/login">Iniciar Sesión</ion-button>
+    </div>
+  </div>
+</ion-content>

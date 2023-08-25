@@ -1,0 +1,60 @@
+<ion-header>
+  
+  <ion-toolbar color="dark">
+    <ion-title id="title">Reservas</ion-title>
+    <ion-buttons>
+      <div class="ion-align-items-center ion-justify-content-between">
+        <ion-back-button defaultHref="" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-card *ngFor="let pista of pistas">
+
+    <ion-card-header>
+      <ion-card-title>{{ pista }}</ion-card-title>
+    </ion-card-header>
+
+    <ng-container *ngIf="pista === 'Pista1'">
+      <ion-list>
+        <ion-item-sliding *ngFor="let reserva of reservasPista1">
+          <ion-item>
+            <ion-label>
+              <h4>Fecha: {{ reserva.fecha }}</h4>
+              <p>Hora: {{ reserva.hora }}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item-options side="end">
+            <ion-item-option color="danger" (click)="borrarReserva(reserva.pista, reserva)">Eliminar</ion-item-option>
+          </ion-item-options>
+
+        </ion-item-sliding>
+      </ion-list>
+    </ng-container>
+
+    <ng-container *ngIf="pista === 'Pista2'">
+      <ion-list>
+        <ion-item-sliding *ngFor="let reserva of reservasPista2">
+          <ion-item>
+            <ion-label>
+              <h4>Fecha: {{ reserva.fecha }}</h4>
+              <p>Hora: {{ reserva.hora }}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item-options side="end">
+            <ion-item-option color="danger" (click)="borrarReserva(reserva.pista, reserva)">Eliminar</ion-item-option>
+          </ion-item-options>
+
+        </ion-item-sliding>
+      </ion-list>
+    </ng-container>
+
+  </ion-card>
+
+</ion-content>
