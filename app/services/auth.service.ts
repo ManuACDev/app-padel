@@ -35,4 +35,12 @@ export class AuthService {
     return this.auth.authState;
   }
 
+  async resetPassword(correo: string):Promise<void>{
+    try {
+      return this.auth.sendPasswordResetEmail(correo);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 }

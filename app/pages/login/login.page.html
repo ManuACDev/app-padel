@@ -23,7 +23,7 @@
     </div>
     <div class="action-buttons ion-padding">
       <ion-button size="large" class="login-button" (click)="login()">Iniciar Sesión</ion-button>
-      <p><a>¿Olvidaste tú contraseña?</a></p>
+      <p><a (click)="navegarComponente('forgot-password')">¿Olvidaste tú contraseña?</a></p>
       <ion-button class="signup-button" size="large" fill="outline" routerLink="/registro">Registrarse</ion-button>
     </div>
   </div>

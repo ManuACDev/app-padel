@@ -36,4 +36,11 @@ export class LoginPage implements OnInit {
     }
   }
 
+  async navegarComponente(componente: string) {
+    this.toast.presentToast("Cargando...", 500);
+    setTimeout(() => {
+      this.router.navigate(['/',componente]);
+    }, 500);
+  }
+
 }
