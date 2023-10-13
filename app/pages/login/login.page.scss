@@ -1,4 +1,4 @@
-.login-section{
+.login-section {
     width: 100%;
     background: #fff;
     right: 0;
@@ -9,16 +9,15 @@
     margin: auto;
     border-top-left-radius: 46px;
     border-top-right-radius: 46px;
-
     
-    .heading{
+    .heading {
 
-        .img{
+        .img {
             display: flex;
             flex-direction: row;
             align-items: center;
 
-            img{
+            img {
                 margin-top: 3%;
                 height: 80%;
                 width: 80%;
@@ -28,31 +27,31 @@
             }
         }
 
-        p{
+        p {
             margin-top: 1px;
             font-size: 1rem;
             color: #7b7b7b;
         }
     }
     
-    .login-form{
+    .login-form {
         
-        .form-input{
+        .form-input {
             position: relative;
             margin-bottom: 0.5%;
             ion-item::part(native) {
                 padding-left: 0;
             }
 
-            ion-icon{
+            ion-icon {
                 position: absolute;
-                top: 37px;
+                top: 39px;
                 z-index: 2;
                 font-size: 1.2rem;
                 left: 5px;
             }
 
-            ion-label{
+            ion-label {
                 position: absolute;
                 margin-left: 35px;
                 font-weight: bolder;
@@ -60,7 +59,7 @@
                 top: 3px;
             }
 
-            ion-input{
+            ion-input {
                 font-size: 0.9rem;
                 --padding-start: 36px;
                 --padding-top: 36px;
@@ -69,24 +68,24 @@
         }
     }
 
-    .action-buttons{
+    .action-buttons {
         text-align: center;
-        .login-button{
+        .login-button {
             --background: #f9b801;
             width: 100%;
             font-weight: bold;
         }
 
-        p{
+        p {
             margin-top: 5%;
             font-size: 1rem;
             
-            a{
+            a {
                 color: #7b7b7b;
             }
         }
 
-        .signup-button{
+        .signup-button {
             --border-color: #b4b4b4;
             --color: #000000;
             font-weight: bold;
