@@ -18,7 +18,7 @@ export class RegistroPage implements OnInit {
     correo:null,
     uid:null,
     password: null,
-    perfil: 'usuario'
+    perfil: 'usuario',
   }
 
   password2: string = null;
@@ -50,7 +50,9 @@ export class RegistroPage implements OnInit {
             this.datos.password = null;
             await this.firestore.createDoc(this.datos, path, id);
             this.toast.presentToast("Registrado con éxito", 1500)
-            this.router.navigate(['home']);
+            this.router.navigate(['verificacion-email']);
+          } else {
+            this.toast.presentToast("Error al registrar el usuario", 1500)
           }
         } else {
           this.toast.presentToast("Las contraseñas no coinciden", 1500);

@@ -8,18 +8,30 @@ import { User } from '../models/user.model';
 })
 export class AuthService {
 
-  constructor(private auth: AngularFireAuth) { }
+  constructor(public afAuth: AngularFireAuth) { }
 
-  login(correo:string, password:string) {
-    return this.auth.signInWithEmailAndPassword(correo, password);
+  async login(correo:string, password:string) {
+    try {
+      const result = await this.afAuth.signInWithEmailAndPassword(correo, password);
+      return result;
+    } catch (error) {
+        return error;
+    }
   }
 
-  registerUser(usuario: User)  {
-    return this.auth.createUserWithEmailAndPassword(usuario.correo, usuario.password);
+  async registerUser(usuario: User)  {
+    try {
+      const result = await this.afAuth.createUserWithEmailAndPassword(usuario.correo, usuario.password);
+      this.sendVerificationEmail();
+      return result;
+    } catch (error) {
+        return error;
+    }
+    
   }
 
   async getUid() {
-    const user = await  this.auth.currentUser;
+    const user = await  this.afAuth.currentUser;
     if (user) {
       return user.uid;
     } else {
@@ -28,19 +40,23 @@ export class AuthService {
   }
 
   logout() {
-    this.auth.signOut();
+    this.afAuth.signOut();
   }
 
   stateUser() {
-    return this.auth.authState;
+    return this.afAuth.authState;
   }
 
   async resetPassword(correo: string):Promise<void>{
     try {
-      return this.auth.sendPasswordResetEmail(correo);
+      return this.afAuth.sendPasswordResetEmail(correo);
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async sendVerificationEmail():Promise<void> {
+    return (await this.afAuth.currentUser).sendEmailVerification();
   }
 
 }
