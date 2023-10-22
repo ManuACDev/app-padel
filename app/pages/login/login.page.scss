@@ -39,6 +39,7 @@
         .form-input {
             position: relative;
             margin-bottom: 0.5%;
+
             ion-item::part(native) {
                 padding-left: 0;
             }
@@ -70,6 +71,7 @@
 
     .action-buttons {
         text-align: center;
+        
         .login-button {
             --background: #f9b801;
             width: 100%;
