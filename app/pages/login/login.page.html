@@ -9,15 +9,13 @@
       <div class="form-input">
         <ion-icon name="mail-outline"></ion-icon>
         <ion-item>
-          <ion-label position="floating">Correo electrónico</ion-label>
-          <ion-input type="email" [(ngModel)]="credenciales.correo"></ion-input>
+          <ion-input type="email" label="Correo electrónico" labelPlacement="floating" [(ngModel)]="credenciales.correo" class="label"></ion-input>
         </ion-item>
       </div>
       <div class="form-input">
         <ion-icon name="lock-closed-outline"></ion-icon>
         <ion-item>
-          <ion-label position="floating">Contraseña</ion-label>
-          <ion-input type="password" [(ngModel)]="credenciales.password"></ion-input>
+          <ion-input type="password" label="Contraseña" labelPlacement="floating" [(ngModel)]="credenciales.password" class="label"></ion-input>
         </ion-item>
       </div>
     </div>
