@@ -15,7 +15,7 @@ export class AuthService {
       const result = await this.afAuth.signInWithEmailAndPassword(correo, password);
       return result;
     } catch (error) {
-        return error;
+      throw error;
     }
   }
 
@@ -25,7 +25,7 @@ export class AuthService {
       this.sendVerificationEmail();
       return result;
     } catch (error) {
-        return error;
+      throw error;
     }
     
   }

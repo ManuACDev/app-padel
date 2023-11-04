@@ -25,26 +25,27 @@ export class LoginPage implements OnInit {
     if (this.credenciales.correo == null || this.credenciales.password == null) {
       this.toast.presentToast("El correo y la contraseña son oblligatorios", 1500);
     } else {
-      try {
         this.toast.presentToast("Cargando...", 1500);
-        const res = await this.auth.login(this.credenciales.correo, this.credenciales.password).catch( error => {
-        this.toast.presentToast("El correo o la contraseña son incorrectos", 1500);
-        });
-
-        if (res && res.user.emailVerified) {
-          this.toast.presentToast("Iniciando sesión", 1500);
-          this.router.navigate(['home']);
-        } else if(res){
-          this.toast.presentToast("No has verificado la dirección de correo", 1500);
-          this.router.navigate(['verificacion-email']);
-        } else {
-          this.toast.presentToast("No existe el usuario", 1500);
-          this.router.navigate(['registro']);  
-        }
-      } catch (error) {
-        this.toast.presentToast("No existe el usuario", 1500);
-        this.router.navigate(['registro']);
-      }
+        this.auth.login(this.credenciales.correo, this.credenciales.password).then((res) => {
+          if (res && res.user) {
+            if (res && res.user.emailVerified) {
+              this.toast.presentToast("Iniciando sesión", 1500);
+              this.router.navigate(['home']);
+            } else if (res) {
+              this.toast.presentToast("No has verificado la dirección de correo", 1500);
+              this.router.navigate(['verificacion-email']);
+            }
+          } 
+        }).catch(error => {
+            if (error.code == "auth/wrong-password") {
+              this.toast.presentToast("La contraseña es incorrecta", 1500);;
+            } else if (error.code = "auth/user-not-found") {
+              this.toast.presentToast("No existe el usuario", 1500);
+              this.router.navigate(['registro']);
+            } else {
+              this.toast.presentToast("Error al iniciar sesión.", 1500); 
+            }
+        });                     
     }
   }
 
