@@ -35,25 +35,24 @@ export class RegistroPage implements OnInit {
       if (this.datos.password.length >= 8) {
         if (this.datos.password === this.password2) {
           this.toast.presentToast("Cargando...", 1500);
-          const res = await this.auth.registerUser(this.datos).catch( error => {           
-          const uid = this.auth.getUid();
-            if (uid) {
+          this.auth.registerUser(this.datos).then(async (res) => {
+            if (res) {
+              const path = 'Usuarios';
+              const id = res.user.uid;
+              this.datos.uid = id;
+              this.datos.password = null;
+              await this.firestore.createDoc(this.datos, path, id);
+              this.toast.presentToast("Registrado con éxito", 1500);
+              this.router.navigate(['verificacion-email']);
+            }
+          }).catch( error => {
+            console.log(error.code);
+            if (error.code = "auth/email-already-in-use") {
               this.toast.presentToast("Ya existe un usuario registrado", 1500)
             } else {
               this.toast.presentToast("Error al registrar el usuario", 1500)
             }
           });
-          if (res) {
-            const path = 'Usuarios';
-            const id = res.user.uid;
-            this.datos.uid = id;
-            this.datos.password = null;
-            await this.firestore.createDoc(this.datos, path, id);
-            this.toast.presentToast("Registrado con éxito", 1500)
-            this.router.navigate(['verificacion-email']);
-          } else {
-            this.toast.presentToast("Error al registrar el usuario", 1500)
-          }
         } else {
           this.toast.presentToast("Las contraseñas no coinciden", 1500);
         }
