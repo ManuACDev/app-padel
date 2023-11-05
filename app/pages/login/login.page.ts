@@ -39,10 +39,10 @@ export class LoginPage implements OnInit {
         }).catch(error => {
             if (error.code == "auth/wrong-password") {
               this.toast.presentToast("La contraseña es incorrecta", 1500);;
-            } else if (error.code = "auth/user-not-found") {
+            } else if (error.code == "auth/user-not-found") {
               this.toast.presentToast("No existe el usuario", 1500);
               this.router.navigate(['registro']);
-            } else if (error.code = "auth/user-disabled") {
+            } else if (error.code == "auth/user-disabled") {
               this.toast.presentToast("Tu cuenta está deshabilitada. Por favor, contacta al soporte para obtener información.", 1500);
             } else {
               this.toast.presentToast("Error al iniciar sesión.", 1500); 

@@ -46,7 +46,7 @@ export class RegistroPage implements OnInit {
               this.router.navigate(['verificacion-email']);
             }
           }).catch( error => {
-            if (error.code = "auth/email-already-in-use") {
+            if (error.code == "auth/email-already-in-use") {
               this.toast.presentToast("Ya existe un usuario registrado", 1500)
             } else {
               this.toast.presentToast("Error al registrar el usuario", 1500)
