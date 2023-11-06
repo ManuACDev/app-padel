@@ -43,7 +43,9 @@ export class LoginPage implements OnInit {
               this.toast.presentToast("No existe el usuario", 1500);
               this.router.navigate(['registro']);
             } else if (error.code == "auth/user-disabled") {
-              this.toast.presentToast("Tu cuenta está deshabilitada. Por favor, contacta al soporte para obtener información.", 1500);
+              this.toast.presentToast("Tu cuenta está deshabilitada. Por favor, contacta al soporte para más información.", 1500);
+            } else if (error.code == "auth/too-many-requests") {
+              this.toast.presentToast("Demasiados intentos fallidos. Por favor, espera antes de intentarlo de nuevo.", 1500);
             } else {
               this.toast.presentToast("Error al iniciar sesión.", 1500); 
             }
