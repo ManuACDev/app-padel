@@ -34,6 +34,7 @@ export class HomePage implements OnInit {
 
   logout() {
     this.auth.logout();
+    localStorage.setItem('sesionActiva', 'false');
     this.toast.presentToast('Sesión finalizada', 1000);
   }
 

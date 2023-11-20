@@ -16,6 +16,8 @@ export class LoginPage implements OnInit {
     password: null
   }
 
+  sesionActiva: boolean = false;
+
   constructor(private auth: AuthService, private toast: InteractionService, private router: Router) { }
 
   ngOnInit() {
@@ -31,6 +33,11 @@ export class LoginPage implements OnInit {
             if (res && res.user.emailVerified) {
               this.toast.presentToast("Iniciando sesión", 1500);
               this.router.navigate(['home']);
+              if (this.sesionActiva) {
+                localStorage.setItem('sesionActiva', 'true');
+              } else {
+                localStorage.setItem('sesionActiva', 'false');
+              }
             } else if (res) {
               this.toast.presentToast("No has verificado la dirección de correo", 1500);
               this.router.navigate(['verificacion-email']);

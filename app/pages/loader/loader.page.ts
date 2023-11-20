@@ -11,9 +11,20 @@ export class LoaderPage implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
+    const valor = localStorage.getItem('sesionActiva');
     setTimeout(() => {
+      this.autoLogin(valor);
+    }, 1000);
+  }
+
+  async autoLogin(valor: string) {
+    if (valor == 'true') {
+      this.router.navigate(['home']);
+    } else if (valor == 'false') {
       this.router.navigate(['login']);
-    }, 1000)
+    } else {
+      this.router.navigate(['login']);
+    }
   }
 
 }
