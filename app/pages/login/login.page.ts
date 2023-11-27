@@ -32,7 +32,7 @@ export class LoginPage implements OnInit {
           if (res && res.user) {
             if (res && res.user.emailVerified) {
               this.toast.presentToast("Iniciando sesión", 1500);
-              this.router.navigate(['home']);
+              this.router.navigate(['home'], { replaceUrl: true });
               if (this.sesionActiva) {
                 localStorage.setItem('sesionActiva', 'true');
               } else {
