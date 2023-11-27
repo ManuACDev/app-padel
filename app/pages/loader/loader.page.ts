@@ -19,11 +19,11 @@ export class LoaderPage implements OnInit {
 
   async autoLogin(valor: string) {
     if (valor == 'true') {
-      this.router.navigate(['home']);
+      this.router.navigate(['home'], { replaceUrl: true });
     } else if (valor == 'false') {
-      this.router.navigate(['login']);
+      this.router.navigate(['login'], { replaceUrl: true });
     } else {
-      this.router.navigate(['login']);
+      this.router.navigate(['login'], { replaceUrl: true });
     }
   }
 
