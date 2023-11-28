@@ -18,7 +18,16 @@ export class ContactoPage implements OnInit {
   constructor(private toast: InteractionService, private router: Router, private modalController: ModalController) { }
 
   ngOnInit() {
-    this.loadMap();
+    this.loadScript(() => {
+      this.loadMap();
+    });
+  }
+
+  loadScript(callback: () => void) {
+    const script = document.createElement('script');
+    script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyA3mLrpJZdM9H6JmGaZZWhtf-Vnb2no3yQ";
+    script.onload = callback;
+    document.head.appendChild(script);
   }
 
   loadMap() {
@@ -29,25 +38,25 @@ export class ContactoPage implements OnInit {
       zoom: 13.5
     });
 
-  const infoWindow = new google.maps.InfoWindow({
-    content: '<div><strong>Padel Center X4</strong><br>Av. de las Ciudades, 10</div>'
-  });
-  
-  google.maps.event.addListenerOnce(this.map, 'idle', () => {
-    mapEle.classList.add('show-map');
-    const marker = {
-      position: {
-        lat: 40.317347,
-        lng: -3.7243753
-      },
-      title: 'Padel Center X4'
-    };
-    const gMarker = this.addMarker(marker);
-
-    gMarker.addListener('click', () => {
-      infoWindow.open(this.map, gMarker);
+    const infoWindow = new google.maps.InfoWindow({
+      content: '<div><strong>Padel Center X4</strong><br>Av. de las Ciudades, 10</div>'
     });
-  });
+  
+    google.maps.event.addListenerOnce(this.map, 'idle', () => {
+      mapEle.classList.add('show-map');
+      const marker = {
+        position: {
+          lat: 40.317347,
+          lng: -3.7243753
+        },
+        title: 'Padel Center X4'
+      };
+      const gMarker = this.addMarker(marker);
+
+      gMarker.addListener('click', () => {
+        infoWindow.open(this.map, gMarker);
+      });
+    });
   }
 
   addMarker(marker: Marker) {
