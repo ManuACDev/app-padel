@@ -13,20 +13,15 @@
 
 <ion-content>
 
-  <ion-card (click)="navegarHorarios('Pista1')">
-    <img alt="Pista de padel 1" src="../../../assets/pista-de-padel.jpg" />
-    <ion-card-header>
-      <ion-card-title>Pista 1</ion-card-title>
-      <ion-card-subtitle>Pista de Pádel Indoor</ion-card-subtitle>
-    </ion-card-header>
-  </ion-card>
+  <ion-card *ngFor="let pista of pistas" (click)="navegarHorarios(pista.id)">
 
-  <ion-card (click)="navegarHorarios('Pista2')">
-    <img alt="Pista de padel 2" src="../../../assets/pistas-de-padel.jpg" />
+    <img alt="{{ pista.desc }}" src="{{ pista.img }}">
+
     <ion-card-header>
-      <ion-card-title>Pista 2</ion-card-title>
-      <ion-card-subtitle>Pista de Pádel</ion-card-subtitle>
+      <ion-card-title>{{ pista.titulo }}</ion-card-title>
+      <ion-card-subtitle>{{ pista.desc }}</ion-card-subtitle>
     </ion-card-header>
+
   </ion-card>
   
 </ion-content>
