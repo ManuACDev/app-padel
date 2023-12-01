@@ -102,12 +102,15 @@ export class HorariosPage implements OnInit {
     const fechaActual = new Date();
     fechaActual.setHours(0, 0, 0, 0);
 
-    if (fecha < fechaActual || this.horaPasada(hora)) {
+    if (this.fechaSeleccionada == null) {
+      this.toast.presentToast("Seleccione día y hora para hacer su reserva",1000);
+      return;
+    } else if (fecha < fechaActual || this.horaPasada(hora)) {
       this.toast.presentToast('No se pueden reservar fechas anteriores a la actual', 3000);
       return;
     } else if (this.horasNoDisponibles.includes(hora)) {
-        this.toast.presentToast('Esta hora ya ha sido reservada', 2000);
-        return;
+      this.toast.presentToast('Esta hora ya ha sido reservada', 2000);
+      return;
     } else {
       const confirmacion = await this.alertController.create({
         header: 'Confirmar reserva',
@@ -148,7 +151,7 @@ export class HorariosPage implements OnInit {
     await doc.update({ id: docId });
   }
 
-  async obtenerReservas(fechaSeleccionada: string,) {
+  async obtenerReservas(fechaSeleccionada: string) {
     this.horasNoDisponibles = [];
 
     const fecha = new Date(fechaSeleccionada); 
