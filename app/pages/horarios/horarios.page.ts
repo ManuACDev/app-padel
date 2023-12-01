@@ -9,6 +9,7 @@ import { map } from 'rxjs';
 import { formatDate } from '@angular/common';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Pista } from 'src/app/models/pista.model';
 
 @Component({
   selector: 'app-horarios',
@@ -17,17 +18,7 @@ import { Router } from '@angular/router';
 })
 export class HorariosPage implements OnInit {
 
-  horas = ['10:00 - 11:00',
-    '11:00 - 12:00',
-    '12:00 - 13:00',
-    '13:00 - 14:00',
-    '15:00 - 16:00',
-    '16:00 - 17:00',
-    '17:00 - 18:00',
-    '18:00 - 19:00',
-    '19:00 - 20:00',
-    '20:00 - 21:00'
-  ];
+  horas = [];
 
   showMore = false;
   fechaSeleccionada: string;
@@ -49,12 +40,23 @@ export class HorariosPage implements OnInit {
   constructor(private toast: InteractionService, private firestore: FirestoreService, private auth: AuthService, private route: ActivatedRoute, private alertController: AlertController, private router: Router) { }
 
   ngOnInit() {
-    this.auth.stateUser().subscribe( res => {
+    this.auth.stateUser().subscribe(res => {
       this.getId();
     });
     this.route.queryParams.subscribe(params => {
       this.pista = params['pista'];
       console.log('Pista seleccionada: ', this.pista);
+    });
+    this.obtenerHoras();
+  }
+
+  async obtenerHoras() {
+    const path = 'Pistas';
+    const pistaId = this.pista;
+    this.firestore.getDoc<Pista>(path, pistaId).subscribe(pista => {
+      if (pista && pista.horas) {
+        this.horas = pista.horas;
+      }
     });
   }
 
@@ -85,7 +87,7 @@ export class HorariosPage implements OnInit {
   getDatosUser(uid: string) {
     const path = 'Usuarios';
     const id = uid;
-    this.firestore.getDoc<User>(path, id).subscribe( res => {
+    this.firestore.getDoc<User>(path, id).subscribe(res => {
       if (res) {
         this.dni = res.dni;
       }
@@ -145,26 +147,6 @@ export class HorariosPage implements OnInit {
     const docId = doc.id;
     await doc.update({ id: docId });
   }
-
-  /*
-  async obtenerReservasUsuario() {
-    const path = `Pistas/Pista1/Reservas`;
-    const id = this.uid;
-    const reservas = await this.firestore.getCollectionId<Reserva>(id, path);
-    reservas.subscribe(data =>{
-      data.forEach((doc) => {
-        const reserva = doc.data() as Reserva;
-        console.log('Reserva:', reserva);
-      })
-    });
-  }*/
-
-  /*
-  async obtenerReservas() {
-    const path = `Pistas/Pista1/Reservas`;
-    const reservas = await this.firestore.getCollection<Reserva>(path);
-    reservas.subscribe(data => console.log('Reservas:', data));
-  }*/
 
   async obtenerReservas(fechaSeleccionada: string,) {
     this.horasNoDisponibles = [];
