@@ -134,7 +134,10 @@ export class HorariosPage implements OnInit {
             handler: async () => {
               await this.cambiarFecha(hora);
               this.toast.presentToast('Hora reservada', 1000);
-              this.router.navigate(['/pistas']);
+              setTimeout(() => {
+                this.toast.presentToast('Cargando...', 1000);
+                this.router.navigate(['/pistas']);
+              }, 1500);
             }
           }
         ]
