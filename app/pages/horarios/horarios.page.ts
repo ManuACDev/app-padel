@@ -51,30 +51,6 @@ export class HorariosPage implements OnInit {
     this.obtenerHoras();
   }
 
-  async obtenerHoras() {
-    const path = 'Pistas';
-    const pistaId = this.pista;
-    this.firestore.getDoc<Pista>(path, pistaId).subscribe(pista => {
-      if (pista && pista.horas) {
-        this.horas = pista.horas;
-      }
-    });
-  }
-
-  cambiarFecha(horaSeleccionada) {
-    if (horaSeleccionada != null && this.fechaSeleccionada != null) {
-      const fecha = new Date(this.fechaSeleccionada);
-      const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
-
-      if (fechaFormateada && horaSeleccionada) {
-        this.horasNoDisponibles = [];
-        this.guardarReserva(fechaFormateada, horaSeleccionada);
-      }
-    } else {
-      this.toast.presentToast("Seleccione día y hora para hacer su reserva",1000);
-    }
-  }
-
   async getId() {
     const uid = await this.auth.getUid();
     if (uid) {
@@ -93,6 +69,35 @@ export class HorariosPage implements OnInit {
         this.dni = res.dni;
       }
     })
+  }
+
+  async obtenerHoras() {
+    const path = 'Pistas';
+    const pistaId = this.pista;
+    this.firestore.getDoc<Pista>(path, pistaId).subscribe(pista => {
+      if (pista && pista.horas) {
+        this.horas = pista.horas;
+      }
+    });
+  }
+
+  async obtenerReservas(fechaSeleccionada: string) {
+    this.horasNoDisponibles = [];
+
+    const fecha = new Date(fechaSeleccionada); 
+    const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
+
+    const pista = this.pista;
+    const path = 'Pistas/' + pista +'/Reservas';
+    const reservas = await this.firestore.getCollection<Reserva>(path);
+    const reservasFiltradas = reservas.pipe(
+      map(reservas => reservas.filter(reserva => reserva.fecha == fechaFormateada))
+    );
+    reservasFiltradas.subscribe(data => { 
+      data.forEach(reserva => {
+        this.horasNoDisponibles.push(reserva.hora);
+      });
+    });
   }
 
   /** Método creado 04/04/2023 */
@@ -138,39 +143,6 @@ export class HorariosPage implements OnInit {
     }
   }
 
-  async guardarReserva(fecha, hora) {
-    const id = this.uid;
-    const path = this.pista;
-
-    this.datos.uid = id;
-    this.datos.dni = this.dni;
-    this.datos.fecha = fecha;
-    this.datos.hora = hora;
-    this.datos.pista = this.pista;
-    const doc = await this.firestore.createColl(this.datos, path);
-    const docId = doc.id;
-    await doc.update({ id: docId });
-  }
-
-  async obtenerReservas(fechaSeleccionada: string) {
-    this.horasNoDisponibles = [];
-
-    const fecha = new Date(fechaSeleccionada); 
-    const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
-
-    const pista = this.pista;
-    const path = 'Pistas/' + pista +'/Reservas';
-    const reservas = await this.firestore.getCollection<Reserva>(path);
-    const reservasFiltradas = reservas.pipe(
-      map(reservas => reservas.filter(reserva => reserva.fecha == fechaFormateada))
-    );
-    reservasFiltradas.subscribe(data => { 
-      data.forEach(reserva => {
-        this.horasNoDisponibles.push(reserva.hora);
-      });
-    });
-  }
-
   horaPasada(hora: string): boolean {
     const horaInicio = parseInt(hora.split(':')[0].trim());
     const horaActual = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric' });
@@ -188,6 +160,34 @@ export class HorariosPage implements OnInit {
     } else {
       return false;
     }
+  }
+
+  cambiarFecha(horaSeleccionada) {
+    if (horaSeleccionada != null && this.fechaSeleccionada != null) {
+      const fecha = new Date(this.fechaSeleccionada);
+      const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
+
+      if (fechaFormateada && horaSeleccionada) {
+        this.horasNoDisponibles = [];
+        this.guardarReserva(fechaFormateada, horaSeleccionada);
+      }
+    } else {
+      this.toast.presentToast("Seleccione día y hora para hacer su reserva",1000);
+    }
+  }
+
+  async guardarReserva(fecha, hora) {
+    const id = this.uid;
+    const path = this.pista;
+
+    this.datos.uid = id;
+    this.datos.dni = this.dni;
+    this.datos.fecha = fecha;
+    this.datos.hora = hora;
+    this.datos.pista = this.pista;
+    const doc = await this.firestore.createColl(this.datos, path);
+    const docId = doc.id;
+    await doc.update({ id: docId });
   }
 
 }
