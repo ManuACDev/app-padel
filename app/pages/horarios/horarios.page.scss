@@ -26,6 +26,40 @@ ion-datetime {
   margin-bottom: 10%;
 }
 
+.leyenda {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5%;
+}
+
+.columna {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}
+
+.leyenda-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  margin: 5%;
+}
+
+.color-indicador {
+  width: 13px;
+  height: 13px;
+  margin-right: 5%;
+}
+
+.descripcion {
+  font-size: 60%;
+}
+
+.dia-no-seleccionado {
+  background-color: rgb(231, 84, 5);
+}
+
 .hora-disponible {
   background-color: rgb(36, 200, 36);
 }

@@ -40,6 +40,7 @@ export class HorariosPage implements OnInit {
   constructor(private toast: InteractionService, private firestore: FirestoreService, private auth: AuthService, private route: ActivatedRoute, private alertController: AlertController, private router: Router) { }
 
   ngOnInit() {
+    this.fechaSeleccionada = null;
     this.auth.stateUser().subscribe(res => {
       this.getId();
     });
