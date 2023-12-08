@@ -7,6 +7,7 @@ import { AlertController } from '@ionic/angular';
 import { InteractionService } from 'src/app/services/interaction.service';
 import { getAuth, updateEmail } from "firebase/auth";
 import { Reserva } from 'src/app/models/reserva.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
@@ -20,7 +21,7 @@ export class PerfilPage implements OnInit {
   min: string = null;
   pistas: string[] = ['Pista1', 'Pista2'];
 
-  constructor(private menuCtrl: MenuController, private auth: AuthService, private firestore: FirestoreService, private alertController: AlertController, private toast: InteractionService) {}
+  constructor(private menuCtrl: MenuController, private auth: AuthService, private firestore: FirestoreService, private alertController: AlertController, private toast: InteractionService, private router: Router) {}
 
   ngOnInit() {
     this.auth.stateUser().subscribe( res => {
@@ -72,12 +73,10 @@ export class PerfilPage implements OnInit {
         {
           text: 'Guardar',
           handler: (data) => {
-            this.guardarCampo(this.min, data[this.min]);
             if (this.min == "correo") {
-              this.actualizarEmail(data[this.min]);
-            }
-            else if (this.min = "dni") {
-              this.actualizarDni(data[this.min])
+              this.actualizarEmail(this.min, data[this.min]);
+            } else if (this.min = "dni") {
+              this.actualizarDni(this.min, data[this.min])
             }
           }
         }
@@ -100,16 +99,27 @@ export class PerfilPage implements OnInit {
     })
   }
 
-  async actualizarEmail(correo:string) {
+  async actualizarEmail(campo:string, correo:string) {
     const auth = getAuth();
     updateEmail(auth.currentUser, correo).then(() => {
-      console.log("Correo actualizado")
+      this.guardarCampo(campo, correo);
+      this.auth.sendVerificationEmail();
+      localStorage.setItem('sesionActiva', 'false');
+      this.toast.presentToast('Cargando...', 1000);
+      this.router.navigate(['/verificacion-email']);
     }).catch((error) => {
-      console.log('Error ->', error);
+      if (error.code == "auth/email-already-in-use") {
+        this.toast.presentToast("Ya existe un usuario con ese correo electrónico.", 1500);;
+      } else if (error.code == "auth/requires-recent-login") {
+        this.toast.presentToast("Por razones de seguridad, es necesario una sesión reciente para actualizar el correo.", 1500);
+      } else {
+        this.toast.presentToast("Error al actualizar el correo electrónico.", 1500); 
+      }
     })
   }
 
-  async actualizarDni(dni:string) {
+  async actualizarDni(campo:string, dni:string) {
+    const updatePromises: Promise<void>[] = [];
     const id = this.uid;
     const pistas = this.pistas;
 
@@ -120,9 +130,17 @@ export class PerfilPage implements OnInit {
         data.forEach((doc) => {
           const reserva = doc.data() as Reserva;
           const id = reserva.id;
-          this.firestore.updateDoc(path, id, { dni: dni });
+          const updatePromise = this.firestore.updateDoc(path, id, { dni: dni });
+          updatePromises.push(updatePromise);
         });
       });
+    }
+
+    try {
+      await Promise.all(updatePromises);
+      this.guardarCampo(campo, dni);
+    } catch (error) {
+      this.toast.presentToast("Error al actualizar el dni.", 1500);
     }
   }
 
