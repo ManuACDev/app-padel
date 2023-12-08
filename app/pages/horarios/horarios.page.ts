@@ -188,14 +188,13 @@ export class HorariosPage implements OnInit {
       const doc = await this.firestore.createColl(this.datos, path);
       const docId = doc.id;
 
-      await doc.set({ id: docId }, { merge: true });
-
       if (docId !== null) {
         this.toast.presentToast('Hora reservada', 1000);
 
         setTimeout(() => {
           this.toast.presentToast('Cargando...', 1000);
           this.router.navigate(['/pistas']);
+          doc.set({ id: docId }, { merge: true });
         }, 1500);
       } else {
         this.toast.presentToast('Error al reservar la hora', 1000);  
