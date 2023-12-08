@@ -177,14 +177,9 @@ export class HorariosPage implements OnInit {
     const id = this.uid;
     const path = this.pista;
 
-    this.datos.uid = id;
-    this.datos.dni = this.dni;
-    this.datos.fecha = fecha;
-    this.datos.hora = hora;
-    this.datos.pista = this.pista;
+    this.datos = { uid: id, dni: this.dni, fecha: fecha, hora: hora, pista: this.pista, id: null };
 
     try {
-
       const doc = await this.firestore.createColl(this.datos, path);
       const docId = doc.id;
 
