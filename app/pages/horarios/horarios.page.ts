@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs';
+import { Subscription, map } from 'rxjs';
 import { formatDate } from '@angular/common';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -68,7 +68,7 @@ export class HorariosPage implements OnInit {
       if (res) {
         this.dni = res.dni;
       }
-    })
+    });
   }
 
   async obtenerHoras() {
@@ -82,18 +82,18 @@ export class HorariosPage implements OnInit {
   }
 
   async obtenerReservas(fechaSeleccionada: string) {
-    this.horasNoDisponibles = [];
-
     const fecha = new Date(fechaSeleccionada); 
     const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
 
     const pista = this.pista;
     const path = 'Pistas/' + pista +'/Reservas';
+    
     const reservas = await this.firestore.getCollection<Reserva>(path);
     const reservasFiltradas = reservas.pipe(
       map(reservas => reservas.filter(reserva => reserva.fecha == fechaFormateada))
     );
     reservasFiltradas.subscribe(data => { 
+      this.horasNoDisponibles = [];
       data.forEach(reserva => {
         this.horasNoDisponibles.push(reserva.hora);
       });
@@ -133,11 +133,6 @@ export class HorariosPage implements OnInit {
             text: 'Aceptar',
             handler: async () => {
               await this.cambiarFecha(hora);
-              this.toast.presentToast('Hora reservada', 1000);
-              setTimeout(() => {
-                this.toast.presentToast('Cargando...', 1000);
-                this.router.navigate(['/pistas']);
-              }, 1500);
             }
           }
         ]
@@ -165,14 +160,13 @@ export class HorariosPage implements OnInit {
     }
   }
 
-  cambiarFecha(horaSeleccionada) {
+  async cambiarFecha(horaSeleccionada) {
     if (horaSeleccionada != null && this.fechaSeleccionada != null) {
       const fecha = new Date(this.fechaSeleccionada);
       const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
 
       if (fechaFormateada && horaSeleccionada) {
-        this.horasNoDisponibles = [];
-        this.guardarReserva(fechaFormateada, horaSeleccionada);
+        this.guardarReserva(fechaFormateada, horaSeleccionada);          
       }
     } else {
       this.toast.presentToast("Seleccione día y hora para hacer su reserva",1000);
@@ -188,9 +182,27 @@ export class HorariosPage implements OnInit {
     this.datos.fecha = fecha;
     this.datos.hora = hora;
     this.datos.pista = this.pista;
-    const doc = await this.firestore.createColl(this.datos, path);
-    const docId = doc.id;
-    await doc.update({ id: docId });
+
+    try {
+
+      const doc = await this.firestore.createColl(this.datos, path);
+      const docId = doc.id;
+
+      await doc.set({ id: docId }, { merge: true });
+
+      if (docId !== null) {
+        this.toast.presentToast('Hora reservada', 1000);
+
+        setTimeout(() => {
+          this.toast.presentToast('Cargando...', 1000);
+          this.router.navigate(['/pistas']);
+        }, 1500);
+      } else {
+        this.toast.presentToast('Error al reservar la hora', 1000);  
+      }
+    } catch (error) {
+      this.toast.presentToast('Error al reservar la hora', 1000);
+    }
   }
 
 }
