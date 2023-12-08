@@ -160,7 +160,7 @@ export class HorariosPage implements OnInit {
     }
   }
 
-  async cambiarFecha(horaSeleccionada) {
+  cambiarFecha(horaSeleccionada) {
     if (horaSeleccionada != null && this.fechaSeleccionada != null) {
       const fecha = new Date(this.fechaSeleccionada);
       const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
