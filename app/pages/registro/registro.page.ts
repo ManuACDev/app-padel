@@ -43,7 +43,7 @@ export class RegistroPage implements OnInit {
               this.datos.password = null;
               await this.firestore.createDoc(this.datos, path, id);
               this.toast.presentToast("Registrado con éxito", 1500);
-              this.router.navigate(['verificacion-email']);
+              this.router.navigate(['verificacion-email'], { queryParams: { registro: true } });
             }
           }).catch( error => {
             if (error.code == "auth/email-already-in-use") {

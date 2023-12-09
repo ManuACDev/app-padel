@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -14,8 +14,9 @@ export class VerificacionEmailPage implements OnInit {
 
   public usuario;
   public emailVerificado = false;
+  esRegistro: boolean = true;
 
-  constructor(private auth:AuthService,  private router: Router) { }
+  constructor(private auth:AuthService,  private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     //this.estadoEmailVerificacion();
@@ -24,7 +25,10 @@ export class VerificacionEmailPage implements OnInit {
         // El correo electrónico está verificado, redirige al usuario a la página de inicio.
         this.router.navigate(['home']);
       }
-    }); 
+    });
+    this.route.queryParams.subscribe(params => {
+      this.esRegistro = params['registro'] === 'true';
+    });
   }
 
   async enviarEmailVerificacion() {

@@ -17,10 +17,11 @@
     <ion-row>
       <ion-col size="12">
         <div class="confirmation-message">
-          <h2>¡Gracias por registrarte!</h2>
+          <h2>{{ esRegistro ? '¡Gracias por registrarte!' : '¡Correo modificado!' }}</h2>
           <p>Hemos enviado un correo de confirmación a la dirección:</p>
           <p class="user-email">{{ usuario?.email }}</p>
-          <p>Por favor, revisa tu correo electrónico y haz clic en el enlace de confirmación para verificar tu dirección de correo. </p>
+          <p *ngIf="esRegistro">Por favor, revisa tu correo electrónico y haz clic en el enlace de confirmación para verificar tu dirección de correo.</p>
+          <p *ngIf="!esRegistro">Tu correo electrónico ha sido modificado. Por favor, revisa tu nuevo correo y sigue las instrucciones para verificarlo.</p>
           <p>Una vez confirmado, podrás iniciar sesión en la aplicación.</p>
         </div>
       </ion-col>
