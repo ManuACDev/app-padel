@@ -14,7 +14,9 @@ export class VerificacionEmailPage implements OnInit {
 
   public usuario;
   public emailVerificado = false;
-  esRegistro: boolean = true;
+  registro: boolean = false;
+  perfil: boolean = false;
+  login: boolean = false;
 
   constructor(private auth:AuthService,  private router: Router, private route: ActivatedRoute) { }
 
@@ -27,7 +29,9 @@ export class VerificacionEmailPage implements OnInit {
       }
     });
     this.route.queryParams.subscribe(params => {
-      this.esRegistro = params['registro'] === 'true';
+      this.registro = params['registro'] === 'true';
+      this.perfil = params['perfil'] === 'true';
+      this.login = params['login'] === 'true';
     });
   }
 

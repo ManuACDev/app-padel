@@ -40,7 +40,7 @@ export class LoginPage implements OnInit {
               }
             } else if (res) {
               this.toast.presentToast("No has verificado la dirección de correo", 1500);
-              this.router.navigate(['verificacion-email']);
+              this.router.navigate(['verificacion-email'], { queryParams: { login: true } });
             }
           } 
         }).catch(error => {

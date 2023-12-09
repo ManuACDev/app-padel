@@ -106,7 +106,7 @@ export class PerfilPage implements OnInit {
       this.auth.sendVerificationEmail();
       localStorage.setItem('sesionActiva', 'false');
       this.toast.presentToast('Cargando...', 1000);
-      this.router.navigate(['verificacion-email'], { queryParams: { registro: false } });
+      this.router.navigate(['verificacion-email'], { queryParams: { perfil: true } });
     }).catch((error) => {
       if (error.code == "auth/email-already-in-use") {
         this.toast.presentToast("Ya existe un usuario con ese correo electrónico.", 1500);;
