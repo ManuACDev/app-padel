@@ -83,7 +83,8 @@ export class VerificacionEmailPage implements OnInit {
     location.reload();
   }
   
-  
-  
+  navigateToLogin() {
+    this.router.navigateByUrl('/login');
+  }
 
 }
