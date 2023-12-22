@@ -3,5 +3,6 @@ export interface Pista {
     titulo: string;
     desc: string;
     img: string;
-    horas: string[]
+    horas: string[];
+    precio: number;
 }

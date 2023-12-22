@@ -60,6 +60,10 @@ const routes: Routes = [
     path: 'verificacion-email',
     loadChildren: () => import('./pages/verificacion-email/verificacion-email.module').then( m => m.VerificacionEmailPageModule)
   },
+  {
+    path: 'pago',
+    loadChildren: () => import('./pages/pago/pago.module').then( m => m.PagoPageModule)
+  },
 ];
 
 @NgModule({

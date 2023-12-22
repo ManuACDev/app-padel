@@ -1,0 +1,40 @@
+.credit-card {
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  height: 25%;
+  margin: auto;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  margin-top: 10%;
+  box-shadow: 0 0 1em #6f6f6f;
+  text-align: center;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 15%;
+}
+
+.action-buttons {
+  text-align: center;
+
+  .custom-button {
+    --background: black;  
+    --color: #ffffff;
+    font-weight: bold;
+    width: 100%;
+    float: center;
+    margin-top: 8%;
+  }
+}
+
+.precio-titulo {
+  font-size: 75%;
+  margin-top: 2%;
+  color: black;
+  font-weight: bold;
+}

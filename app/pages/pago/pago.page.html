@@ -1,0 +1,41 @@
+<ion-header>
+
+  <ion-toolbar color="dark">
+    <ion-title id="title">Pago</ion-title>
+    <ion-buttons>
+      <div class="ion-align-items-center ion-justify-content-between">
+        <ion-back-button defaultHref="/horarios" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-card *ngIf="pista$ | async as pista">
+
+    <img alt="{{ pista.desc }}" src="{{ pista.img }}">
+
+    <ion-card-header>
+      <ion-card-subtitle class="precio-titulo"> El precio de la pista es: {{ pista.precio }}</ion-card-subtitle>
+      <ion-card-title>{{ pista.titulo }}</ion-card-title>
+      <ion-card-subtitle>{{ pista.desc }}</ion-card-subtitle>
+    </ion-card-header>
+
+  </ion-card>
+
+  <div class="credit-card ion-padding">
+    <div>
+      <div id="cardInfo" #cardInfo></div>
+      <div class="error" *ngIf="cardError">
+        {{ cardError }}
+      </div>      
+    </div>
+  </div>
+
+  <div class="action-buttons ion-padding">
+    <ion-button class="custom-button" (click)="onClick()">Pagar</ion-button>
+  </div>
+
+</ion-content>

@@ -3,6 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  stripeKey: "sk_test_51OMCVIG1SEw13K6aVgLjEE0eMBXaq0RNyayG0m3Qi5L99MRdtXFCkUeeVhK98slNdNrHaNutXunCJkuk39Z71OuM00Aqc3P6o2",
+
   firebase: {
     projectId: "padelgroup-73311",
     appId: "1:83889317166:web:9463992249b1a8ea6206bf",

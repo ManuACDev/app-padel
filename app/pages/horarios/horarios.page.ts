@@ -132,7 +132,8 @@ export class HorariosPage implements OnInit {
           {
             text: 'Aceptar',
             handler: async () => {
-              await this.cambiarFecha(hora);
+              //await this.cambiarFecha(hora);
+              this.navegarComponente("pago", this.pista);
             }
           }
         ]
@@ -197,6 +198,13 @@ export class HorariosPage implements OnInit {
     } catch (error) {
       this.toast.presentToast('Error al reservar la hora', 1000);
     }
+  }
+
+  async navegarComponente(componente: string, pista: string) {
+    this.toast.presentToast("Cargando...", 500);
+    setTimeout(() => {
+      this.router.navigate(['/',componente], { queryParams: { pista: pista } });
+    }, 500);
   }
 
 }
