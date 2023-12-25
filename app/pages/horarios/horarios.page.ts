@@ -22,53 +22,19 @@ export class HorariosPage implements OnInit {
 
   showMore = false;
   fechaSeleccionada: string;
-  uid: string;
-  dni: string;
-
-  datos: Reserva = {
-    uid:null,
-    dni:null,
-    fecha:null,
-    hora:null,
-    pista:null,
-    id:null
-  }
 
   pista: string;
   horasNoDisponibles: string[] = [];
 
-  constructor(private toast: InteractionService, private firestore: FirestoreService, private auth: AuthService, private route: ActivatedRoute, private alertController: AlertController, private router: Router) { }
+  constructor(private toast: InteractionService, private firestore: FirestoreService, private route: ActivatedRoute, private alertController: AlertController, private router: Router) { }
 
   ngOnInit() {
     this.fechaSeleccionada = null;
-    this.auth.stateUser().subscribe(res => {
-      this.getId();
-    });
     this.route.queryParams.subscribe(params => {
       this.pista = params['pista'];
       console.log('Pista seleccionada: ', this.pista);
     });
     this.obtenerHoras();
-  }
-
-  async getId() {
-    const uid = await this.auth.getUid();
-    if (uid) {
-      this.uid = uid;
-      this.getDatosUser(uid);
-    } else {
-      console.log("No existe uid");
-    }
-  }
-
-  getDatosUser(uid: string) {
-    const path = 'Usuarios';
-    const id = uid;
-    this.firestore.getDoc<User>(path, id).subscribe(res => {
-      if (res) {
-        this.dni = res.dni;
-      }
-    });
   }
 
   async obtenerHoras() {
@@ -133,7 +99,7 @@ export class HorariosPage implements OnInit {
             text: 'Aceptar',
             handler: async () => {
               //await this.cambiarFecha(hora);
-              this.navegarComponente("pago", this.pista);
+              this.navegarComponente("pago", this.pista, hora, this.fechaSeleccionada);
             }
           }
         ]
@@ -161,49 +127,10 @@ export class HorariosPage implements OnInit {
     }
   }
 
-  cambiarFecha(horaSeleccionada) {
-    if (horaSeleccionada != null && this.fechaSeleccionada != null) {
-      const fecha = new Date(this.fechaSeleccionada);
-      const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
-
-      if (fechaFormateada && horaSeleccionada) {
-        this.guardarReserva(fechaFormateada, horaSeleccionada);          
-      }
-    } else {
-      this.toast.presentToast("Seleccione día y hora para hacer su reserva",1000);
-    }
-  }
-
-  async guardarReserva(fecha, hora) {
-    const id = this.uid;
-    const path = this.pista;
-
-    this.datos = { uid: id, dni: this.dni, fecha: fecha, hora: hora, pista: this.pista, id: null };
-
-    try {
-      const doc = await this.firestore.createColl(this.datos, path);
-
-      if (doc !== null) {
-        this.toast.presentToast('Hora reservada', 1000);
-
-        setTimeout(() => {
-          this.toast.presentToast('Cargando...', 1000);
-          this.router.navigate(['/pistas']);
-          const docId = doc.id;
-          doc.set({ id: docId }, { merge: true });
-        }, 1500);
-      } else {
-        this.toast.presentToast('Error al reservar la hora', 1000);  
-      }
-    } catch (error) {
-      this.toast.presentToast('Error al reservar la hora', 1000);
-    }
-  }
-
-  async navegarComponente(componente: string, pista: string) {
+  async navegarComponente(componente: string, pista: string, hora: string, fecha: string) {
     this.toast.presentToast("Cargando...", 500);
     setTimeout(() => {
-      this.router.navigate(['/',componente], { queryParams: { pista: pista } });
+      this.router.navigate(['/',componente], { queryParams: { pista: pista, hora: hora, fecha: fecha} });
     }, 500);
   }
 

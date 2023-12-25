@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireFunctions } from '@angular/fire/compat/functions';
+import { from, lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +22,9 @@ export class StripeService {
   }
 
   async charge(precio, token) {
-    console.log("Pago StripeService " + precio);
     try {
-      this.functions.httpsCallable('processPayment')({ precio, token }).subscribe((response) => {
-        console.log('Resultado del pago:', response);
-        return response;
-      });
+      const response = await lastValueFrom(from(this.functions.httpsCallable('processPayment')({ precio, token })));  
+      return response.success;
     } catch (error) {
       console.error('Error al realizar el cargo:', error.message);
       throw error;
