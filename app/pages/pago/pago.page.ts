@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Component, ViewChild, ElementRef, AfterViewInit, NgZone, OnDestroy  } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs/internal/Observable';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
@@ -40,7 +41,9 @@ export class PagoPage implements AfterViewInit, OnDestroy {
   hora: string;
   fechaSeleccionada: string;
 
-  constructor(private ngZone: NgZone, private stripeService: StripeService, private route: ActivatedRoute, private firestore: FirestoreService, private auth: AuthService, private toast: InteractionService, private router: Router) { }
+  disableButton: boolean = false;
+
+  constructor(private ngZone: NgZone, private stripeService: StripeService, private route: ActivatedRoute, private firestore: FirestoreService, private auth: AuthService, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController) { }
   
   ngAfterViewInit() {
     this.card = elements.create('card');
@@ -99,13 +102,29 @@ export class PagoPage implements AfterViewInit, OnDestroy {
   async onClick() {
     const {token, error} = await stripe.createToken(this.card);
     if (token) {
-      const response: any = await this.stripeService.charge(this.precio, token.id);
-      if (response == true) {
-        this.cambiarFecha(this.hora);
-      } else {
-        this.toast.presentToast('Error al procesar el pago.', 1000);  
+      this.disableButton  = true;
+      this.showLoading();
+      try {
+        const response = await this.stripeService.charge(this.precio, token.id);
+        if (response == true) {
+          this.cambiarFecha(this.hora);
+        } else {
+          this.disableButton = false;
+          this.loadingCtrl.dismiss();
+          this.toast.presentToast('Error al procesar el pago.', 1000);  
+        }
+      } catch (error) {
+        this.disableButton = false;
+        this.loadingCtrl.dismiss();
+        console.log('Error al procesar el pago: ' + error);
+        this.toast.presentToast('Error al procesar el pago.', 1000); 
+      } finally {
+        this.disableButton = false;
       }
+      
     } else {
+      this.disableButton = false;
+      this.loadingCtrl.dismiss();
       this.ngZone.run(() => this.cardError = error.message);
     }
   }
@@ -142,6 +161,7 @@ export class PagoPage implements AfterViewInit, OnDestroy {
         this.toast.presentToast('Hora reservada', 1000);
 
         setTimeout(() => {
+          this.loadingCtrl.dismiss();
           this.toast.presentToast('Cargando...', 1000);
           this.router.navigate(['/pistas']);
           const docId = doc.id;
@@ -153,6 +173,15 @@ export class PagoPage implements AfterViewInit, OnDestroy {
     } catch (error) {
       this.toast.presentToast('Error al reservar la hora', 1000);
     }
+    this.disableButton = false;
+    this.loadingCtrl.dismiss();
+  }
+
+  async showLoading() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Procesando...',
+    });
+    loading.present();
   }
 
 }
