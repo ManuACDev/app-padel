@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { LoadingController, MenuController } from '@ionic/angular';
 import { Reserva } from 'src/app/models/reserva.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -17,7 +17,9 @@ export class ReservasPage implements OnInit {
   reservasPista2: Reserva[] = [];
   pistas: string[] = ['Pista1', 'Pista2'];
 
-  constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private auth: AuthService, private toast: InteractionService) { }
+  fechasPasadas: Reserva[] = [];
+
+  constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private auth: AuthService, private toast: InteractionService, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     this.auth.stateUser().subscribe( res => {
@@ -34,7 +36,7 @@ export class ReservasPage implements OnInit {
     const uid = await this.auth.getUid();
     if (uid) {
       this.uid = uid;
-      this.obtenerReservasUsuario();
+      this.borrarReservasAuto();      
     } else {
       console.log("No existe uid");
     }
@@ -50,14 +52,16 @@ export class ReservasPage implements OnInit {
     for (let i = 0; i < pistas.length; i++) {
       const path = `Pistas/${pistas[i]}/Reservas`;
       const reservas = await this.firestore.getCollectionId<Reserva>(id, path);
+
       reservas.subscribe(data => {
         data.forEach((doc) => {
           const reserva = doc.data() as Reserva;
+
           if (reserva.pista === 'Pista1') {
             this.reservasPista1.push(reserva);
           } else if (reserva.pista === 'Pista2') {
             this.reservasPista2.push(reserva);
-          }
+          } 
         });
       });
     }
@@ -83,4 +87,65 @@ export class ReservasPage implements OnInit {
     });
   }
 
+  async borrarReservasAuto() {
+    const loading = await this.showLoading();
+
+    try {
+      const id = this.uid;
+      const pistas = this.pistas;
+      const deletePromises: Promise<void>[] = [];
+
+      const fechaActual = new Date();
+      fechaActual.setHours(0, 0, 0, 0);
+
+      for (let i = 0; i < pistas.length; i++) {
+        const path = `Pistas/${pistas[i]}/Reservas`;
+        const reservas = await this.firestore.getCollectionId<Reserva>(id, path);
+
+        reservas.subscribe(data => {
+          data.forEach(async (doc) => {
+            const reserva = doc.data() as Reserva;
+            const fechaReserva = this.parseFechaString(reserva.fecha);
+
+            if (fechaReserva < fechaActual) {
+              if (doc.id === reserva.id) {
+                console.log(doc.id); 
+                const deletePromise = this.firestore.deleteDoc(path, doc.id).then().catch(error => {
+                  console.error(error);
+                  this.toast.presentToast("Error al borrar la reserva", 1000);
+                });
+                deletePromises.push(deletePromise);
+              }
+            }
+          });
+        });
+      }
+      await Promise.all(deletePromises);
+    } catch (error) {
+      console.error('Error durante el borrado de reservas:', error);
+    } finally {
+      loading.dismiss();
+      setTimeout(() => {
+        this.obtenerReservasUsuario();
+      }, 500);
+    }    
+  }
+  
+  parseFechaString(fechaString: string): Date {
+    const partes = fechaString.split('/');
+    
+    const dia = parseInt(partes[0], 10);
+    const mes = parseInt(partes[1], 10) - 1;
+    const anio = parseInt(partes[2], 10);
+  
+    return new Date(anio, mes, dia);
+  }
+
+  async showLoading() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Eliminando reservas pasadas...',
+    });
+    loading.present();
+    return loading;
+  }
 }
