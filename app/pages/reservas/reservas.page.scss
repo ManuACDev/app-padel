@@ -3,11 +3,23 @@ ion-card {
 }
 
 ion-card-header {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  border: 1px solid #dbdbdb;
 }
 
 ion-card-title {
-  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;  
+}
+
+ion-card-title img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 15px;
 }
 
 ion-item {
@@ -32,6 +44,6 @@ p {
 }
 
 ion-icon {
-    margin: 1px;
-    font-size: 20px;
+  margin: 1px;
+  font-size: 20px;
 }

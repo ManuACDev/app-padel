@@ -16,7 +16,7 @@
   <ion-card *ngFor="let pista of pistas">
 
     <ion-card-header>
-      <ion-card-title>{{ pista.titulo }}</ion-card-title>
+      <ion-card-title><img alt="{{ pista.desc }}" src="{{ pista.img }}">{{ pista.titulo }}</ion-card-title>
     </ion-card-header>
 
     <ng-container *ngIf="pista.id === 'Pista1'">
