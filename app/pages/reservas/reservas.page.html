@@ -16,10 +16,10 @@
   <ion-card *ngFor="let pista of pistas">
 
     <ion-card-header>
-      <ion-card-title>{{ pista }}</ion-card-title>
+      <ion-card-title>{{ pista.titulo }}</ion-card-title>
     </ion-card-header>
 
-    <ng-container *ngIf="pista === 'Pista1'">
+    <ng-container *ngIf="pista.id === 'Pista1'">
       <ion-list>
         <ion-item-sliding *ngFor="let reserva of reservasPista1">
           <ion-item>
@@ -37,7 +37,7 @@
       </ion-list>
     </ng-container>
 
-    <ng-container *ngIf="pista === 'Pista2'">
+    <ng-container *ngIf="pista.id === 'Pista2'">
       <ion-list>
         <ion-item-sliding *ngFor="let reserva of reservasPista2">
           <ion-item>

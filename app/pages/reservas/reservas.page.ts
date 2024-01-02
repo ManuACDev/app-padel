@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingController, MenuController } from '@ionic/angular';
+import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -15,14 +16,15 @@ export class ReservasPage implements OnInit {
   uid: string = null;
   reservasPista1: Reserva[] = [];
   reservasPista2: Reserva[] = [];
-  pistas: string[] = ['Pista1', 'Pista2'];
+  pistas: Pista[] = [];
 
   fechasPasadas: Reserva[] = [];
 
   constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private auth: AuthService, private toast: InteractionService, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
-    this.auth.stateUser().subscribe( res => {
+    this.obtenerPistas();
+    this.auth.stateUser().subscribe(res => {
       this.getId();
     });
   }
@@ -36,10 +38,24 @@ export class ReservasPage implements OnInit {
     const uid = await this.auth.getUid();
     if (uid) {
       this.uid = uid;
-      this.borrarReservasAuto();      
+      setTimeout(() => {
+        this.borrarReservasAuto();
+      }, 500);      
     } else {
       console.log("No existe uid");
     }
+  }
+
+  async obtenerPistas() {
+    this.pistas = [];
+
+    const path = `Pistas`;
+    const pistas = await this.firestore.getCollection<Pista>(path);
+    pistas.subscribe(data => {
+      data.forEach((doc) => {
+        this.pistas.push(doc);
+      });
+    });
   }
   
   async obtenerReservasUsuario() {
@@ -47,10 +63,9 @@ export class ReservasPage implements OnInit {
     this.reservasPista2 = [];
 
     const id = this.uid;
-    const pistas = this.pistas;
 
-    for (let i = 0; i < pistas.length; i++) {
-      const path = `Pistas/${pistas[i]}/Reservas`;
+    for (const pista of this.pistas) {
+      const path = `Pistas/${pista.id}/Reservas`;
       const reservas = await this.firestore.getCollectionId<Reserva>(id, path);
 
       reservas.subscribe(data => {
@@ -92,14 +107,13 @@ export class ReservasPage implements OnInit {
 
     try {
       const id = this.uid;
-      const pistas = this.pistas;
       const deletePromises: Promise<void>[] = [];
 
       const fechaActual = new Date();
       fechaActual.setHours(0, 0, 0, 0);
 
-      for (let i = 0; i < pistas.length; i++) {
-        const path = `Pistas/${pistas[i]}/Reservas`;
+      for (const pista of this.pistas) {
+        const path = `Pistas/${pista.id}/Reservas`;
         const reservas = await this.firestore.getCollectionId<Reserva>(id, path);
 
         reservas.subscribe(data => {
@@ -127,7 +141,7 @@ export class ReservasPage implements OnInit {
       loading.dismiss();
       setTimeout(() => {
         this.obtenerReservasUsuario();
-      }, 500);
+      }, 600);
     }    
   }
   
