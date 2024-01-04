@@ -14,8 +14,7 @@ import { InteractionService } from 'src/app/services/interaction.service';
 export class ReservasPage implements OnInit {
 
   uid: string = null;
-  reservasPista1: Reserva[] = [];
-  reservasPista2: Reserva[] = [];
+  reservasPistas: { [pistaId: string]: Reserva[] } = {};
   pistas: Pista[] = [];
 
   fechasPasadas: Reserva[] = [];
@@ -58,25 +57,20 @@ export class ReservasPage implements OnInit {
     });
   }
   
-  async obtenerReservasUsuario() {
-    this.reservasPista1 = [];
-    this.reservasPista2 = [];
-
+  async obtenerReservasUsuario() {    
     const id = this.uid;
 
     for (const pista of this.pistas) {
       const path = `Pistas/${pista.id}/Reservas`;
       const reservas = await this.firestore.getCollectionId<Reserva>(id, path);
 
+      this.reservasPistas[pista.id] = [];
+
       reservas.subscribe(data => {
         data.forEach((doc) => {
           const reserva = doc.data() as Reserva;
 
-          if (reserva.pista === 'Pista1') {
-            this.reservasPista1.push(reserva);
-          } else if (reserva.pista === 'Pista2') {
-            this.reservasPista2.push(reserva);
-          } 
+          this.reservasPistas[pista.id].push(reserva);
         });
       });
     }
