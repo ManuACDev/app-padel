@@ -13,44 +13,46 @@
 
 <ion-content>
 
-  <div class="lista-pistas">
+  <div>
     <ion-list>
 
       <ion-datetime presentation="month-year-date" [firstDayOfWeek]="1" [(ngModel)]="fechaSeleccionada" (click)="obtenerReservas(fechaSeleccionada)"></ion-datetime>
       
-      <ion-card-subtitle class="subtitle">Horario mañana</ion-card-subtitle>
-      <ion-row>
-        <ng-container *ngFor="let hora of horas.slice(0, showMore ? horas.length : 4)">
-          <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null}" (click)="reservarHora(hora)">{{ hora }}</ion-col>
-        </ng-container>
-      </ion-row>
+      <div class="lista-pistas">
+        <ion-card-subtitle class="subtitle">Horario mañana</ion-card-subtitle>
+        <ion-row>
+          <ng-container *ngFor="let hora of horas.slice(0, showMore ? horas.length : 4)">
+            <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null}" (click)="reservarHora(hora)">{{ hora }}</ion-col>
+          </ng-container>
+        </ion-row>
       
-      <ion-card-subtitle class="subtitle">Horario tarde</ion-card-subtitle>
-      <ion-row>
-        <ng-container *ngFor="let hora of horas.slice(4, showMore ? undefined : 12)">
-          <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null}" (click)="reservarHora(hora)">{{ hora }}</ion-col>
-        </ng-container>
-      </ion-row>
+        <ion-card-subtitle class="subtitle">Horario tarde</ion-card-subtitle>
+        <ion-row>
+          <ng-container *ngFor="let hora of horas.slice(4, showMore ? undefined : 12)">
+            <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null}" (click)="reservarHora(hora)">{{ hora }}</ion-col>
+          </ng-container>
+        </ion-row>
 
-      <div class="leyenda">
-        <div class="columna">
-          <div class="leyenda-item">
-            <div class="color-indicador dia-no-seleccionado"></div>
-            <div class="descripcion">No seleccionado</div>
+        <div class="leyenda">
+          <div class="columna">
+            <div class="leyenda-item">
+              <div class="color-indicador dia-no-seleccionado"></div>
+              <div class="descripcion">No seleccionado</div>
+            </div>
+            <div class="leyenda-item">
+              <div class="color-indicador hora-disponible"></div>
+              <div class="descripcion">Hora disponible</div>
+            </div>
           </div>
-          <div class="leyenda-item">
-            <div class="color-indicador hora-disponible"></div>
-            <div class="descripcion">Hora disponible</div>
-          </div>
-        </div>
-        <div class="columna">
-          <div class="leyenda-item">
-            <div class="color-indicador hora-no-disponible"></div>
-            <div class="descripcion">Hora no disponible</div>
-          </div>
-          <div class="leyenda-item">
-            <div class="color-indicador hora-pasada"></div>
-            <div class="descripcion">Hora pasada</div>
+          <div class="columna">
+            <div class="leyenda-item">
+              <div class="color-indicador hora-no-disponible"></div>
+              <div class="descripcion">Hora no disponible</div>
+            </div>
+            <div class="leyenda-item">
+              <div class="color-indicador hora-pasada"></div>
+              <div class="descripcion">Hora pasada</div>
+            </div>
           </div>
         </div>
       </div>     
