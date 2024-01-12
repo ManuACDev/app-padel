@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, MenuController } from '@ionic/angular';
+import { AlertController, LoadingController, MenuController } from '@ionic/angular';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -19,7 +19,7 @@ export class ReservasPage implements OnInit {
 
   fechasPasadas: Reserva[] = [];
 
-  constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private auth: AuthService, private toast: InteractionService, private loadingCtrl: LoadingController) { }
+  constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private auth: AuthService, private toast: InteractionService, private loadingCtrl: LoadingController, private alertController: AlertController) { }
 
   ngOnInit() {
     this.obtenerPistas();
@@ -74,6 +74,29 @@ export class ReservasPage implements OnInit {
         });
       });
     }
+  }
+
+  async confirmarBorrar(idPista: string, reserva: Reserva) {
+    const confirmacion = await this.alertController.create({
+      header: 'Eliminar reserva',
+      message: `¿Estás seguro de eliminar la reserva? Esta acción no se puede deshacer y no se devolverá el pago.`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            this.toast.presentToast('Acción cancelada', 1000);
+          }
+        },
+        {
+          text: 'Eliminar',
+          handler: async () => {
+            this.borrarReserva(idPista, reserva);
+          }
+        }
+      ]
+    });
+    await confirmacion.present();
   }
 
   async borrarReserva(pista:string, reserva:Reserva) {
