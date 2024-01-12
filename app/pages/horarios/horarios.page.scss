@@ -27,6 +27,9 @@ ion-col {
 ion-datetime {
   padding-top: 10px;
   padding-right: 8px;
+  --background: #f1f1f1;
+  border-radius: 16px;
+  box-shadow: rgba(#7b7b7b, 0.3) 0px 10px 15px -3px;
 }
 
 .leyenda {
