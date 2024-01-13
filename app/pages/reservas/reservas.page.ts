@@ -79,7 +79,9 @@ export class ReservasPage implements OnInit {
   async confirmarBorrar(idPista: string, reserva: Reserva) {
     const confirmacion = await this.alertController.create({
       header: 'Eliminar reserva',
-      message: `¿Estás seguro de eliminar la reserva? Esta acción no se puede deshacer y no se devolverá el pago.`,
+      subHeader: '¿Estás seguro de eliminar la reserva?',
+      message: 'Esta acción no se puede deshacer y no se devolverá el pago.',
+      cssClass: 'alert-text',
       buttons: [
         {
           text: 'Cancelar',
