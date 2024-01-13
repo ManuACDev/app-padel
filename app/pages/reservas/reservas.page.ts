@@ -81,7 +81,7 @@ export class ReservasPage implements OnInit {
       header: 'Eliminar reserva',
       subHeader: '¿Estás seguro de eliminar la reserva?',
       message: 'Esta acción no se puede deshacer y no se devolverá el pago.',
-      cssClass: 'alert-text',
+      cssClass: 'alert-reservas',
       buttons: [
         {
           text: 'Cancelar',
