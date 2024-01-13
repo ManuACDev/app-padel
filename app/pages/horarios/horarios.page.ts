@@ -87,6 +87,7 @@ export class HorariosPage implements OnInit {
       const confirmacion = await this.alertController.create({
         header: 'Confirmar reserva',
         message: `¿Desea reservar la hora ${hora}?`,
+        cssClass: 'alert-horarios',
         buttons: [
           {
             text: 'Cancelar',
