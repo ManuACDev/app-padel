@@ -24,6 +24,12 @@ ion-col {
   font-size: small;
 }
 
+.datetime {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 ion-datetime {
   padding-top: 10px;
   padding-right: 8px;

@@ -16,7 +16,9 @@
   <div>
     <ion-list>
 
-      <ion-datetime presentation="month-year-date" [firstDayOfWeek]="1" [(ngModel)]="fechaSeleccionada" (click)="obtenerReservas(fechaSeleccionada)"></ion-datetime>
+      <div class="datetime">
+        <ion-datetime presentation="month-year-date" [firstDayOfWeek]="1" [(ngModel)]="fechaSeleccionada" (click)="obtenerReservas(fechaSeleccionada)"></ion-datetime>
+      </div>
       
       <div class="lista-pistas">
         <ion-card-subtitle class="subtitle">Horario mañana</ion-card-subtitle>
