@@ -31,13 +31,13 @@
 }
 
 .alert-reservas .alert-sub-title {
-    font-size: 13.5px;
+    font-size: clamp(9.5px, 3vw, 13.5px);    
     text-align: center;
     color: black;  
 }
 
 .alert-reservas .alert-message {
-    font-size: 13px;
+    font-size: clamp(10px, 3vw, 13px);
     text-align: center;
     color: black;  
 }
@@ -48,6 +48,6 @@
 }
 
 .alert-horarios .alert-message {
-    font-size: 13px;
+    font-size: clamp(10px, 2vw, 13px);
     color: black;  
 }
