@@ -2,7 +2,7 @@
   
   <ion-toolbar color="dark">
     <ion-title id="title">Verificación</ion-title>
-    <ion-buttons>
+    <ion-buttons slot="start">
       <div class="ion-align-items-center ion-justify-content-between">
         <ion-back-button (click)="navigateToLogin()" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
       </div>
@@ -31,8 +31,8 @@
       </ion-col>
     </ion-row>
     <ion-button class="resend-verification" (click)="enviarEmailVerificacion()">Reenviar Email de Verificación</ion-button>
-    <ion-button class="resend-verification" (click)="estadoEmailVerificacion()">Sesión</ion-button>
-    <ion-button class="resend-verification" (click)="reloadApp()">Recargar Aplicación</ion-button>
+    <!--<ion-button class="resend-verification" (click)="estadoEmailVerificacion()">Sesión</ion-button>
+    <ion-button class="resend-verification" (click)="reloadApp()">Recargar Aplicación</ion-button>-->
 
   </ion-grid>
 
