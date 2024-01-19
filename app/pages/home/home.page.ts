@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { InteractionService } from 'src/app/services/interaction.service';
 import { MenuController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
+import { User } from 'src/app/models/user.model';
+import { FirestoreService } from 'src/app/services/firestore.service';
 
 
 @Component({
@@ -12,9 +14,35 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HomePage implements OnInit {
 
-  constructor(private toast: InteractionService, private router: Router, private menuCtrl: MenuController, private auth: AuthService) {}
+  uid: string = null;
+  perfil: string = null;
+
+  constructor(private toast: InteractionService, private router: Router, private menuCtrl: MenuController, private auth: AuthService, private firestore: FirestoreService) {}
 
   ngOnInit() {
+    this.auth.stateUser().subscribe(res => {
+      this.getId();
+    })
+  }
+
+  async getId() {
+    const uid = await this.auth.getUid();
+    if (uid) {
+      this.uid = uid;
+      this.getDatosUser(uid);
+    } else {
+      console.log("No existe uid");
+    }
+  }
+
+  getDatosUser(uid: string) {
+    const path = 'Usuarios';
+    const id = uid;
+    this.firestore.getDoc<User>(path, id).subscribe(res => {
+      if (res) {
+        this.perfil = res.perfil;
+      }
+    })
   }
 
   async navegarComponente(componente: string) {
