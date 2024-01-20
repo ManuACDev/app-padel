@@ -1,0 +1,29 @@
+<ion-header>
+  
+  <ion-toolbar color="dark">
+    <ion-title id="title">Gestión Pistas</ion-title>
+    <ion-buttons slot="start">
+      <div class="ion-align-items-center ion-justify-content-between">
+        <ion-back-button defaultHref="" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-card *ngFor="let pista of pistas">
+
+    <img alt="{{ pista.desc }}" src="{{ pista.img }}">
+
+    <ion-card-header>
+      <ion-card-title>{{ pista.titulo }}</ion-card-title>
+      <ion-card-subtitle>{{ pista.desc }}</ion-card-subtitle>      
+    </ion-card-header>
+
+    <ion-button fill="clear" class="opciones" (click)="presentActionSheet(pista)"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
+    
+  </ion-card>  
+
+</ion-content>

@@ -1,0 +1,13 @@
+ion-card img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  position: relative;
+}
+
+.opciones {
+    --color: rgb(90, 90, 90);
+    position: absolute;
+    bottom: 2px;
+    right: 0px;    
+}

@@ -68,6 +68,10 @@ const routes: Routes = [
     path: 'ajustes',
     loadChildren: () => import('./pages/ajustes/ajustes.module').then( m => m.AjustesPageModule)
   },
+  {
+    path: 'gestion-pistas',
+    loadChildren: () => import('./pages/gestion-pistas/gestion-pistas.module').then( m => m.GestionPistasPageModule)
+  },
 ];
 
 @NgModule({
