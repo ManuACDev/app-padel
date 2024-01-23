@@ -108,4 +108,57 @@ export class GestionPistasPage implements OnInit {
     return index === this.pistas.length - 1;
   }
 
+  async agregarPista() {
+    const agregar = await this.alertController.create({
+      header: 'Alerta con Inputs Personalizados',
+      inputs: [
+        {
+          type: 'text',
+          name: 'texto',
+          placeholder: 'Escribe algo...',
+          value: 'Valor inicial',
+          label: 'Etiqueta de Texto',
+          id: 'input-texto'
+        },
+        {
+          type: 'number',
+          name: 'numero',
+          placeholder: 'Ingresa un número',
+          value: '123',
+          label: 'Etiqueta de Número',
+          id: 'input-numero'
+        },
+        {
+          type: 'checkbox',
+          name: 'check',
+          label: 'Acepto los términos',
+          checked: true,
+          id: 'input-checkbox'
+        },
+        {
+          type: 'radio',
+          name: 'radio',
+          label: 'Opción 1',
+          checked: false,
+          id: 'input-radio'
+        }
+        // Puedes agregar más inputs aquí
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Aceptar',
+          handler: (data) => {
+            console.log('Datos del formulario:', data);
+          }
+        }
+      ]
+    });
+  
+    await agregar.present();
+  }
+
 }
