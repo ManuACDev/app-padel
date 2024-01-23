@@ -6,8 +6,21 @@ ion-card img {
 }
 
 .opciones {
-    --color: rgb(90, 90, 90);
-    position: absolute;
-    bottom: 2px;
-    right: 0px;    
+  --color: rgb(90, 90, 90);
+  position: absolute;
+  bottom: 2px;
+  right: 0px;    
+}
+
+.fab-button {
+  --background: #f2f399;
+  --background-activated: #f2f399;
+  --background-hover: #d7e681;
+  --border-radius: 15px;
+  --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --color: black;
+}
+
+.last-card {
+  margin-bottom: 80px;
 }

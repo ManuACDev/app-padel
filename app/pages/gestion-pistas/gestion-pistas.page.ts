@@ -103,4 +103,9 @@ export class GestionPistasPage implements OnInit {
     });
   }
 
+  ultimaCard(pista: Pista): boolean {
+    const index = this.pistas.indexOf(pista);
+    return index === this.pistas.length - 1;
+  }
+
 }

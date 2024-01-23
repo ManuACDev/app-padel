@@ -13,7 +13,7 @@
 
 <ion-content>
 
-  <ion-card *ngFor="let pista of pistas">
+  <ion-card *ngFor="let pista of pistas" [class.last-card]="ultimaCard(pista)">
 
     <img alt="{{ pista.desc }}" src="{{ pista.img }}">
 
@@ -24,6 +24,12 @@
 
     <ion-button fill="clear" class="opciones" (click)="presentActionSheet(pista)"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
     
-  </ion-card>  
+  </ion-card>
+  
+  <ion-fab slot="fixed" vertical="bottom" horizontal="center">
+    <ion-fab-button class="fab-button">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>
