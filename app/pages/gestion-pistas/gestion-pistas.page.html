@@ -27,9 +27,53 @@
   </ion-card>
   
   <ion-fab slot="fixed" vertical="bottom" horizontal="center">
-    <ion-fab-button class="fab-button" (click)="agregarPista()">
+    <ion-fab-button class="fab-button" id="open-modal">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+  <ion-modal #modal trigger="open-modal" class="formulario-modal">
+    <ng-template>
+      <ion-content>
+        <ion-toolbar>
+          <ion-title>Añadir pista</ion-title>
+          <ion-buttons slot="end">
+            <ion-button color="light" (click)="modal.dismiss()">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+
+        <ion-list>
+          
+          <ion-item>
+            <ion-label position="stacked">Título</ion-label>
+            <ion-input [(ngModel)]="pista.titulo" name="nombre" type="text" required></ion-input>
+          </ion-item>
+          
+          <ion-item>
+            <ion-label position="stacked">Descripción</ion-label>
+            <ion-input [(ngModel)]="pista.desc" name="descripcion" type="text" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Precio</ion-label>
+            <ion-input [(ngModel)]="pista.precio" name="precio" type="number" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Horas</ion-label>
+            <ion-input [(ngModel)]="pista.horas" name="horas" type="text" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Imagen</ion-label>
+            <ion-input accept="image/*" type="file"></ion-input> <!--(change)="handleImageChange($event)"-->
+          </ion-item>
+
+        </ion-list>
+
+        <ion-button (click)="agregarPista()">Añadir Pista</ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 
 </ion-content>
