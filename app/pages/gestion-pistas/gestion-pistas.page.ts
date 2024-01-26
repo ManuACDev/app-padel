@@ -21,6 +21,10 @@ export class GestionPistasPage implements OnInit {
     precio: null,
   }
 
+  apertura: number = null;
+  cierre: number = null;
+  duracion: number = null;
+
   constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService) { }
 
   ngOnInit() {

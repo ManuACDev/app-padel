@@ -45,33 +45,32 @@
         <ion-list>
           
           <ion-item>
-            <ion-label position="stacked">Título</ion-label>
-            <ion-input [(ngModel)]="pista.titulo" name="nombre" type="text" required></ion-input>
+            <ion-input type="text" label="Título" labelPlacement="stacked" [(ngModel)]="pista.titulo" required></ion-input>
           </ion-item>
           
           <ion-item>
-            <ion-label position="stacked">Descripción</ion-label>
-            <ion-input [(ngModel)]="pista.desc" name="descripcion" type="text" required></ion-input>
+            <ion-input type="text" label="Descripción" labelPlacement="stacked" [(ngModel)]="pista.desc" required></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked">Precio</ion-label>
-            <ion-input [(ngModel)]="pista.precio" name="precio" type="number" required></ion-input>
+            <ion-input type="number" label="Precio" labelPlacement="stacked" [(ngModel)]="pista.precio" required></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked">Horas</ion-label>
-            <ion-input [(ngModel)]="pista.horas" name="horas" type="text" required></ion-input>
+            <ion-input type="number" label="Apertura" labelPlacement="stacked" [(ngModel)]="apertura" required></ion-input>
+            <ion-input type="number" label="Cierre" labelPlacement="stacked" [(ngModel)]="cierre" required></ion-input>
+            <ion-input type="number" label="Duración" labelPlacement="stacked" [(ngModel)]="duracion" required></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked">Imagen</ion-label>
-            <ion-input accept="image/*" type="file" class="custom-file-input" required></ion-input> <!--(change)="handleImageChange($event)"-->
+            <ion-chip>
+              <ion-input type="file" accept="image/*" class="custom-file" required></ion-input> <!--(change)="handleImageChange($event)"-->
+            </ion-chip>
           </ion-item>
 
         </ion-list>
 
-          <ion-button color="dark" (click)="agregarPista()" class="pista-boton">Añadir Pista</ion-button>
+        <ion-button color="dark" (click)="agregarPista()" class="pista-boton">Añadir Pista</ion-button>
       </ion-content>
     </ng-template>
   </ion-modal>
