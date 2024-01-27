@@ -24,6 +24,8 @@ export class GestionPistasPage implements OnInit {
   apertura: number = null;
   cierre: number = null;
   duracion: number = null;
+  
+  horasDisponibles: string[] = [];
 
   constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService) { }
 
@@ -121,7 +123,45 @@ export class GestionPistasPage implements OnInit {
   }
 
   async agregarPista() {
-    console.log("Añadir psita");
+    if (!this.pista.titulo || !this.pista.desc || !this.pista.precio || !this.pista.img || !this.apertura || !this.cierre || !this.duracion) {
+      this.toast.presentToast("Todos los campos son obligatorios", 1500);
+    } else {
+        try {
+          this.pista.id = this.pista.titulo;
+          this.pista.horas = this.calcularHorasDisponibles(this.apertura, this.cierre, this.duracion);
+
+          const path = 'Pistas';
+          const doc = await this.firestore.createDoc(this.pista, path, this.pista.id);
+          
+          if (doc !== null) {
+            this.toast.presentToast('Pista creada', 1000);
+            this.obtenerPistas();
+          } else {
+            this.toast.presentToast('Error al crear la pista', 1000);
+          }
+        } catch (error) {
+          console.log(error);
+          this.toast.presentToast('Error al crear la pista', 1000);
+        }
+    }
+  }
+
+  calcularHorasDisponibles(apertura: number, cierre: number, duracionReserva: number) {
+    const horasDisponibles: string[] = [];
+  
+    for (let hora = apertura; hora < cierre; hora += duracionReserva) {
+      const horaFin = hora + duracionReserva;
+      const rangoHorario = `${this.formatoHora(hora)} - ${this.formatoHora(horaFin)}`;
+      horasDisponibles.push(rangoHorario);
+    }
+  
+    return  horasDisponibles;
+  }
+
+  formatoHora(hora: number): string {
+    const horas = Math.floor(hora);
+    const minutos = (hora - horas) * 60;
+    return `${horas < 10 ? '0' : ''}${horas}:${minutos === 0 ? '00' : minutos}`;
   }
 
 }

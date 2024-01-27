@@ -53,18 +53,18 @@
           </ion-item>
 
           <ion-item>
-            <ion-input type="number" label="Precio" labelPlacement="stacked" [(ngModel)]="pista.precio" required></ion-input>
+            <ion-input type="number" label="Precio" labelPlacement="stacked" [(ngModel)]="pista.precio" min="0" required></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-input type="number" label="Apertura" labelPlacement="stacked" [(ngModel)]="apertura" required></ion-input>
-            <ion-input type="number" label="Cierre" labelPlacement="stacked" [(ngModel)]="cierre" required></ion-input>
-            <ion-input type="number" label="Duración" labelPlacement="stacked" [(ngModel)]="duracion" required></ion-input>
+            <ion-input type="number" label="Apertura" labelPlacement="stacked" [(ngModel)]="apertura" min="0" max="23" required></ion-input>
+            <ion-input type="number" label="Cierre" labelPlacement="stacked" [(ngModel)]="cierre" min="0" max="23" required></ion-input>
+            <ion-input type="number" label="Duración" labelPlacement="stacked" [(ngModel)]="duracion" min="0" max="24" required></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-chip>
-              <ion-input type="file" accept="image/*" class="custom-file" required></ion-input> <!--(change)="handleImageChange($event)"-->
+              <ion-input type="file" accept="image/*" class="custom-file" [(ngModel)]="pista.img" required></ion-input> <!--(change)="handleImageChange($event)"-->
             </ion-chip>
           </ion-item>
 
