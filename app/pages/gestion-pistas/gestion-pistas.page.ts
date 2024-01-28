@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { Pista } from 'src/app/models/pista.model';
+import { FirestorageService } from 'src/app/services/firestorage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { InteractionService } from 'src/app/services/interaction.service';
 
@@ -27,7 +28,7 @@ export class GestionPistasPage implements OnInit {
   
   horasDisponibles: string[] = [];
 
-  constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService) { }
+  constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService, private firestorage: FirestorageService, private modalController: ModalController) { }
 
   ngOnInit() {
     this.obtenerPistas();
@@ -112,6 +113,7 @@ export class GestionPistasPage implements OnInit {
       this.toast.presentToast("Pista borrada", 1000);
       this.obtenerPistas();
     }).catch(error => {
+      this.pistas = [];
       console.log(error);
       this.toast.presentToast("Error al borrar la pista", 1000);
     });
@@ -131,14 +133,14 @@ export class GestionPistasPage implements OnInit {
           this.pista.horas = this.calcularHorasDisponibles(this.apertura, this.cierre, this.duracion);
 
           const path = 'Pistas';
-          const doc = await this.firestore.createDoc(this.pista, path, this.pista.id);
-          
-          if (doc !== null) {
+          await this.firestore.createDoc(this.pista, path, this.pista.id).then(() => {
             this.toast.presentToast('Pista creada', 1000);
-            this.obtenerPistas();
-          } else {
+            this.pistas = [];
+            this.modalController.dismiss();
+          }).catch(error => {
+            console.log(error);
             this.toast.presentToast('Error al crear la pista', 1000);
-          }
+          });
         } catch (error) {
           console.log(error);
           this.toast.presentToast('Error al crear la pista', 1000);
@@ -162,6 +164,15 @@ export class GestionPistasPage implements OnInit {
     const horas = Math.floor(hora);
     const minutos = (hora - horas) * 60;
     return `${horas < 10 ? '0' : ''}${horas}:${minutos === 0 ? '00' : minutos}`;
+  }
+
+  async handleImageChange($event: any) {
+    const path = `Pistas de padel`;
+    const file = $event.target.files[0];
+    const nombre = file.name;
+
+    const res = await this.firestorage.uploadImage(file, path, nombre);
+    this.pista.img = res;
   }
 
 }
