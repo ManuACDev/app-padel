@@ -38,14 +38,14 @@
         <ion-toolbar>
           <ion-title>Añadir pista</ion-title>
           <ion-buttons slot="end">
-            <ion-button color="light" (click)="modal.dismiss()">Close</ion-button>
+            <ion-button color="light" (click)="cerrarModal()">Close</ion-button>
           </ion-buttons>
         </ion-toolbar>
 
         <ion-list>
           
           <ion-item>
-            <ion-input type="text" label="Título" labelPlacement="stacked" [(ngModel)]="pista.titulo" required></ion-input>
+            <ion-input type="text" label="Título" labelPlacement="stacked" [(ngModel)]="pista.titulo" autocomplete="off" required></ion-input>
           </ion-item>
           
           <ion-item>

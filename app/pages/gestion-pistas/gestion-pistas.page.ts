@@ -142,7 +142,7 @@ export class GestionPistasPage implements OnInit {
           await this.firestore.createDoc(this.pista, path, this.pista.id).then(() => {
             this.toast.presentToast('Pista creada', 1000);
             this.pistas = [];
-            this.modalController.dismiss();
+            this.cerrarModal();
           }).catch(error => {
             console.log(error);
             this.toast.presentToast('Error al crear la pista', 1000);
@@ -195,5 +195,14 @@ export class GestionPistasPage implements OnInit {
     return nuevoId;
   }
 
+  cerrarModal() {
+    this.modalController.dismiss();
+
+    this.pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null };
+
+    this.apertura = null;
+    this.cierre = null;
+    this.duracion = null;
+  }
 
 }
