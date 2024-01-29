@@ -184,6 +184,7 @@ export class GestionPistasPage implements OnInit {
       this.pistasIDs.push(parseInt(id));
     }
 
+    this.pistasIDs.sort((a, b) => a - b);
     const ultimoId = this.pistasIDs[this.pistasIDs.length - 1];
     const nuevoId = ultimoId + 1;
     
