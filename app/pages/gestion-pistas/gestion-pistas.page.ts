@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
+import { ActionSheetController, AlertController, MenuController, ModalController } from '@ionic/angular';
 import { Pista } from 'src/app/models/pista.model';
 import { FirestorageService } from 'src/app/services/firestorage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -29,10 +29,14 @@ export class GestionPistasPage implements OnInit {
   horasDisponibles: string[] = [];
   pistasIDs: number[] = [];
 
-  constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService, private firestorage: FirestorageService, private modalController: ModalController) { }
+  constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService, private firestorage: FirestorageService, private modalController: ModalController, private menuCtrl: MenuController) { }
 
   ngOnInit() {
     this.obtenerPistas();
+  }
+
+  ionViewDidLeave() {
+    this.menuCtrl.close();
   }
 
   async obtenerPistas() {
