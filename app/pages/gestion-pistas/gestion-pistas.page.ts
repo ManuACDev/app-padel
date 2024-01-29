@@ -27,6 +27,7 @@ export class GestionPistasPage implements OnInit {
   duracion: number = null;
   
   horasDisponibles: string[] = [];
+  pistasIDs: number[] = [];
 
   constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService, private firestorage: FirestorageService, private modalController: ModalController) { }
 
@@ -129,7 +130,8 @@ export class GestionPistasPage implements OnInit {
       this.toast.presentToast("Todos los campos son obligatorios", 1500);
     } else {
         try {
-          this.pista.id = this.pista.titulo;
+          const id = await this.obtenerIDsPistas();
+          this.pista.id = "Pista" + id;
           this.pista.horas = this.calcularHorasDisponibles(this.apertura, this.cierre, this.duracion);
 
           const path = 'Pistas';
@@ -174,5 +176,19 @@ export class GestionPistasPage implements OnInit {
     const res = await this.firestorage.uploadImage(file, path, nombre);
     this.pista.img = res;
   }
+
+  async obtenerIDsPistas() {    
+
+    for(const pista of this.pistas) {
+      const id = pista.id.replace("Pista", "");
+      this.pistasIDs.push(parseInt(id));
+    }
+
+    const ultimoId = this.pistasIDs[this.pistasIDs.length - 1];
+    const nuevoId = ultimoId + 1;
+    
+    return nuevoId;
+  }
+
 
 }
