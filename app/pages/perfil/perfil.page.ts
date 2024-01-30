@@ -8,6 +8,7 @@ import { InteractionService } from 'src/app/services/interaction.service';
 import { getAuth, updateEmail } from "firebase/auth";
 import { Reserva } from 'src/app/models/reserva.model';
 import { Router } from '@angular/router';
+import { Pista } from 'src/app/models/pista.model';
 
 @Component({
   selector: 'app-perfil',
@@ -19,14 +20,15 @@ export class PerfilPage implements OnInit {
   uid: string = null;
   datosUser: User = null;
   min: string = null;
-  pistas: string[] = ['Pista1', 'Pista2'];
+  pistas: Pista[] = [];
 
   constructor(private menuCtrl: MenuController, private auth: AuthService, private firestore: FirestoreService, private alertController: AlertController, private toast: InteractionService, private router: Router) {}
 
   ngOnInit() {
     this.auth.stateUser().subscribe( res => {
       this.getId();
-    })
+    });
+    this.obtenerPistas();
   }
 
   ionViewDidLeave() {
@@ -52,6 +54,18 @@ export class PerfilPage implements OnInit {
         this.datosUser = res;
       }
     })
+  }
+
+  async obtenerPistas() {
+    this.pistas = [];
+
+    const path = `Pistas`;
+    const pistas = await this.firestore.getCollection<Pista>(path);
+    pistas.subscribe(data => {
+      data.forEach((doc) => {
+        this.pistas.push(doc);
+      });
+    });
   }
 
   async editarDatos(campo: string) {
@@ -123,8 +137,8 @@ export class PerfilPage implements OnInit {
     const id = this.uid;
     const pistas = this.pistas;
 
-    for (let i = 0; i < pistas.length; i++) {
-      const path = `Pistas/${pistas[i]}/Reservas`;
+    for (const pista of pistas) {
+      const path = `Pistas/${pista.id}/Reservas`;
       const reservas = await this.firestore.getCollectionId<Reserva>(id, path);
       reservas.subscribe(data => {
         data.forEach((doc) => {
