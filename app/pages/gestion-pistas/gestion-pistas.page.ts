@@ -233,7 +233,7 @@ export class GestionPistasPage implements OnInit {
 
   async showLoading() {
     const loading = await this.loadingCtrl.create({
-      message: 'Eliminando pistas...',
+      message: 'Eliminando pista...',
     });
     loading.present();
     return loading;
