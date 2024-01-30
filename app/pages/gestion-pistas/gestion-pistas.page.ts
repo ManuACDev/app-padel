@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, AlertController, MenuController, ModalController } from '@ionic/angular';
+import { ActionSheetController, AlertController, LoadingController, MenuController, ModalController } from '@ionic/angular';
 import { Pista } from 'src/app/models/pista.model';
+import { Reserva } from 'src/app/models/reserva.model';
 import { FirestorageService } from 'src/app/services/firestorage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { InteractionService } from 'src/app/services/interaction.service';
@@ -29,7 +30,7 @@ export class GestionPistasPage implements OnInit {
   horasDisponibles: string[] = [];
   pistasIDs: number[] = [];
 
-  constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService, private firestorage: FirestorageService, private modalController: ModalController, private menuCtrl: MenuController) { }
+  constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService, private firestorage: FirestorageService, private modalController: ModalController, private menuCtrl: MenuController, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     this.obtenerPistas();
@@ -112,16 +113,41 @@ export class GestionPistasPage implements OnInit {
   }
 
   async borrarPista(pista:Pista) {
-    const id = pista.id;
-    const path = `Pistas/`;
-    await this.firestore.deleteDoc<Pista>(path, id).then(() => {
-      this.toast.presentToast("Pista borrada", 1000);
-      this.obtenerPistas();
-    }).catch(error => {
-      this.pistas = [];
+    const loading = await this.showLoading();
+
+    try {
+      const id = pista.id;
+      const deletePromises: Promise<void>[] = [];
+
+      const pathRes = `Pistas/${id}/Reservas`;
+      const reservas = await this.firestore.getCollection<Reserva>(pathRes);
+      
+      reservas.subscribe(data => {
+        data.forEach(async (doc) => {
+          const reserva = doc as Reserva;
+          const deletePromise = this.firestore.deleteDoc(pathRes, reserva.id).catch(error => {
+            console.log(error);
+          });
+          deletePromises.push(deletePromise);
+        });
+      });
+
+      await Promise.all(deletePromises).then(async () => {
+        const path = `Pistas/`;
+        await this.firestore.deleteDoc<Pista>(path, id).catch(error => {
+          this.pistas = [];
+          console.log(error);
+          this.toast.presentToast("Error al borrar la pista", 1000);
+        });
+      });
+    } catch (error) {
       console.log(error);
       this.toast.presentToast("Error al borrar la pista", 1000);
-    });
+    } finally {
+      this.obtenerPistas();
+      loading.dismiss();
+      this.toast.presentToast("Pista borrada", 1000);
+    }
   }
 
   ultimaCard(pista: Pista): boolean {
@@ -205,4 +231,11 @@ export class GestionPistasPage implements OnInit {
     this.duracion = null;
   }
 
+  async showLoading() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Eliminando pistas...',
+    });
+    loading.present();
+    return loading;
+  }
 }
