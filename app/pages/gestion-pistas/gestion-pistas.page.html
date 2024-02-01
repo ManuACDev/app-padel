@@ -26,7 +26,7 @@
     
   </ion-card>
   
-  <ion-fab slot="fixed" vertical="bottom" horizontal="center">
+  <ion-fab slot="fixed" vertical="bottom" horizontal="center" (click)="modoEdicion = false">
     <ion-fab-button class="fab-button" id="open-modal">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
@@ -36,7 +36,7 @@
     <ng-template>
       <ion-content>
         <ion-toolbar>
-          <ion-title>Añadir pista</ion-title>
+          <ion-title>{{ modoEdicion ? 'Editar Pista' : 'Añadir Pista' }}</ion-title>
           <ion-buttons slot="end">
             <ion-button color="light" (click)="cerrarModal()">Close</ion-button>
           </ion-buttons>
@@ -70,7 +70,8 @@
 
         </ion-list>
 
-        <ion-button color="dark" (click)="agregarPista()" class="pista-boton">Añadir Pista</ion-button>
+        <ion-button color="dark" (click)="agregarPista()" class="pista-boton" *ngIf="!modoEdicion">{{ modoEdicion ? 'Guardar Cambios' : 'Añadir Pista' }}</ion-button>
+        <ion-button color="dark" (click)="guardarCambios()" class="pista-boton" *ngIf="modoEdicion">{{ modoEdicion ? 'Guardar Cambios' : 'Añadir Pista' }}</ion-button>
       </ion-content>
     </ng-template>
   </ion-modal>

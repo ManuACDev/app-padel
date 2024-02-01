@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActionSheetController, AlertController, LoadingController, MenuController, ModalController } from '@ionic/angular';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { FirestorageService } from 'src/app/services/firestorage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { InteractionService } from 'src/app/services/interaction.service';
+import { ModalPage } from '../modal/modal.page';
 
 @Component({
   selector: 'app-gestion-pistas',
@@ -12,6 +13,8 @@ import { InteractionService } from 'src/app/services/interaction.service';
   styleUrls: ['./gestion-pistas.page.scss'],
 })
 export class GestionPistasPage implements OnInit {
+
+  @ViewChild('modal') modal: HTMLIonModalElement;
 
   pistas: Pista[] = [];
   pista: Pista = {
@@ -30,7 +33,9 @@ export class GestionPistasPage implements OnInit {
   horasDisponibles: string[] = [];
   pistasIDs: number[] = [];
 
-  constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService, private firestorage: FirestorageService, private modalController: ModalController, private menuCtrl: MenuController, private loadingCtrl: LoadingController) { }
+  modoEdicion = false;
+
+  constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService, private firestorage: FirestorageService, private modalCtrl: ModalController, private menuCtrl: MenuController, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     this.obtenerPistas();
@@ -64,9 +69,9 @@ export class GestionPistasPage implements OnInit {
         },
         {
           text: 'Editar',
-          data: {
-            action: 'share',
-          },
+          handler: async () => {
+            this.edidtarPista(pista);
+          }
         },
         {
           text: 'Clausular',
@@ -221,8 +226,24 @@ export class GestionPistasPage implements OnInit {
     return nuevoId;
   }
 
+  async guardarCambios() {
+    console.log("Editar");
+  }
+
+  async edidtarPista(pista: Pista) {
+    await this.modalCtrl.create({ 
+      component: this.modal.component, 
+      componentProps: {
+        modoEdicion: this.modoEdicion = true,
+        pistaPadel: this.pista = pista,
+       } 
+    });
+    
+    await this.modal.present();
+  }
+
   cerrarModal() {
-    this.modalController.dismiss();
+    this.modalCtrl.dismiss();
 
     this.pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null };
 
