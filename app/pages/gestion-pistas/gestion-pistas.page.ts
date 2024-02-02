@@ -236,6 +236,9 @@ export class GestionPistasPage implements OnInit {
       componentProps: {
         modoEdicion: this.modoEdicion = true,
         pistaPadel: this.pista = pista,
+        horaApertura: this.apertura = this.obtenerPrimeraHora(pista.horas[0]),
+        horaCierre: this.cierre = this.obtenerUltimaHora(pista.horas[pista.horas.length - 1]),
+        duracionPista: this.duracion = this.calcularDuracionTotal(pista.horas[0])
        } 
     });
     
@@ -258,5 +261,38 @@ export class GestionPistasPage implements OnInit {
     });
     loading.present();
     return loading;
+  }
+
+  obtenerPrimeraHora(horario: string) {
+    const partes = horario.split(' - ');
+    const horas = partes[0].split(':');
+
+    const hora = parseInt(horas[0]);
+    const minutos = parseInt(horas[1]) / 60;
+
+    return hora +  minutos;
+  }
+
+  obtenerUltimaHora(horario: string) {
+    const partes = horario.split(' - ');
+    const horas = partes[1].split(':');
+
+    const hora = parseInt(horas[0]);
+    const minutos = parseInt(horas[1]) / 60;
+
+    return hora + minutos;
+  }
+
+  calcularDuracionTotal(horario: string) {
+    const partes = horario.split(' - ');
+    const horaInicio = partes[0].split(':');
+    const horaFin = partes[1].split(':');    
+
+    const inicioReserva = parseInt(horaInicio[0]) + parseInt(horaInicio[1]) / 60;
+    const finReserva = parseInt(horaFin[0]) + parseInt(horaFin[1]) / 60;
+
+    const duracion = finReserva - inicioReserva;
+    
+    return duracion;
   }
 }
