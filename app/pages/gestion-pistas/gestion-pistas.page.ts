@@ -226,10 +226,6 @@ export class GestionPistasPage implements OnInit {
     return nuevoId;
   }
 
-  async guardarCambios() {
-    console.log("Editar");
-  }
-
   async edidtarPista(pista: Pista) {
     await this.modalCtrl.create({ 
       component: this.modal.component, 
@@ -243,6 +239,31 @@ export class GestionPistasPage implements OnInit {
     });
     
     await this.modal.present();
+  }
+
+  async guardarCambios(pista: Pista) {
+    if (!this.pista.titulo || !this.pista.desc || !this.pista.precio || !this.apertura || !this.cierre || !this.duracion) {
+      this.toast.presentToast("Todos los campos son obligatorios", 1500);
+    } else {
+        try {
+          const id = pista.id;
+          const path = 'Pistas';
+          
+          pista.horas = this.calcularHorasDisponibles(this.apertura, this.cierre, this.duracion);
+          
+          await this.firestore.updateDoc(path, id , {titulo: pista.titulo, desc: pista.desc, precio: pista.precio, horas: pista.horas, img: pista.img}).then(() => {
+            this.toast.presentToast('Pista editada', 1000);
+            this.pistas = [];
+            this.cerrarModal();
+          }).catch(error => {
+            console.log(error);
+            this.toast.presentToast('Error al editar la pista', 1000);
+          });
+        } catch (error) {
+          console.log(error);
+          this.toast.presentToast('Error al editar la pista', 1000);
+        }
+    }
   }
 
   cerrarModal() {
