@@ -5,4 +5,5 @@ export interface Pista {
     img: string;
     horas: string[];
     precio: number;
+    abierto: boolean;
 }

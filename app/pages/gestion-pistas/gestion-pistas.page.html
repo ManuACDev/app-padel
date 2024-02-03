@@ -23,6 +23,8 @@
     </ion-card-header>
 
     <ion-button fill="clear" class="opciones" (click)="presentActionSheet(pista)"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
+
+    <ng-container *ngIf="!pista.abierto"><p class="p-info"><ion-icon name="alert-circle-outline"></ion-icon>Pista cerrada por mantenimiento.</p></ng-container>
     
   </ion-card>
   

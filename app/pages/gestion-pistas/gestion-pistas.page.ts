@@ -5,7 +5,6 @@ import { Reserva } from 'src/app/models/reserva.model';
 import { FirestorageService } from 'src/app/services/firestorage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { InteractionService } from 'src/app/services/interaction.service';
-import { ModalPage } from '../modal/modal.page';
 
 @Component({
   selector: 'app-gestion-pistas',
@@ -17,14 +16,7 @@ export class GestionPistasPage implements OnInit {
   @ViewChild('modal') modal: HTMLIonModalElement;
 
   pistas: Pista[] = [];
-  pista: Pista = {
-    id: null,
-    titulo:null,
-    desc:null,
-    img:null,
-    horas: null,
-    precio: null,
-  }
+  pista: Pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: null }
 
   apertura: number = null;
   cierre: number = null;
@@ -75,9 +67,9 @@ export class GestionPistasPage implements OnInit {
         },
         {
           text: 'Clausular',
-          data: {
-            
-          },
+          handler: async () => {
+            this.estadoPista(pista);
+          }
         },      
         {
           text: 'Cancelar',
@@ -266,10 +258,40 @@ export class GestionPistasPage implements OnInit {
     }
   }
 
+  async estadoPista(pista: Pista) {
+    try {
+      const id = pista.id;
+      const path = 'Pistas';
+      const estado = pista.abierto;
+
+      if (estado) {
+        pista.abierto = false;
+      } else {
+        pista.abierto = true;
+      }
+
+      await this.firestore.updateDoc(path, id , {abierto: pista.abierto}).then(() => {
+        if (pista.abierto) {
+          this.toast.presentToast('Pista abierta para el público.', 1000);
+        } else {
+          this.toast.presentToast('Pista cerrada para el público.', 1000);
+        }
+        this.pistas = [];
+        this.cerrarModal();
+      }).catch(error => {
+        console.log(error);
+        this.toast.presentToast('Error al clausular la pista', 1000);
+      });
+    } catch (error) {
+      console.log(error);
+      this.toast.presentToast('Error al clausular la pista', 1000);
+    }
+  }
+
   cerrarModal() {
     this.modalCtrl.dismiss();
 
-    this.pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null };
+    this.pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: null };
 
     this.apertura = null;
     this.cierre = null;
