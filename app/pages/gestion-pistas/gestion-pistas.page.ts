@@ -16,16 +16,18 @@ export class GestionPistasPage implements OnInit {
   @ViewChild('modal') modal: HTMLIonModalElement;
 
   pistas: Pista[] = [];
-  pista: Pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: null }
+  pista: Pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: true }
 
   apertura: number = null;
   cierre: number = null;
   duracion: number = null;
+  descanso: number = null;
   
   horasDisponibles: string[] = [];
   pistasIDs: number[] = [];
 
   modoEdicion = false;
+  horaDescanso = false;
 
   constructor(private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private toast: InteractionService, private firestorage: FirestorageService, private modalCtrl: ModalController, private menuCtrl: MenuController, private loadingCtrl: LoadingController) { }
 
@@ -159,7 +161,7 @@ export class GestionPistasPage implements OnInit {
         try {
           const id = await this.obtenerIDsPistas();
           this.pista.id = "Pista" + id;
-          this.pista.horas = this.calcularHorasDisponibles(this.apertura, this.cierre, this.duracion);
+          this.pista.horas = this.calcularHorasDisponibles(this.apertura, this.cierre, this.duracion, this.descanso);
 
           const path = 'Pistas';
           await this.firestore.createDoc(this.pista, path, this.pista.id).then(() => {
@@ -177,13 +179,17 @@ export class GestionPistasPage implements OnInit {
     }
   }
 
-  calcularHorasDisponibles(apertura: number, cierre: number, duracionReserva: number) {
+  calcularHorasDisponibles(apertura: number, cierre: number, duracionReserva: number, descanso: number | null) {
     const horasDisponibles: string[] = [];
   
     for (let hora = apertura; hora < cierre; hora += duracionReserva) {
-      const horaFin = hora + duracionReserva;
-      const rangoHorario = `${this.formatoHora(hora)} - ${this.formatoHora(horaFin)}`;
-      horasDisponibles.push(rangoHorario);
+
+      if (descanso === null || hora !== descanso) {
+        const horaFin = hora + duracionReserva;
+        const rangoHorario = `${this.formatoHora(hora)} - ${this.formatoHora(horaFin)}`;
+        horasDisponibles.push(rangoHorario);
+      }
+
     }
   
     return  horasDisponibles;
@@ -241,7 +247,7 @@ export class GestionPistasPage implements OnInit {
           const id = pista.id;
           const path = 'Pistas';
           
-          pista.horas = this.calcularHorasDisponibles(this.apertura, this.cierre, this.duracion);
+          pista.horas = this.calcularHorasDisponibles(this.apertura, this.cierre, this.duracion, this.descanso);
           
           await this.firestore.updateDoc(path, id , {titulo: pista.titulo, desc: pista.desc, precio: pista.precio, horas: pista.horas, img: pista.img}).then(() => {
             this.toast.presentToast('Pista editada', 1000);

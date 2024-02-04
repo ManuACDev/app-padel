@@ -64,6 +64,11 @@
             <ion-input type="number" label="Duración" labelPlacement="stacked" [(ngModel)]="duracion" min="0" max="24" required></ion-input>
           </ion-item>
 
+          <ion-item class="item-descanso">
+            <ion-checkbox labelPlacement="end" [(ngModel)]="horaDescanso" class="checkbox">Hora de descanso:</ion-checkbox>
+            <ion-input type="number" label="Hora" labelPlacement="stacked" [(ngModel)]="descanso" min="0" max="23" [disabled]="!horaDescanso" required></ion-input>
+          </ion-item>
+
           <ion-item>
             <ion-chip>
               <ion-input type="file" accept="image/*" class="custom-file" (change)="handleImageChange($event)" required></ion-input>
