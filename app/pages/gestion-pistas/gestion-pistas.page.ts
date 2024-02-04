@@ -66,7 +66,7 @@ export class GestionPistasPage implements OnInit {
           }
         },
         {
-          text: 'Clausular',
+          text: pista.abierto ? 'Cerrar' : 'Abrir',
           handler: async () => {
             this.estadoPista(pista);
           }
