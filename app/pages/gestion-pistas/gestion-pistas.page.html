@@ -59,14 +59,23 @@
           </ion-item>
 
           <ion-item>
-            <ion-input type="number" label="Apertura" labelPlacement="stacked" [(ngModel)]="apertura" min="0" max="23" required></ion-input>
-            <ion-input type="number" label="Cierre" labelPlacement="stacked" [(ngModel)]="cierre" min="0" max="23" required></ion-input>
-            <ion-input type="number" label="Duración" labelPlacement="stacked" [(ngModel)]="duracion" min="0" max="24" required></ion-input>
+            <ion-label>Apertura</ion-label>
+            <ion-datetime-button datetime="time-apertura"></ion-datetime-button>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Cierre</ion-label>
+            <ion-datetime-button datetime="time-cierre"></ion-datetime-button>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Duración</ion-label>
+            <ion-datetime-button datetime="time-duracion"></ion-datetime-button>
           </ion-item>
 
           <ion-item class="item-descanso">
             <ion-checkbox labelPlacement="end" [(ngModel)]="horaDescanso" class="checkbox">Hora de descanso:</ion-checkbox>
-            <ion-input type="number" label="Hora" labelPlacement="stacked" [(ngModel)]="descanso" min="0" max="23" [disabled]="!horaDescanso" required></ion-input>
+            <ion-datetime-button datetime="time-descanso" [disabled]="!horaDescanso"></ion-datetime-button>
           </ion-item>
 
           <ion-item>
@@ -77,9 +86,33 @@
 
         </ion-list>
 
-        <ion-button color="dark" (click)="agregarPista()" class="pista-boton" *ngIf="!modoEdicion">{{ modoEdicion ? 'Guardar Cambios' : 'Añadir Pista' }}</ion-button>
-        <ion-button color="dark" (click)="guardarCambios(pista)" class="pista-boton" *ngIf="modoEdicion">{{ modoEdicion ? 'Guardar Cambios' : 'Añadir Pista' }}</ion-button>
+        <ion-button color="dark" (click)="agregarPista()" class="pista-boton" *ngIf="!modoEdicion">Añadir Pista</ion-button>
+        <ion-button color="dark" (click)="guardarCambios(pista)" class="pista-boton" *ngIf="modoEdicion">Guardar Cambios</ion-button>
       </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="time-apertura" display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="apertura" required></ion-datetime>    
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="time-cierre" display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="cierre" required></ion-datetime>    
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="time-duracion" display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="duracion" required></ion-datetime>    
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="time-descanso" display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="descanso" required></ion-datetime>    
     </ng-template>
   </ion-modal>
 

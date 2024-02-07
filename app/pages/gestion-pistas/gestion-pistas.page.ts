@@ -18,10 +18,10 @@ export class GestionPistasPage implements OnInit {
   pistas: Pista[] = [];
   pista: Pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: true }
 
-  apertura: number = null;
-  cierre: number = null;
-  duracion: number = null;
-  descanso: number = null;
+  apertura: string = null;
+  cierre: string = null;
+  duracion: string = null;
+  descanso: string = null;
   
   horasDisponibles: string[] = [];
   pistasIDs: number[] = [];
@@ -159,9 +159,15 @@ export class GestionPistasPage implements OnInit {
       this.toast.presentToast("Todos los campos son obligatorios", 1500);
     } else {
         try {
+          const apertura = this.obtenerHora(this.apertura),
+                cierre = this.obtenerHora(this.cierre),
+                duracion = this.obtenerHora(this.duracion),
+                descanso = this.obtenerHora(this.descanso);
+
           const id = await this.obtenerIDsPistas();
           this.pista.id = "Pista" + id;
-          this.pista.horas = this.calcularHorasDisponibles(this.apertura, this.cierre, this.duracion, this.descanso);
+          this.pista.horas = this.calcularHorasDisponibles(apertura, cierre, duracion, descanso);
+          this.pista.abierto = true;
 
           const path = 'Pistas';
           await this.firestore.createDoc(this.pista, path, this.pista.id).then(() => {
@@ -179,27 +185,49 @@ export class GestionPistasPage implements OnInit {
     }
   }
 
-  calcularHorasDisponibles(apertura: number, cierre: number, duracionReserva: number, descanso: number | null) {
+  calcularHorasDisponibles(apertura: string, cierre: string, duracionReserva: string, descanso: string | null) {
     const horasDisponibles: string[] = [];
+    
+    let hora = apertura;
+    const horaCierre = cierre;
   
-    for (let hora = apertura; hora < cierre; hora += duracionReserva) {
-
-      if (descanso === null || hora !== descanso) {
-        const horaFin = hora + duracionReserva;
-        const rangoHorario = `${this.formatoHora(hora)} - ${this.formatoHora(horaFin)}`;
+    while (hora < horaCierre) {
+      if (descanso !== null && hora === descanso) {
+        const horaFinDescanso = this.sumarHoras(hora, '01:00');
+        const rangoDescanso = `${hora} - ${horaFinDescanso}`;
+        horasDisponibles.push(rangoDescanso);
+        hora = horaFinDescanso;
+      } else {
+        const horaFinReserva = this.sumarHoras(hora, duracionReserva);
+        const rangoHorario = `${hora} - ${horaFinReserva}`;
         horasDisponibles.push(rangoHorario);
+        hora = horaFinReserva;
       }
-
     }
-  
-    return  horasDisponibles;
+    
+    return horasDisponibles;
   }
 
-  formatoHora(hora: number): string {
-    const horas = Math.floor(hora);
-    const minutos = (hora - horas) * 60;
-    return `${horas < 10 ? '0' : ''}${horas}:${minutos === 0 ? '00' : minutos}`;
+sumarHoras(hora: string, cantidadHoras: string): string {
+  const [horas, minutos] = hora.split(':').map(Number);
+  const [horasSumar, minutosSumar] = cantidadHoras.split(':').map(Number);
+  let minutosTotales = horas * 60 + minutos + horasSumar * 60 + minutosSumar;
+  let horasSumadas = Math.floor(minutosTotales / 60);
+  const minutosRestantes = minutosTotales % 60;
+  
+  if (horasSumadas >= 24) {
+    horasSumadas -= 24; // Ajustar las horas si se excede el límite de 24 horas en un día
   }
+
+  return `${horasSumadas < 10 ? '0' : ''}${horasSumadas}:${minutosRestantes < 10 ? '0' : ''}${minutosRestantes}`;
+}
+
+  formatoHora(horaInicio: Date, horaFin: Date): string {
+    const horaInicioStr = horaInicio.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    const horaFinStr = horaFin.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    return `${horaInicioStr} - ${horaFinStr}`;
+  }
+
 
   async handleImageChange($event: any) {
     const path = `Pistas de padel`;
@@ -230,8 +258,8 @@ export class GestionPistasPage implements OnInit {
       componentProps: {
         modoEdicion: this.modoEdicion = true,
         pistaPadel: this.pista = pista,
-        horaApertura: this.apertura = this.obtenerPrimeraHora(pista.horas[0]),
-        horaCierre: this.cierre = this.obtenerUltimaHora(pista.horas[pista.horas.length - 1]),
+        horaApertura: this.apertura = pista.horas[0],
+        horaCierre: this.cierre = (pista.horas[pista.horas.length - 1]),
         duracionPista: this.duracion = this.calcularDuracionTotal(pista.horas[0])
        } 
     });
@@ -246,8 +274,13 @@ export class GestionPistasPage implements OnInit {
         try {
           const id = pista.id;
           const path = 'Pistas';
+
+          const apertura = this.obtenerHora(this.apertura),
+                cierre = this.obtenerHora(this.cierre),
+                duracion = this.obtenerHora(this.duracion),
+                descanso = this.obtenerHora(this.descanso);
           
-          pista.horas = this.calcularHorasDisponibles(this.apertura, this.cierre, this.duracion, this.descanso);
+          pista.horas = this.calcularHorasDisponibles(apertura, cierre, duracion, descanso);
           
           await this.firestore.updateDoc(path, id , {titulo: pista.titulo, desc: pista.desc, precio: pista.precio, horas: pista.horas, img: pista.img}).then(() => {
             this.toast.presentToast('Pista editada', 1000);
@@ -312,36 +345,35 @@ export class GestionPistasPage implements OnInit {
     return loading;
   }
 
-  obtenerPrimeraHora(horario: string) {
-    const partes = horario.split(' - ');
-    const horas = partes[0].split(':');
+  calcularDuracionTotal(horario: string): string {
+    const [horaInicio, horaFin] = horario.split(' - ');
 
-    const hora = parseInt(horas[0]);
-    const minutos = parseInt(horas[1]) / 60;
+    const duracion = this.restarHorarios(horaInicio, horaFin);
 
-    return hora +  minutos;
-  }
-
-  obtenerUltimaHora(horario: string) {
-    const partes = horario.split(' - ');
-    const horas = partes[1].split(':');
-
-    const hora = parseInt(horas[0]);
-    const minutos = parseInt(horas[1]) / 60;
-
-    return hora + minutos;
-  }
-
-  calcularDuracionTotal(horario: string) {
-    const partes = horario.split(' - ');
-    const horaInicio = partes[0].split(':');
-    const horaFin = partes[1].split(':');    
-
-    const inicioReserva = parseInt(horaInicio[0]) + parseInt(horaInicio[1]) / 60;
-    const finReserva = parseInt(horaFin[0]) + parseInt(horaFin[1]) / 60;
-
-    const duracion = finReserva - inicioReserva;
-    
     return duracion;
+  }
+
+  restarHorarios(horaInicio: string, horaFin: string): string {
+    
+    const [horaInicioHH, horaInicioMM] = horaInicio.split(':').map(Number);
+    const [horaFinHH, horaFinMM] = horaFin.split(':').map(Number);
+    const minutosInicio = horaInicioHH * 60 + horaInicioMM;
+    const minutosFin = horaFinHH * 60 + horaFinMM;
+
+    let diferenciaMinutos = minutosFin - minutosInicio;
+
+    const horas = Math.floor(diferenciaMinutos / 60);
+    const minutos = diferenciaMinutos % 60;
+
+    const resultado = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
+
+    return resultado;
+}
+
+  obtenerHora(horario: string) {
+    const fechaCompleta = new Date(horario);
+    const hora = fechaCompleta.getHours().toString().padStart(2, '0');
+    const minutos = fechaCompleta.getMinutes().toString().padStart(2, '0');
+    return `${hora}:${minutos}`;
   }
 }
