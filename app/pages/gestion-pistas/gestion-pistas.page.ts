@@ -313,7 +313,6 @@ sumarHoras(hora: string, cantidadHoras: string): string {
           this.toast.presentToast('Pista cerrada para el público.', 1000);
         }
         this.pistas = [];
-        this.cerrarModal();
       }).catch(error => {
         console.log(error);
         this.toast.presentToast('Error al clausular la pista', 1000);
