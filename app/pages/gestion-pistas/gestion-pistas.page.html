@@ -60,22 +60,22 @@
 
           <ion-item>
             <ion-label>Apertura</ion-label>
-            <ion-datetime-button datetime="time-apertura"></ion-datetime-button>
+            <ion-datetime-button datetime="time-apertura" [ngClass]="{'hora-null': apertura === null}"></ion-datetime-button>
           </ion-item>
 
           <ion-item>
             <ion-label>Cierre</ion-label>
-            <ion-datetime-button datetime="time-cierre"></ion-datetime-button>
+            <ion-datetime-button datetime="time-cierre" [ngClass]="{'hora-null': cierre === null}"></ion-datetime-button>
           </ion-item>
 
           <ion-item>
             <ion-label>Duración</ion-label>
-            <ion-datetime-button datetime="time-duracion"></ion-datetime-button>
+            <ion-datetime-button datetime="time-duracion" [ngClass]="{'hora-null': duracion === null}"></ion-datetime-button>
           </ion-item>
 
           <ion-item class="item-descanso">
             <ion-checkbox labelPlacement="end" [(ngModel)]="horaDescanso" class="checkbox">Hora de descanso:</ion-checkbox>
-            <ion-datetime-button datetime="time-descanso" [disabled]="!horaDescanso"></ion-datetime-button>
+            <ion-datetime-button datetime="time-descanso" [disabled]="!horaDescanso" [ngClass]="{'hora-null': descanso === null}"></ion-datetime-button>
           </ion-item>
 
           <ion-item>
@@ -92,27 +92,27 @@
     </ng-template>
   </ion-modal>
 
-  <ion-modal [keepContentsMounted]="true">
+  <ion-modal [keepContentsMounted]="true" class="modal-hora">
     <ng-template>
-      <ion-datetime id="time-apertura" display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="apertura" required></ion-datetime>    
+      <ion-datetime id="time-apertura" display-format="HH:mm" picker-format="HH:mm" presentation="time" minuteValues="0,15,30,45" [(ngModel)]="apertura" required></ion-datetime>    
     </ng-template>
   </ion-modal>
 
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime id="time-cierre" display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="cierre" required></ion-datetime>    
+      <ion-datetime id="time-cierre" display-format="HH:mm" picker-format="HH:mm" presentation="time" minuteValues="0,15,30,45" [(ngModel)]="cierre" required></ion-datetime>    
     </ng-template>
   </ion-modal>
 
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime id="time-duracion" display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="duracion" required></ion-datetime>    
+      <ion-datetime id="time-duracion" display-format="HH:mm" picker-format="HH:mm" presentation="time" hourValues="1,2" minuteValues="0,15,30,45" [(ngModel)]="duracion" required></ion-datetime>    
     </ng-template>
   </ion-modal>
 
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime id="time-descanso" display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="descanso" required></ion-datetime>    
+      <ion-datetime id="time-descanso" display-format="HH:mm" picker-format="HH:mm" presentation="time" minuteValues="0,15,30,45" [(ngModel)]="descanso" required></ion-datetime>    
     </ng-template>
   </ion-modal>
 

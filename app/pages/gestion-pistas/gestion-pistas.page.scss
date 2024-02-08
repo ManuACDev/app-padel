@@ -57,3 +57,19 @@ ion-card img {
 .checkbox {
   margin-right: 20px;
 }
+
+.modal-hora {
+  width: 100%;
+  background-color: transparent;
+}
+
+ion-datetime {
+  width: 99%;
+  border: 2px solid #ccc;
+  border-color: black;
+  border-radius: 15px;
+}
+
+.hora-null::part(native) {
+  background-color: #f6cbcb;
+}
