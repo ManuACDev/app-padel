@@ -171,8 +171,8 @@ export class GestionPistasPage implements OnInit {
 
           const path = 'Pistas';
           await this.firestore.createDoc(this.pista, path, this.pista.id).then(() => {
-            this.toast.presentToast('Pista creada', 1000);
             this.pistas = [];
+            this.toast.presentToast('Pista creada', 1000);
             this.cerrarModal();
           }).catch(error => {
             console.log(error);
