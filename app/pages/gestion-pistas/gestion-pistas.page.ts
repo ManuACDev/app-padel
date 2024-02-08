@@ -193,10 +193,7 @@ export class GestionPistasPage implements OnInit {
   
     while (hora < horaCierre) {
       if (descanso !== null && hora === descanso) {
-        const horaFinDescanso = this.sumarHoras(hora, '01:00');
-        const rangoDescanso = `${hora} - ${horaFinDescanso}`;
-        horasDisponibles.push(rangoDescanso);
-        hora = horaFinDescanso;
+        hora = this.sumarHoras(hora, '01:00');
       } else {
         const horaFinReserva = this.sumarHoras(hora, duracionReserva);
         const rangoHorario = `${hora} - ${horaFinReserva}`;
