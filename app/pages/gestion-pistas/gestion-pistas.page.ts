@@ -255,8 +255,8 @@ sumarHoras(hora: string, cantidadHoras: string): string {
       componentProps: {
         modoEdicion: this.modoEdicion = true,
         pistaPadel: this.pista = pista,
-        horaApertura: this.apertura = pista.horas[0],
-        horaCierre: this.cierre = (pista.horas[pista.horas.length - 1]),
+        horaApertura: this.apertura = this.recuperarHora(pista.horas[0], "primera"),
+        horaCierre: this.cierre = this.recuperarHora((pista.horas[pista.horas.length - 1]), "segunda"),
         duracionPista: this.duracion = this.calcularDuracionTotal(pista.horas[0])
        } 
     });
@@ -343,7 +343,6 @@ sumarHoras(hora: string, cantidadHoras: string): string {
 
   calcularDuracionTotal(horario: string): string {
     const [horaInicio, horaFin] = horario.split(' - ');
-
     const duracion = this.restarHorarios(horaInicio, horaFin);
 
     return duracion;
@@ -372,4 +371,15 @@ sumarHoras(hora: string, cantidadHoras: string): string {
     const minutos = fechaCompleta.getMinutes().toString().padStart(2, '0');
     return `${hora}:${minutos}`;
   }
+
+  recuperarHora(horario: string, parte: 'primera' | 'segunda'): string {
+    const partes = horario.split('-').map(part => part.trim());
+    if (parte === 'primera') {
+        return partes[0];
+    } else if (parte === 'segunda') {
+        return partes[1];
+    } else {
+        throw new Error('El parámetro "parte" debe ser "primera" o "segunda"');
+    }
+}
 }
