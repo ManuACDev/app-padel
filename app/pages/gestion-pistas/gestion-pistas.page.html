@@ -94,25 +94,25 @@
 
   <ion-modal [keepContentsMounted]="true" class="modal-hora">
     <ng-template>
-      <ion-datetime id="time-apertura" display-format="HH:mm" picker-format="HH:mm" presentation="time" minuteValues="0,15,30,45" [(ngModel)]="apertura" required></ion-datetime>    
+      <ion-datetime [showDefaultButtons]="true" doneText="Aceptar" cancelText="Cancelar" id="time-apertura" display-format="HH:mm" picker-format="HH:mm" presentation="time" minuteValues="0,15,30,45" [(ngModel)]="apertura" required></ion-datetime>    
     </ng-template>
   </ion-modal>
 
-  <ion-modal [keepContentsMounted]="true">
+  <ion-modal [keepContentsMounted]="true" class="modal-hora">
     <ng-template>
-      <ion-datetime id="time-cierre" display-format="HH:mm" picker-format="HH:mm" presentation="time" minuteValues="0,15,30,45" [(ngModel)]="cierre" required></ion-datetime>    
+      <ion-datetime [showDefaultButtons]="true" doneText="Aceptar" cancelText="Cancelar" id="time-cierre" display-format="HH:mm" picker-format="HH:mm" presentation="time" minuteValues="0,15,30,45" [(ngModel)]="cierre" required></ion-datetime>    
     </ng-template>
   </ion-modal>
 
-  <ion-modal [keepContentsMounted]="true">
+  <ion-modal [keepContentsMounted]="true" class="modal-hora">
     <ng-template>
-      <ion-datetime id="time-duracion" display-format="HH:mm" picker-format="HH:mm" presentation="time" hourValues="1,2" minuteValues="0,15,30,45" [(ngModel)]="duracion" required></ion-datetime>    
+      <ion-datetime [showDefaultButtons]="true" doneText="Aceptar" cancelText="Cancelar" id="time-duracion" display-format="HH:mm" picker-format="HH:mm" presentation="time" hourValues="1,2" minuteValues="0,15,30,45" [(ngModel)]="duracion" required></ion-datetime>    
     </ng-template>
   </ion-modal>
 
-  <ion-modal [keepContentsMounted]="true">
+  <ion-modal [keepContentsMounted]="true" class="modal-hora">
     <ng-template>
-      <ion-datetime id="time-descanso" display-format="HH:mm" picker-format="HH:mm" presentation="time" minuteValues="0,15,30,45" [(ngModel)]="descanso" required></ion-datetime>    
+      <ion-datetime [showDefaultButtons]="true" doneText="Aceptar" cancelText="Cancelar" id="time-descanso" display-format="HH:mm" picker-format="HH:mm" presentation="time" minuteValues="0,15,30,45" [(ngModel)]="descanso" required></ion-datetime>    
     </ng-template>
   </ion-modal>
 

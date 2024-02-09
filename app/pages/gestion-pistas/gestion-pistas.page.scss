@@ -59,8 +59,7 @@ ion-card img {
 }
 
 .modal-hora {
-  width: 100%;
-  background-color: transparent;
+  --background: transparent;
 }
 
 ion-datetime {
@@ -68,6 +67,7 @@ ion-datetime {
   border: 2px solid #ccc;
   border-color: black;
   border-radius: 15px;
+  background-color: white;
 }
 
 .hora-null::part(native) {
