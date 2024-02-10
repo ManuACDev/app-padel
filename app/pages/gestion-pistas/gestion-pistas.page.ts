@@ -205,19 +205,19 @@ export class GestionPistasPage implements OnInit {
     return horasDisponibles;
   }
 
-sumarHoras(hora: string, cantidadHoras: string): string {
-  const [horas, minutos] = hora.split(':').map(Number);
-  const [horasSumar, minutosSumar] = cantidadHoras.split(':').map(Number);
-  let minutosTotales = horas * 60 + minutos + horasSumar * 60 + minutosSumar;
-  let horasSumadas = Math.floor(minutosTotales / 60);
-  const minutosRestantes = minutosTotales % 60;
+  sumarHoras(hora: string, cantidadHoras: string): string {
+    const [horas, minutos] = hora.split(':').map(Number);
+    const [horasSumar, minutosSumar] = cantidadHoras.split(':').map(Number);
+    let minutosTotales = horas * 60 + minutos + horasSumar * 60 + minutosSumar;
+    let horasSumadas = Math.floor(minutosTotales / 60);
+    const minutosRestantes = minutosTotales % 60;
   
-  if (horasSumadas >= 24) {
-    horasSumadas -= 24; // Ajustar las horas si se excede el límite de 24 horas en un día
-  }
+    if (horasSumadas >= 24) {
+      horasSumadas -= 24; // Ajustar las horas si se excede el límite de 24 horas en un día
+    }
 
-  return `${horasSumadas < 10 ? '0' : ''}${horasSumadas}:${minutosRestantes < 10 ? '0' : ''}${minutosRestantes}`;
-}
+    return `${horasSumadas < 10 ? '0' : ''}${horasSumadas}:${minutosRestantes < 10 ? '0' : ''}${minutosRestantes}`;
+  }
 
   formatoHora(horaInicio: Date, horaFin: Date): string {
     const horaInicioStr = horaInicio.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
