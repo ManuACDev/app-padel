@@ -276,9 +276,9 @@ export class GestionPistasPage implements OnInit {
                 cierre = this.obtenerHora(this.cierre),
                 duracion = this.obtenerHora(this.duracion),
                 descanso = this.obtenerHora(this.descanso);
-          
+
           pista.horas = this.calcularHorasDisponibles(apertura, cierre, duracion, descanso);
-          
+                    
           await this.firestore.updateDoc(path, id , {titulo: pista.titulo, desc: pista.desc, precio: pista.precio, horas: pista.horas, img: pista.img}).then(() => {
             this.toast.presentToast('Pista editada', 1000);
             this.pistas = [];
@@ -365,12 +365,24 @@ export class GestionPistasPage implements OnInit {
     return resultado;
 }
 
-  obtenerHora(horario: string) {
-    const fechaCompleta = new Date(horario);
-    const hora = fechaCompleta.getHours().toString().padStart(2, '0');
-    const minutos = fechaCompleta.getMinutes().toString().padStart(2, '0');
-    return `${hora}:${minutos}`;
+  obtenerHora(horario: string | null) {
+    if (horario == null) {
+      return '';
+    } else {
+      if (horario.includes('T')) {
+        // Formato 'YYYY-MM-DDTHH:mm:ss.sssZ'
+        const fechaCompleta = new Date(horario);
+        const hora = fechaCompleta.getHours().toString().padStart(2, '0');
+        const minutos = fechaCompleta.getMinutes().toString().padStart(2, '0');
+        return `${hora}:${minutos}`;
+      } else {
+        // Formato 'HH:mm'
+        const [hora, minutos] = horario.split(':');
+        return `${hora.padStart(2, '0')}:${minutos.padStart(2, '0')}`;
+      }
+    }
   }
+
 
   recuperarHora(horario: string, parte: 'primera' | 'segunda'): string {
     const partes = horario.split('-').map(part => part.trim());
