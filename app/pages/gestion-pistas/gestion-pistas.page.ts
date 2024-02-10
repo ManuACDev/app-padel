@@ -257,7 +257,9 @@ export class GestionPistasPage implements OnInit {
         pistaPadel: this.pista = pista,
         horaApertura: this.apertura = this.recuperarHora(pista.horas[0], "primera"),
         horaCierre: this.cierre = this.recuperarHora((pista.horas[pista.horas.length - 1]), "segunda"),
-        duracionPista: this.duracion = this.calcularDuracionTotal(pista.horas[0])
+        duracionPista: this.duracion = this.calcularDuracionTotal(pista.horas[0]),
+        tiempoDescanso: this.descanso = null,
+        horaDescanso: this.horaDescanso = false
        } 
     });
     
@@ -331,6 +333,9 @@ export class GestionPistasPage implements OnInit {
     this.apertura = null;
     this.cierre = null;
     this.duracion = null;
+
+    this.horaDescanso = false;
+    this.descanso = null;
   }
 
   async showLoading() {
