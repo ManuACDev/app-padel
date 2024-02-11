@@ -187,22 +187,28 @@ export class GestionPistasPage implements OnInit {
 
   calcularHorasDisponibles(apertura: string, cierre: string, duracionReserva: string, descanso: string | null) {
     const horasDisponibles: string[] = [];
-    
+
     let hora = apertura;
     const horaCierre = cierre;
-  
+
     while (hora < horaCierre) {
-      if (descanso !== null && hora === descanso) {
-        hora = this.sumarHoras(hora, '01:00');
-      } else {
         const horaFinReserva = this.sumarHoras(hora, duracionReserva);
-        const rangoHorario = `${hora} - ${horaFinReserva}`;
-        horasDisponibles.push(rangoHorario);
-        hora = horaFinReserva;
-      }
+        if (descanso !== null && (this.mismaHora(hora, descanso))) {
+            hora = this.sumarHoras(hora, '01:00');
+        } else {
+            const rangoHorario = `${hora} - ${horaFinReserva}`;
+            horasDisponibles.push(rangoHorario);
+            hora = horaFinReserva;
+        }
     }
-    
+
     return horasDisponibles;
+  }
+
+  mismaHora(hora1: string, hora2: string): boolean {
+    const [hora1Parte,] = hora1.split(':');
+    const [hora2Parte,] = hora2.split(':');
+    return hora1Parte === hora2Parte;
   }
 
   sumarHoras(hora: string, cantidadHoras: string): string {
