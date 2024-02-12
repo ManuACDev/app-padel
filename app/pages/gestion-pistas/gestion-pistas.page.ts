@@ -159,6 +159,9 @@ export class GestionPistasPage implements OnInit {
       this.toast.presentToast("Todos los campos son obligatorios", 1500);
     } else {
         try {
+
+          this.descanso = this.horaDescanso ? this.descanso : null;
+
           const apertura = this.obtenerHora(this.apertura),
                 cierre = this.obtenerHora(this.cierre),
                 duracion = this.obtenerHora(this.duracion),
@@ -280,6 +283,8 @@ export class GestionPistasPage implements OnInit {
           const id = pista.id;
           const path = 'Pistas';
 
+          this.descanso = this.horaDescanso ? this.descanso : null;
+
           const apertura = this.obtenerHora(this.apertura),
                 cierre = this.obtenerHora(this.cierre),
                 duracion = this.obtenerHora(this.duracion),
@@ -394,7 +399,6 @@ export class GestionPistasPage implements OnInit {
     }
   }
 
-
   recuperarHora(horario: string, parte: 'primera' | 'segunda'): string {
     const partes = horario.split('-').map(part => part.trim());
     if (parte === 'primera') {
@@ -404,5 +408,5 @@ export class GestionPistasPage implements OnInit {
     } else {
         throw new Error('El parámetro "parte" debe ser "primera" o "segunda"');
     }
-}
+  }
 }
