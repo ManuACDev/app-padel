@@ -112,7 +112,7 @@ export class GestionPistasPage implements OnInit {
   }
 
   async borrarPista(pista:Pista) {
-    const loading = await this.showLoading();
+    const loading = await this.showLoading('Eliminando pista...');
 
     try {
       const id = pista.id;
@@ -158,6 +158,7 @@ export class GestionPistasPage implements OnInit {
     if (!this.pista.titulo || !this.pista.desc || !this.pista.precio || !this.pista.img || !this.apertura || !this.cierre || !this.duracion) {
       this.toast.presentToast("Todos los campos son obligatorios", 1500);
     } else {
+        const loading = await this.showLoading('Añadiendo pista...');
         try {
           const apertura = this.obtenerHora(this.apertura),
                 cierre = this.obtenerHora(this.cierre),
@@ -181,6 +182,8 @@ export class GestionPistasPage implements OnInit {
         } catch (error) {
           console.log(error);
           this.toast.presentToast('Error al crear la pista', 1000);
+        } finally {
+          loading.dismiss();
         }
     }
   }
@@ -350,9 +353,9 @@ export class GestionPistasPage implements OnInit {
     this.descanso = null;
   }
 
-  async showLoading() {
+  async showLoading(mensaje: string) {
     const loading = await this.loadingCtrl.create({
-      message: 'Eliminando pista...',
+      message: mensaje,
     });
     loading.present();
     return loading;
