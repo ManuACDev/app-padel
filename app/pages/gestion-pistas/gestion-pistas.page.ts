@@ -21,7 +21,7 @@ export class GestionPistasPage implements OnInit {
   apertura: string = null;
   cierre: string = null;
   duracion: string = null;
-  descanso: string = null;
+  descanso: string | null = null
   
   horasDisponibles: string[] = [];
   pistasIDs: number[] = [];
@@ -159,9 +159,6 @@ export class GestionPistasPage implements OnInit {
       this.toast.presentToast("Todos los campos son obligatorios", 1500);
     } else {
         try {
-
-          this.descanso = this.horaDescanso ? this.descanso : null;
-
           const apertura = this.obtenerHora(this.apertura),
                 cierre = this.obtenerHora(this.cierre),
                 duracion = this.obtenerHora(this.duracion),
@@ -283,8 +280,6 @@ export class GestionPistasPage implements OnInit {
           const id = pista.id;
           const path = 'Pistas';
 
-          this.descanso = this.horaDescanso ? this.descanso : null;
-
           const apertura = this.obtenerHora(this.apertura),
                 cierre = this.obtenerHora(this.cierre),
                 duracion = this.obtenerHora(this.duracion),
@@ -304,6 +299,12 @@ export class GestionPistasPage implements OnInit {
           console.log(error);
           this.toast.presentToast('Error al editar la pista', 1000);
         }
+    }
+  }
+
+  onCheckboxChange(): void {
+    if (!this.horaDescanso) {
+      this.descanso = null;
     }
   }
 

@@ -74,7 +74,7 @@
           </ion-item>
 
           <ion-item class="item-descanso">
-            <ion-checkbox labelPlacement="end" [(ngModel)]="horaDescanso" class="checkbox">Hora de descanso:</ion-checkbox>
+            <ion-checkbox labelPlacement="end" [(ngModel)]="horaDescanso" (ionChange)="onCheckboxChange()" class="checkbox">Hora de descanso:</ion-checkbox>
             <ion-datetime-button datetime="time-descanso" [disabled]="!horaDescanso" [ngClass]="{'hora-null': descanso === null}"></ion-datetime-button>
           </ion-item>
 
