@@ -25,9 +25,7 @@ export class PistasPage implements OnInit {
     const path = `Pistas`;
     const pistas = await this.firestore.getCollection<Pista>(path);
     pistas.subscribe(data => {
-      data.forEach((doc) => {
-        this.pistas.push(doc);
-      });
+      this.pistas = data;
     });
   }
 
