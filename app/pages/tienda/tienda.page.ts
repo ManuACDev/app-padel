@@ -25,9 +25,7 @@ export class TiendaPage implements OnInit {
     const path = `Productos`;
     const productos = await this.firestore.getCollection<Producto>(path);
     productos.subscribe(data => {
-      data.forEach((doc) => {
-        this.productos.push(doc);
-      });
+      this.productos = data;
     });
   }
 
