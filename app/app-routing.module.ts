@@ -72,6 +72,10 @@ const routes: Routes = [
     path: 'gestion-pistas',
     loadChildren: () => import('./pages/gestion-pistas/gestion-pistas.module').then( m => m.GestionPistasPageModule)
   },
+  {
+    path: 'gestion-usuarios',
+    loadChildren: () => import('./pages/gestion-usuarios/gestion-usuarios.module').then( m => m.GestionUsuariosPageModule)
+  },
 ];
 
 @NgModule({
