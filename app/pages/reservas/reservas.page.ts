@@ -51,9 +51,7 @@ export class ReservasPage implements OnInit {
     const path = `Pistas`;
     const pistas = await this.firestore.getCollection<Pista>(path);
     pistas.subscribe(data => {
-      data.forEach((doc) => {
-        this.pistas.push(doc);
-      });
+      this.pistas = data;
     });
   }
   
@@ -69,7 +67,6 @@ export class ReservasPage implements OnInit {
       reservas.subscribe(data => {
         data.forEach((doc) => {
           const reserva = doc.data() as Reserva;
-
           this.reservasPistas[pista.id].push(reserva);
         });
       });
