@@ -13,17 +13,17 @@
 
 <ion-content>
 
-  <ion-card *ngFor="let usuario of usuarios" class="ion-card">
-
-    <img id="img" alt="{{ usuario.nombre }}" src="../../../assets/usuario.png">
-
-    <ion-card-header>
-      <ion-card-title>{{ usuario.correo }}</ion-card-title>
-      <ion-card-subtitle>{{ usuario.nombre }}</ion-card-subtitle>      
-    </ion-card-header>
-
-    <ion-button fill="clear" class="opciones"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
-    
-  </ion-card>
+  <ion-list>
+    <ion-item *ngFor="let usuario of usuarios">
+      <ion-avatar slot="start">
+        <img src="../../../assets/usuario.png">
+      </ion-avatar>
+      <ion-label class="label">
+        <h2>{{ usuario.nombre }}</h2>
+        <h4>{{ usuario.correo }}</h4>
+      </ion-label>
+      <ion-button fill="clear" class="opciones"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
+    </ion-item>
+  </ion-list>
 
 </ion-content>
