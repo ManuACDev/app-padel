@@ -52,10 +52,10 @@ export class GestionUsuariosPage implements OnInit {
     }    
   }
 
-  async navegarComponente(componente: string) {
+  async navegarComponente(componente: string, usuario: string) {
     this.toast.presentToast("Cargando...", 500);
     setTimeout(() => {
-      this.router.navigate(['/',componente]);
+      this.router.navigate(['/',componente], { queryParams: { usuario: usuario } });
     }, 500);
   }
 }

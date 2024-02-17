@@ -13,4 +13,19 @@
 
 <ion-content>
 
+  <ion-card *ngIf="usuario$ | async as usuario">
+    <ion-card-content>
+      <ion-item>
+        <ion-label>Nombre:</ion-label>
+        <ion-text>{{ usuario.nombre }}</ion-text>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Correo:</ion-label>
+        <ion-text>{{ usuario.correo }}</ion-text>
+      </ion-item>
+
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
