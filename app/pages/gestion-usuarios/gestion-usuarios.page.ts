@@ -11,6 +11,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
 export class GestionUsuariosPage implements OnInit {
 
   usuarios: User[] = [];
+  results: User[] = [];
 
   constructor(private menuCtrl: MenuController, private firestore: FirestoreService) { }
 
@@ -29,7 +30,23 @@ export class GestionUsuariosPage implements OnInit {
     const usuarios = await this.firestore.getCollection<User>(path);
     usuarios.subscribe(data => {
       this.usuarios = data;
+      this.results = this.usuarios;
     });
   }
 
+  searchUser(event) {
+    const query = event.target.value;
+    if (query.trim() !== '') {
+      this.results = this.usuarios.filter(usuario => {
+        return Object.values(usuario).some(value => {
+          if (typeof value === 'string') {
+            return value.toLowerCase().includes(query);
+          }
+          return false;
+        });
+      });
+    } else {
+      this.results = this.usuarios;
+    }    
+  }
 }
