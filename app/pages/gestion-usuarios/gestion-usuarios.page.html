@@ -16,7 +16,7 @@
   <ion-searchbar placeholer="Buscar usuario" animated (ionInput)="searchUser($event)"></ion-searchbar>
 
   <ion-list>
-    <ion-item *ngFor="let usuario of results">
+    <ion-item *ngFor="let usuario of results" (click)="navegarComponente('editar-usuario')">
       <ion-avatar slot="start">
         <img src="../../../assets/usuario.png">
       </ion-avatar>
@@ -24,7 +24,7 @@
         <h2>{{ usuario.nombre }}</h2>
         <h4>{{ usuario.correo }}</h4>
       </ion-label>
-      <ion-button fill="clear" class="opciones"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
+      <ion-icon id="arrow-icon" name="chevron-forward-outline"></ion-icon>
     </ion-item>
   </ion-list>
 

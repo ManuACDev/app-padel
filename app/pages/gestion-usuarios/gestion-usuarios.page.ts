@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { User } from 'src/app/models/user.model';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { InteractionService } from 'src/app/services/interaction.service';
 
 @Component({
   selector: 'app-gestion-usuarios',
@@ -13,7 +15,7 @@ export class GestionUsuariosPage implements OnInit {
   usuarios: User[] = [];
   results: User[] = [];
 
-  constructor(private menuCtrl: MenuController, private firestore: FirestoreService) { }
+  constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private toast: InteractionService, private router: Router) { }
 
   ngOnInit() {
     this.obtenerUsuarios();
@@ -48,5 +50,12 @@ export class GestionUsuariosPage implements OnInit {
     } else {
       this.results = this.usuarios;
     }    
+  }
+
+  async navegarComponente(componente: string) {
+    this.toast.presentToast("Cargando...", 500);
+    setTimeout(() => {
+      this.router.navigate(['/',componente]);
+    }, 500);
   }
 }

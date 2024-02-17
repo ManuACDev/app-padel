@@ -75,6 +75,10 @@ const routes: Routes = [
   {
     path: 'gestion-usuarios',
     loadChildren: () => import('./pages/gestion-usuarios/gestion-usuarios.module').then( m => m.GestionUsuariosPageModule)
+  },  
+  {
+    path: 'editar-usuario',
+    loadChildren: () => import('./pages/editar-usuario/editar-usuario.module').then( m => m.EditarUsuarioPageModule)
   },
 ];
 
