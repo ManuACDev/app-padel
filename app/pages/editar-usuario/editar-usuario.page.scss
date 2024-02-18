@@ -1,0 +1,22 @@
+ion-card {
+    background: rgb(250, 250, 250);
+}
+
+.center-container {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+}
+
+.profile-picture {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 35%;
+  height: 35%;
+}
+
+p {
+  margin-bottom: 20px;
+}

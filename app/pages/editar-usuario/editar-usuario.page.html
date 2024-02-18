@@ -15,15 +15,24 @@
 
   <ion-card *ngIf="usuario$ | async as usuario">
     <ion-card-content>
-      <ion-item>
-        <ion-label>Nombre:</ion-label>
-        <ion-text>{{ usuario.nombre }}</ion-text>
-      </ion-item>
+      
+      <div class="center-container">
+        <ion-avatar class="profile-picture">
+          <img src="../../../assets/usuario.png" alt="Foto de perfil">
+        </ion-avatar>
+      </div>
 
-      <ion-item>
-        <ion-label>Correo:</ion-label>
-        <ion-text>{{ usuario.correo }}</ion-text>
-      </ion-item>
+      <p>
+        <ion-input label="Nombre" label-placement="stacked" fill="outline" type="text" mode="md" [(ngModel)]="usuario.nombre"></ion-input>
+      </p>
+      
+      <p>
+        <ion-input label="Correo electrónico" label-placement="stacked" fill="outline" type="email" mode="md" [(ngModel)]="usuario.correo"></ion-input>      
+      </p>
+
+      <p>
+        <ion-input label="DNI" label-placement="stacked" fill="outline" type="text" mode="md" [(ngModel)]="usuario.dni"></ion-input>      
+      </p>
 
     </ion-card-content>
   </ion-card>
