@@ -25,7 +25,7 @@ export class PerfilPage implements OnInit {
   constructor(private menuCtrl: MenuController, private auth: AuthService, private firestore: FirestoreService, private alertController: AlertController, private toast: InteractionService, private router: Router) {}
 
   ngOnInit() {
-    this.auth.stateUser().subscribe( res => {
+    this.auth.stateUser().subscribe(() => {
       this.getId();
     });
     this.obtenerPistas();
