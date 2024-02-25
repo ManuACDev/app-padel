@@ -3,7 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { ActionSheetController, MenuController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { InteractionService } from 'src/app/services/interaction.service';
 
 @Component({
   selector: 'app-editar-usuario',
@@ -15,7 +17,7 @@ export class EditarUsuarioPage implements OnInit {
   usuario: string = null;
   public usuario$: Observable<User>;
 
-  constructor(private menuCtrl: MenuController, private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController) { }
+  constructor(private menuCtrl: MenuController, private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private auth: AuthService, private toast: InteractionService) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -46,7 +48,7 @@ export class EditarUsuarioPage implements OnInit {
         {
           text: 'Inhabilitar',
           handler: () => {
-            console.log('Inhabilitar');
+            this.inhabilitarCuenta(this.usuario);
           }
         },
         {
@@ -66,6 +68,21 @@ export class EditarUsuarioPage implements OnInit {
     });
   
     await actionSheet.present();
+  }
+
+  async inhabilitarCuenta(uid: string) {
+    console.log("Uid: " + uid);
+    try {
+      const response = await this.auth.disableUser(uid);
+      if (response == true) {
+        this.toast.presentToast("Cuenta inhabilitada exitosamente.", 1500);
+      } else {
+        this.toast.presentToast("Error al inhabilitar la cuenta.", 1500);
+      }
+    } catch (error) {
+      console.error('Error al inhabilitar la cuenta:', error);
+      this.toast.presentToast("Error al inhabilitar la cuenta.", 1500);
+    }
   }
 
 }

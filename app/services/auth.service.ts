@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { User } from '../models/user.model';
+import { from, lastValueFrom } from 'rxjs';
+import { AngularFireFunctions } from '@angular/fire/compat/functions';
 
 
 @Injectable({
@@ -8,7 +10,7 @@ import { User } from '../models/user.model';
 })
 export class AuthService {
 
-  constructor(public afAuth: AngularFireAuth) { }
+  constructor(public afAuth: AngularFireAuth, private functions: AngularFireFunctions) { }
 
   async login(correo:string, password:string) {
     try {
@@ -57,6 +59,16 @@ export class AuthService {
 
   async sendVerificationEmail():Promise<void> {
     return (await this.afAuth.currentUser).sendEmailVerification();
+  }
+
+  async disableUser(uid: string) {
+    try {
+      const response = await lastValueFrom(from(this.functions.httpsCallable('disableUserAccount')({ uid })));
+      return response.success;
+    } catch (error) {
+      console.error('Error al inhabilitar la cuenta:', error.message);
+      throw error;
+    }
   }
 
 }
