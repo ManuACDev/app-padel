@@ -4,5 +4,6 @@ export interface User{
     correo:string;
     uid:string;
     password: string;
-    perfil: 'usuario'
+    perfil: 'usuario';
+    disabled: boolean
 }

@@ -19,6 +19,7 @@ export class RegistroPage implements OnInit {
     uid:null,
     password: null,
     perfil: 'usuario',
+    disabled: false
   }
 
   password2: string = null;
