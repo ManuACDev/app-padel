@@ -61,12 +61,12 @@ export class AuthService {
     return (await this.afAuth.currentUser).sendEmailVerification();
   }
 
-  async disableUser(uid: string) {
+  async stateUserAccount(uid: string, disabled: boolean) {
     try {
-      const response = await lastValueFrom(from(this.functions.httpsCallable('disableUserAccount')({ uid })));
+      const response = await lastValueFrom(from(this.functions.httpsCallable('toggleUserAccount')({ uid, disabled })));
       return response.success;
     } catch (error) {
-      console.error('Error al inhabilitar la cuenta:', error.message);
+      console.error('Error al cambiar el estado de la cuenta:', error);
       throw error;
     }
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ActionSheetController, MenuController } from '@ionic/angular';
+import { ActionSheetController, LoadingController, MenuController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -17,7 +17,7 @@ export class EditarUsuarioPage implements OnInit {
   usuario: string = null;
   public usuario$: Observable<User>;
 
-  constructor(private menuCtrl: MenuController, private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private auth: AuthService, private toast: InteractionService) { }
+  constructor(private menuCtrl: MenuController, private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private auth: AuthService, private toast: InteractionService, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -35,20 +35,20 @@ export class EditarUsuarioPage implements OnInit {
     this.usuario$ = this.firestore.getDoc<User>(path, this.usuario);
   }
 
-  async presentActionSheet() {
+  async presentActionSheet(usuario: User) {
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'Eliminar',
+          text: 'Eliminar Usuario',
           role: 'destructive',
           handler: () => {
             console.log('Borrar Cuenta clicked');
           }
         },
         {
-          text: 'Inhabilitar',
+          text: usuario.disabled ? 'Habilitar Cuenta' : 'Inhabilitar Cuenta',
           handler: () => {
-            this.inhabilitarCuenta(this.usuario);
+            this.estadoCuenta(usuario);
           }
         },
         {
@@ -70,19 +70,53 @@ export class EditarUsuarioPage implements OnInit {
     await actionSheet.present();
   }
 
-  async inhabilitarCuenta(uid: string) {
-    console.log("Uid: " + uid);
+  async estadoCuenta(usuario: User) {
+    const loading = await this.showLoading('Gestionando usuario...');
     try {
-      const response = await this.auth.disableUser(uid);
+      const response = await this.auth.stateUserAccount(usuario.uid, usuario.disabled);
       if (response == true) {
-        this.toast.presentToast("Cuenta inhabilitada exitosamente.", 1500);
+        try {
+          const id = usuario.uid;
+          const path = 'Usuarios';
+          const estado = usuario.disabled;
+
+          if (estado) {
+            usuario.disabled = false;
+          } else {
+            usuario.disabled = true;
+          }
+
+          await this.firestore.updateDoc(path, id, {disabled: usuario.disabled}).then(() => {
+            if (usuario.disabled) {
+              this.toast.presentToast("Cuenta inhabilitada exitosamente.", 1000);
+            } else {
+              this.toast.presentToast("Cuenta habilitada exitosamente.", 1000);
+            }
+          }).catch(error => {
+            console.log(error);
+            this.toast.presentToast("Error al cambiar el estado de la cuenta.", 1000);
+          });          
+        } catch (error) {
+          console.error('Error al inhabilitar la cuenta:', error);
+          this.toast.presentToast("Error al cambiar el estado de la cuenta.", 1000);
+        }
       } else {
-        this.toast.presentToast("Error al inhabilitar la cuenta.", 1500);
+        this.toast.presentToast("Error al cambiar el estado de la cuenta.", 1000);
       }
     } catch (error) {
-      console.error('Error al inhabilitar la cuenta:', error);
-      this.toast.presentToast("Error al inhabilitar la cuenta.", 1500);
+      console.error('Error al cambiar el estado de la cuenta:', error);
+      this.toast.presentToast("Error al cambiar el estado de la cuenta.", 1000);
+    } finally {
+      loading.dismiss();
     }
+  }
+
+  async showLoading(mensaje: string) {
+    const loading = await this.loadingCtrl.create({
+      message: mensaje,
+    });
+    loading.present();
+    return loading;
   }
 
 }
