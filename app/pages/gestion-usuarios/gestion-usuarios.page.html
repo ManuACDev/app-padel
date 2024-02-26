@@ -23,7 +23,7 @@
       <ion-label class="label">
         <h2>{{ usuario.nombre }}</h2>
         <h4>{{ usuario.correo }}</h4>
-        <ng-container *ngIf="usuario.disabled"><p class="disabled-message"><ion-icon name="alert-circle-outline"></ion-icon>Esta cuenta está inhabilitada.</p></ng-container>
+        <p *ngIf="usuario.disabled" class="disabled-message"><ion-icon name="alert-circle-outline"></ion-icon>Esta cuenta está inhabilitada.</p>
       </ion-label>
       <ion-icon id="arrow-icon" name="chevron-forward-outline"></ion-icon>
     </ion-item>
