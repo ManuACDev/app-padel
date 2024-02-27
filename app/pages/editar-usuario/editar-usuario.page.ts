@@ -54,7 +54,7 @@ export class EditarUsuarioPage implements OnInit {
         {
           text: 'Restablecer Contraseña',
           handler: () => {
-            console.log('Restablecer');
+            this.changePassword(usuario);
           }
         },
         {
@@ -106,6 +106,19 @@ export class EditarUsuarioPage implements OnInit {
     } catch (error) {
       console.error('Error al cambiar el estado de la cuenta:', error);
       this.toast.presentToast("Error al cambiar el estado de la cuenta.", 1000);
+    } finally {
+      loading.dismiss();
+    }
+  }
+
+  async changePassword(usuario: User) {
+    const loading = await this.showLoading('Enviando correo...');
+    try {
+      const correo = usuario.correo;
+      await this.auth.resetPassword(correo);
+      this.toast.presentToast("Correo enviado. Consultar la bandeja de entrada", 1500);
+    } catch (error) {
+      this.toast.presentToast("Error al enviar correo. Verifica la dirección.", 1500);
     } finally {
       loading.dismiss();
     }
