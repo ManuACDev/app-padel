@@ -71,4 +71,14 @@ export class AuthService {
     }
   }
 
+  async deleteUser(uid: string) {
+    try {
+      const response = await lastValueFrom(from(this.functions.httpsCallable('deleteUser')({ uid })));
+      return response.success;
+    } catch (error) {
+      console.error('Error al eliminar el usuario:', error);
+      throw error;
+    }
+  }
+
 }

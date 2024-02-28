@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController, MenuController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user.model';
@@ -17,7 +17,7 @@ export class EditarUsuarioPage implements OnInit {
   usuario: string = null;
   public usuario$: Observable<User>;
 
-  constructor(private menuCtrl: MenuController, private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private auth: AuthService, private toast: InteractionService, private loadingCtrl: LoadingController) { }
+  constructor(private menuCtrl: MenuController, private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private auth: AuthService, private toast: InteractionService, private loadingCtrl: LoadingController, private router: Router) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -39,10 +39,10 @@ export class EditarUsuarioPage implements OnInit {
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'Eliminar Usuario',
+          text: 'Eliminar',
           role: 'destructive',
           handler: () => {
-            console.log('Borrar Cuenta clicked');
+            this.eliminarUsuario(usuario);
           }
         },
         {
@@ -68,6 +68,37 @@ export class EditarUsuarioPage implements OnInit {
     });
   
     await actionSheet.present();
+  }
+
+  async eliminarUsuario(usuario: User) {
+    const loading = await this.showLoading('Eliminando usuario...');
+    try {
+      const response = await this.auth.deleteUser(usuario.uid);
+      if (response == true) {
+        try {
+          const id = usuario.uid;
+          const path = 'Usuarios';
+
+          await this.firestore.deleteDoc(path, id).then(() => {
+            this.navegarComponente('gestion-usuarios');
+            this.toast.presentToast("Usuario eliminado correctamente.", 1000);
+          }).catch(error => {
+            console.error('Error al eliminar el usuario:', error);
+            this.toast.presentToast("Error al eliminar el usuario.", 1000);
+          });
+        } catch (error) {
+          console.error('Error al eliminar el usuario:', error);
+          this.toast.presentToast("Error al eliminar el usuario.", 1000);
+        }
+      } else {
+        this.toast.presentToast("Error al eliminar el usuario.", 1000);
+      }
+    } catch (error) {
+      console.error('Error al eliminar el usuario:', error);
+      this.toast.presentToast("Error al eliminar el usuario.", 1000);
+    } finally {
+      loading.dismiss();
+    }
   }
 
   async estadoCuenta(usuario: User) {
@@ -130,6 +161,13 @@ export class EditarUsuarioPage implements OnInit {
     });
     loading.present();
     return loading;
+  }
+
+  async navegarComponente(componente: string) {
+    this.toast.presentToast("Cargando...", 500);
+    setTimeout(() => {
+      this.router.navigate(['/',componente]);
+    }, 500);
   }
 
 }
