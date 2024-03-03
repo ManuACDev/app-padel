@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController, MenuController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { Pista } from 'src/app/models/pista.model';
+import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -14,16 +16,23 @@ import { InteractionService } from 'src/app/services/interaction.service';
 })
 export class EditarUsuarioPage implements OnInit {
 
-  usuario: string = null;
+  uid: string = null;
+  perfil: string = null;
+  pistas: Pista[] = [];
+  reservas: Reserva[] = [];
   public usuario$: Observable<User>;
 
   constructor(private menuCtrl: MenuController, private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private auth: AuthService, private toast: InteractionService, private loadingCtrl: LoadingController, private router: Router) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.usuario = params['usuario'];
+      this.uid = params['usuario'];
     });
     this.obtenerUsuario();
+    this.obtenerPistas();
+    setTimeout(() => {
+      this.obtenerReservasUsuario();
+    }, 600);
   }
 
   ionViewDidLeave() {
@@ -32,7 +41,33 @@ export class EditarUsuarioPage implements OnInit {
 
   async obtenerUsuario() {
     const path = `Usuarios`;
-    this.usuario$ = this.firestore.getDoc<User>(path, this.usuario);
+    this.usuario$ = this.firestore.getDoc<User>(path, this.uid);    
+  }
+
+  async obtenerPistas() {
+    this.pistas = [];
+
+    const path = `Pistas`;
+    const pistas = await this.firestore.getCollection<Pista>(path);
+    pistas.subscribe(data => {
+      this.pistas = data; 
+    });
+  }
+
+  async obtenerReservasUsuario() {    
+    const id = this.uid;
+
+    for (const pista of this.pistas) {
+      const path = `Pistas/${pista.id}/Reservas`;
+      const reservas = await this.firestore.getCollectionId<Reserva>(id, path);
+
+      reservas.subscribe(data => {
+        data.forEach((doc) => {
+          const reserva = doc.data() as Reserva;
+          this.reservas.push(reserva);
+        });
+      });
+    }
   }
 
   async presentActionSheet(usuario: User) {
@@ -70,28 +105,36 @@ export class EditarUsuarioPage implements OnInit {
     await actionSheet.present();
   }
 
-  async eliminarUsuario(usuario: User) {
+  async eliminarUsuario(usuario: User) {    
     const loading = await this.showLoading('Eliminando usuario...');
     try {
-      const response = await this.auth.deleteUser(usuario.uid);
-      if (response == true) {
-        try {
-          const id = usuario.uid;
-          const path = 'Usuarios';
+      this.perfil = usuario.perfil;
+      if (this.perfil == "admin") {
+        this.toast.presentToast("Para eliminar un usuario con perfil de administrador, primero debes cambiar su perfil.", 2500);
+      } else if (this.reservas.length != 0) {
+        this.toast.presentToast("No se puede eliminar el usuario porque tiene reservas activas.", 1500);
+      } 
+      else {
+        const response = await this.auth.deleteUser(usuario.uid);
+        if (response == true) {
+          try {
+            const id = usuario.uid;
+            const path = 'Usuarios';
 
-          await this.firestore.deleteDoc(path, id).then(() => {
-            this.navegarComponente('gestion-usuarios');
-            this.toast.presentToast("Usuario eliminado correctamente.", 1000);
-          }).catch(error => {
+            await this.firestore.deleteDoc(path, id).then(() => {
+              this.navegarComponente('gestion-usuarios');
+              this.toast.presentToast("Usuario eliminado correctamente.", 1000);
+            }).catch(error => {
+              console.error('Error al eliminar el usuario:', error);
+              this.toast.presentToast("Error al eliminar el usuario.", 1000);
+            });
+          } catch (error) {
             console.error('Error al eliminar el usuario:', error);
             this.toast.presentToast("Error al eliminar el usuario.", 1000);
-          });
-        } catch (error) {
-          console.error('Error al eliminar el usuario:', error);
+          }
+        } else {
           this.toast.presentToast("Error al eliminar el usuario.", 1000);
         }
-      } else {
-        this.toast.presentToast("Error al eliminar el usuario.", 1000);
       }
     } catch (error) {
       console.error('Error al eliminar el usuario:', error);
