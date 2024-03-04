@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController, MenuController } from '@ionic/angular';
+import { updateEmail } from 'firebase/auth';
 import { Observable } from 'rxjs';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
@@ -21,6 +22,7 @@ export class EditarUsuarioPage implements OnInit {
   pistas: Pista[] = [];
   reservas: Reserva[] = [];
   public usuario$: Observable<User>;
+  usuarioOriginal: User = null;
 
   constructor(private menuCtrl: MenuController, private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private auth: AuthService, private toast: InteractionService, private loadingCtrl: LoadingController, private router: Router) { }
 
@@ -42,6 +44,10 @@ export class EditarUsuarioPage implements OnInit {
   async obtenerUsuario() {
     const path = `Usuarios`;
     this.usuario$ = this.firestore.getDoc<User>(path, this.uid);    
+    
+    this.usuario$.subscribe(usuario => {
+      this.usuarioOriginal = usuario;
+    });
   }
 
   async obtenerPistas() {
@@ -67,6 +73,87 @@ export class EditarUsuarioPage implements OnInit {
           this.reservas.push(reserva);
         });
       });
+    }
+  }
+
+  async guardarCambios(usuario: User) {
+    if (!usuario.correo || !usuario.dni || !usuario.nombre || !usuario.perfil) {
+      this.toast.presentToast("Todos los campos son obligatorios", 1500);
+    } else if (usuario.correo == this.usuarioOriginal.correo && usuario.dni == this.usuarioOriginal.dni && usuario.nombre == this.usuarioOriginal.nombre && usuario.perfil == this.usuarioOriginal.perfil) {
+      this.toast.presentToast("No hay cambios para guardar.", 1500);
+    } else {
+      const loading = await this.showLoading('Guardando cambios...');
+      try {
+        const cambios: Partial<User> = {};
+  
+        if (usuario.nombre !== this.usuarioOriginal.nombre) {
+          cambios.nombre = usuario.nombre;
+        }
+        if (usuario.correo !== this.usuarioOriginal.correo) {
+          cambios.correo = usuario.correo;
+        }
+        if (usuario.dni !== this.usuarioOriginal.dni) {
+          cambios.dni = usuario.dni;
+        }
+        if (usuario.perfil !== this.usuarioOriginal.perfil) {
+          cambios.perfil = usuario.perfil;
+        }
+  
+        const id = usuario.uid;
+        const path = 'Usuarios';
+
+        await this.firestore.updateDoc(path, id, cambios).then(() => {
+          try {
+            if (cambios?.correo) {
+              this.actualizarEmail(usuario);
+            } if (cambios?.dni) {
+              this.actualizarDni(cambios.dni);
+            }
+            this.toast.presentToast('Cambios guardados', 1000);
+          } catch (error) {
+            console.log(error);
+            this.toast.presentToast('Error al guardar los cambios', 1000);
+          }
+        }).catch(error => {
+          console.log(error);
+          this.toast.presentToast('Error al guardar los cambios', 1000);
+        });
+        this.usuarioOriginal = { ...usuario };
+      } catch (error) {
+        console.log(error);
+        this.toast.presentToast('Error al guardar los cambios', 1000);
+      } finally {
+        loading.dismiss();
+      }
+    }
+  }
+
+  async actualizarEmail(usuario: User) {
+    console.log("Usuario: " + usuario.uid);
+  }
+
+  async actualizarDni(dni: string) {
+    const updatePromises: Promise<void>[] = [];
+    const id = this.uid;
+    const pistas = this.pistas;
+
+    for (const pista of pistas) {
+      const path = `Pistas/${pista.id}/Reservas`;
+      const reservas = await this.firestore.getCollectionId<Reserva>(id, path);
+      reservas.subscribe(data => {
+        data.forEach((doc) => {
+          const reserva = doc.data() as Reserva;
+          const id = reserva.id;
+          const updatePromise = this.firestore.updateDoc(path, id, { dni: dni });
+          updatePromises.push(updatePromise);
+        });
+      });
+    }
+
+    try {
+      await Promise.all(updatePromises);      
+    } catch (error) {
+      this.toast.presentToast("Error al actualizar el dni.", 1500);
     }
   }
 
