@@ -42,7 +42,10 @@
 
       <ion-row class="row-input">
         <ion-col size="12">
-          <ion-input label="Perfil" label-placement="stacked" fill="outline" type="text" mode="md" [(ngModel)]="usuario.perfil"></ion-input>      
+          <ion-select label="Perfil" label-placement="stacked" fill="outline" mode="md" [(ngModel)]="usuario.perfil">
+            <ion-select-option value="usuario">Usuario</ion-select-option>
+            <ion-select-option value="admin">Admin</ion-select-option>
+          </ion-select>
         </ion-col>
       </ion-row>
 
