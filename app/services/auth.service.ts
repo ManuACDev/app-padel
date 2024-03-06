@@ -81,4 +81,14 @@ export class AuthService {
     }
   }
 
+  async changeEmail(uid: string, correo: string) {
+    try {
+      const response = await lastValueFrom(from(this.functions.httpsCallable('changeEmail')({ uid, correo })));
+      return response.success;
+    } catch (error) {
+      console.error('Error al cambiar el correo:', error);
+      throw error;
+    }
+  }
+
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController, MenuController } from '@ionic/angular';
 import { updateEmail } from 'firebase/auth';
-import { Observable } from 'rxjs';
+import { Observable, retry } from 'rxjs';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
@@ -101,23 +101,27 @@ export class EditarUsuarioPage implements OnInit {
   
         const id = usuario.uid;
         const path = 'Usuarios';
+        
+        if (cambios?.correo) {
+          const response = await this.actualizarEmail(usuario);
+          if (!response) {
+            throw new Error('Error al actualizar el correo electrónico');
+          }        
+        }
 
         await this.firestore.updateDoc(path, id, cambios).then(() => {
-          try {
-            if (cambios?.correo) {
-              this.actualizarEmail(usuario);
-            } if (cambios?.dni) {
-              this.actualizarDni(cambios.dni);
-            }
+          if (cambios?.dni) {
+            this.actualizarDni(cambios.dni).then(() => {
+              this.toast.presentToast('Cambios guardados', 1000);
+            });
+          } else {
             this.toast.presentToast('Cambios guardados', 1000);
-          } catch (error) {
-            console.log(error);
-            this.toast.presentToast('Error al guardar los cambios', 1000);
-          }
+          }            
         }).catch(error => {
           console.log(error);
           this.toast.presentToast('Error al guardar los cambios', 1000);
         });
+        
         this.usuarioOriginal = { ...usuario };
       } catch (error) {
         console.log(error);
@@ -129,7 +133,13 @@ export class EditarUsuarioPage implements OnInit {
   }
 
   async actualizarEmail(usuario: User) {
-    console.log("Usuario: " + usuario.uid);
+    try {
+      await this.auth.changeEmail(usuario.uid, usuario.correo);
+      return true
+    } catch (error) {
+      console.error("Error al cambiar el correo:", error);
+      return false;
+    }
   }
 
   async actualizarDni(dni: string) {
