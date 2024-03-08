@@ -91,4 +91,16 @@ export class AuthService {
     }
   }
 
+  /*async confirmationEmail(uid: string) {
+    try {
+      const response = await lastValueFrom(from(this.functions.httpsCallable('confirmationEmail')({ uid })));
+      console.error(response.success);
+      
+      return response.success;
+    } catch (error) {
+      console.error('Error al enviar email de confirmación: ', error);
+      throw error;
+    }
+  }*/
+
 }

@@ -103,7 +103,7 @@ export class EditarUsuarioPage implements OnInit {
         const path = 'Usuarios';
         
         if (cambios?.correo) {
-          const response = await this.actualizarEmail(usuario);
+          const response = await this.auth.changeEmail(usuario.uid, usuario.correo);
           if (!response) {
             throw new Error('Error al actualizar el correo electrónico');
           }        
@@ -129,16 +129,6 @@ export class EditarUsuarioPage implements OnInit {
       } finally {
         loading.dismiss();
       }
-    }
-  }
-
-  async actualizarEmail(usuario: User) {
-    try {
-      await this.auth.changeEmail(usuario.uid, usuario.correo);
-      return true
-    } catch (error) {
-      console.error("Error al cambiar el correo:", error);
-      return false;
     }
   }
 
