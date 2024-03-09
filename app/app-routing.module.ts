@@ -80,6 +80,10 @@ const routes: Routes = [
     path: 'editar-usuario',
     loadChildren: () => import('./pages/editar-usuario/editar-usuario.module').then( m => m.EditarUsuarioPageModule)
   },
+  {
+    path: 'gestion-reservas',
+    loadChildren: () => import('./pages/gestion-reservas/gestion-reservas.module').then( m => m.GestionReservasPageModule)
+  },
 ];
 
 @NgModule({
