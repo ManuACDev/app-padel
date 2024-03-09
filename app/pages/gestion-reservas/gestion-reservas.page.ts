@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-gestion-reservas',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GestionReservasPage implements OnInit {
 
-  constructor() { }
+  constructor(private menuCtrl: MenuController) { }
 
   ngOnInit() {
+  }
+
+  ionViewDidLeave() {
+    this.menuCtrl.close();
   }
 
 }
