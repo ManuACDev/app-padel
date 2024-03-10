@@ -1,0 +1,68 @@
+.search-filter-container {
+  display: flex;
+  align-items: center;
+}
+
+ion-searchbar {
+  flex-grow: 1; /* Para que la barra de búsqueda ocupe todo el espacio disponible */
+  margin-right: 8px; /* Margen derecho para separar la barra de búsqueda del botón de filtro */
+}
+
+button {
+  background-color: transparent; /* Fondo transparente para que el botón se integre mejor con el icono */
+  border: none; /* Sin borde */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+
+.filtro {
+  --color: rgb(90, 90, 90);
+}
+
+ion-card {
+  border-radius: 8px;
+}
+
+ion-card-header {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dbdbdb;
+}
+
+ion-card-title {
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;  
+}
+
+ion-card-title img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+ion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+ion-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+h4 {
+  font-size: 18px;
+}
+
+p {
+  color: #666;
+}
+
+ion-icon {
+  margin: 1px;
+  font-size: 20px;
+}

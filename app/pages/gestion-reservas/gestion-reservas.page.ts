@@ -14,6 +14,10 @@ export class GestionReservasPage implements OnInit {
   pistas: Pista[] = [];
   reservas: Reserva[] = [];
   results: Reserva[] = [];
+  reservasPistas: { [pistaId: string]: Reserva[] } = {};
+  filtroPistas: boolean = false;
+  filtroUsuarios: boolean = false;
+  filtroReservas: boolean = true;
 
   constructor(private menuCtrl: MenuController, private firestore: FirestoreService) { }
 
@@ -44,11 +48,14 @@ export class GestionReservasPage implements OnInit {
       const path = `Pistas/${pista.id}/Reservas`;
       const reservas = await this.firestore.getCollection<Reserva>(path);
 
+      this.reservasPistas[pista.id] = [];
+
       reservas.subscribe(data => {
         data.forEach((doc) => {
           const reserva = doc;
           this.reservas.push(reserva);
           this.results.push(reserva);
+          this.reservasPistas[pista.id].push(reserva);
         });
       });
     }
@@ -69,5 +76,12 @@ export class GestionReservasPage implements OnInit {
       this.results = this.reservas;
     }    
   }
+
+  onChangeDisplay(opcion: string) {
+    this.filtroPistas = opcion === 'pistas';
+    this.filtroUsuarios = opcion === 'usuarios';
+    this.filtroReservas = opcion === 'reservas';
+  }
+  
 
 }
