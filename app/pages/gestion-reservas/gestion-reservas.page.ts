@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { LoadingController, MenuController } from '@ionic/angular';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
@@ -25,19 +25,24 @@ export class GestionReservasPage implements OnInit {
   filtroUsuarios: boolean = false;
   filtroReservas: boolean = true;
 
-  constructor(private menuCtrl: MenuController, private firestore: FirestoreService) { }
+  constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private loadingCtrl: LoadingController) { }
 
-  ngOnInit() {
-    this.obtenerUsuarios();
+  async ngOnInit() {
+    const loading = await this.showLoading();
+    try {
+      this.obtenerUsuarios();
     setTimeout(() => {
       this.obtenerPistas();
-    }, 500);
+    }, 400);
     setTimeout(() => {
       this.obtenerReservas();
-    }, 600);
+    }, 550);
     setTimeout(() => {
       this.obtenerReservasUsuarios();
-    }, 600);
+    }, 700);
+    } finally {
+      loading.dismiss();
+    }
   }
 
   ionViewDidLeave() {
@@ -126,6 +131,14 @@ export class GestionReservasPage implements OnInit {
     this.filtroPistas = opcion === 'pistas';
     this.filtroUsuarios = opcion === 'usuarios';
     this.filtroReservas = opcion === 'reservas';
+  }
+
+  async showLoading() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Cargando...',
+    });
+    loading.present();
+    return loading;
   }
   
 
