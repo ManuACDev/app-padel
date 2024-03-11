@@ -42,13 +42,13 @@ ion-card-title img {
   margin-right: 15px;
 }
 
-ion-item {
+.reserva {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-ion-label {
+.label {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -65,4 +65,26 @@ p {
 ion-icon {
   margin: 1px;
   font-size: 20px;
+}
+
+.label h2 {
+  font-weight: bold;
+}
+
+.label h4 {
+  color: black;
+}
+
+#arrow-icon {
+  color: rgb(42, 42, 42);
+}
+
+.disabled-message {
+  display: flex;
+  align-items: center;
+  color: rgb(255, 126, 126);
+}
+
+.disabled-message ion-icon {
+  margin-right: 5px;
 }
