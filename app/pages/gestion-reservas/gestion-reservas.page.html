@@ -21,6 +21,13 @@
   </div>
 
   <ion-card *ngIf="filtroReservas">
+
+    <ion-card-header>
+      <ion-card-title>
+        <img alt="reservas" src="../../../assets/gestion-reservas.png">Reservas
+      </ion-card-title>
+    </ion-card-header>
+
     <ion-list>
       <ion-item *ngFor="let reserva of results" class="reserva">
         <ion-label class="label">
