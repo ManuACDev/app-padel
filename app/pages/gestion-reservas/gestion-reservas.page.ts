@@ -32,16 +32,22 @@ export class GestionReservasPage implements OnInit {
   async ngOnInit() {
     const loading = await this.showLoading();
     try {
-      this.obtenerUsuarios();
-    setTimeout(() => {
-      this.obtenerPistas();
-    }, 400);
-    setTimeout(() => {
-      this.obtenerReservas();
-    }, 550);
-    setTimeout(() => {
-      this.obtenerReservasUsuarios();
-    }, 700);
+      const lastDisplayMode = localStorage.getItem('lastDisplayMode');
+      if (lastDisplayMode) {
+        this.onChangeDisplay(lastDisplayMode);
+      }
+      setTimeout(() => {
+        this.obtenerUsuarios();
+      }, 250);
+      setTimeout(() => {
+        this.obtenerPistas();
+      }, 400);
+      setTimeout(() => {
+        this.obtenerReservas();
+      }, 550);
+      setTimeout(() => {
+        this.obtenerReservasUsuarios();
+      }, 700);
     } finally {
       loading.dismiss();
     }
@@ -151,6 +157,8 @@ export class GestionReservasPage implements OnInit {
     this.filtroPistas = opcion === 'pistas';
     this.filtroUsuarios = opcion === 'usuarios';
     this.filtroReservas = opcion === 'reservas';
+
+    localStorage.setItem('lastDisplayMode', opcion);
   }
 
   async showLoading() {
