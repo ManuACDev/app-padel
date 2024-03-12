@@ -29,7 +29,7 @@
     </ion-card-header>
 
     <ion-list>
-      <ion-item *ngFor="let reserva of results" class="reserva">
+      <ion-item *ngFor="let reserva of resultsR" class="reserva">
         <ion-label class="label">
           <h4>Fecha: {{ reserva.fecha }}</h4>
           <p>Hora: {{ reserva.hora }}</p>
@@ -39,7 +39,7 @@
   </ion-card>
 
   <div *ngIf="filtroPistas">
-    <ion-card *ngFor="let pista of pistas">
+    <ion-card *ngFor="let pista of resultsP">
 
       <ion-card-header>
         <ion-card-title>
@@ -60,7 +60,7 @@
   </div>
 
   <div *ngIf="filtroUsuarios">
-    <ion-card *ngFor="let usuario of usuarios">
+    <ion-card *ngFor="let usuario of resultsU">
 
       <ion-card-header>
         <ion-card-title>

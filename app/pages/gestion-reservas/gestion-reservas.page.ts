@@ -16,7 +16,9 @@ export class GestionReservasPage implements OnInit {
   pistas: Pista[] = [];
   reservas: Reserva[] = [];
 
-  results: Reserva[] = [];
+  resultsR: Reserva[] = [];
+  resultsP: Pista[] = [];
+  resultsU: User[] = [];
 
   reservasPistas: { [pistaId: string]: Reserva[] } = {};
   reservasUsuarios: { [usuarioId: string]: Reserva[] } = {};
@@ -56,6 +58,7 @@ export class GestionReservasPage implements OnInit {
     const usuarios = await this.firestore.getCollection<User>(path);
     usuarios.subscribe(data => {
       this.usuarios = data;
+      this.resultsU = data;
     });
   }
 
@@ -66,6 +69,7 @@ export class GestionReservasPage implements OnInit {
     const pistas = await this.firestore.getCollection<Pista>(path);
     pistas.subscribe(data => {
       this.pistas = data;
+      this.resultsP = data;
     });
   }
   
@@ -81,11 +85,11 @@ export class GestionReservasPage implements OnInit {
         data.forEach((doc) => {
           const reserva = doc;
           this.reservas.push(reserva);
-          this.results.push(reserva);
           this.reservasPistas[pista.id].push(reserva);
         });
       });
     }
+    this.resultsR = this.reservas;
   }
 
   async obtenerReservasUsuarios() {
@@ -110,21 +114,37 @@ export class GestionReservasPage implements OnInit {
   }
 
   searchReserva(event) {
-    const query = event.target.value;
-    if (query.trim() !== '') {
+    const query = event.target.value.toLowerCase().trim();
+
+    if (query !== '') {
       if (this.filtroReservas) {
-        this.results = this.reservas.filter(reserva => {
-          return Object.values(reserva).some(value => {
-            if (typeof value === 'string') {
-              return value.toLowerCase().includes(query);
-            }
-            return false;
-          });
-        });
+        this.resultsR = this.reservas.filter(reserva =>
+          Object.values(reserva).some(value =>
+            typeof value === 'string' && value.toLowerCase().includes(query.toLowerCase())
+          )
+        );
+      } else if (this.filtroPistas) {
+        this.resultsP = this.pistas.filter(pista =>
+          Object.values(pista).some(value =>
+            typeof value === 'string' && value.toLowerCase().includes(query.toLowerCase())
+          )
+        );
+      } else if (this.filtroUsuarios) {
+        this.resultsU = this.usuarios.filter(usuario =>
+          Object.values(usuario).some(value =>
+            typeof value === 'string' && value.toLowerCase().includes(query.toLowerCase())
+          )
+        );
       }
     } else {
-      this.results = this.reservas;
-    }    
+      if (this.filtroReservas) {
+        this.resultsR = this.reservas;
+      } else if (this.filtroPistas) {
+        this.resultsP = this.pistas;
+      } else if (this.filtroUsuarios) {
+        this.resultsU = this.usuarios;
+      }
+    }   
   }
 
   onChangeDisplay(opcion: string) {
