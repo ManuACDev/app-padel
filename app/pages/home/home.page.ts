@@ -63,6 +63,7 @@ export class HomePage implements OnInit {
   logout() {
     this.auth.logout();
     localStorage.setItem('sesionActiva', 'false');
+    localStorage.setItem('lastDisplayMode', 'reservas');
     this.toast.presentToast('Sesión finalizada', 1000);
   }
 
