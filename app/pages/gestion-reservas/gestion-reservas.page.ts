@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { LoadingController, MenuController } from '@ionic/angular';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { InteractionService } from 'src/app/services/interaction.service';
 
 @Component({
   selector: 'app-gestion-reservas',
@@ -27,7 +29,7 @@ export class GestionReservasPage implements OnInit {
   filtroUsuarios: boolean = false;
   filtroReservas: boolean = true;
 
-  constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private loadingCtrl: LoadingController) { }
+  constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private loadingCtrl: LoadingController, private toast: InteractionService, private router: Router) { }
 
   async ngOnInit() {
     const loading = await this.showLoading();
@@ -167,6 +169,13 @@ export class GestionReservasPage implements OnInit {
     });
     loading.present();
     return loading;
+  }
+
+  async navegarComponente(componente: string, reserva: string) {
+    this.toast.presentToast("Cargando...", 500);
+    setTimeout(() => {
+      this.router.navigate(['/',componente], { queryParams: { reserva: reserva } });
+    }, 500);
   }
   
 
