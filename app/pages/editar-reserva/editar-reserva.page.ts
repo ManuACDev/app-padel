@@ -43,9 +43,12 @@ export class EditarReservaPage implements OnInit {
       const path = `Pistas/${pista.id}/Reservas`;
       const reserva = await this.firestore.getDoc<Reserva>(path, this.id);
 
-      reserva.subscribe(reserva => {
-        this.reserva = reserva;
-      });
+      if (reserva) {
+        reserva.subscribe(reserva => {
+          this.reserva = reserva;
+        });
+        break;
+      }      
     }
   }
 
