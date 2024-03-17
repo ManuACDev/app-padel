@@ -171,10 +171,10 @@ export class GestionReservasPage implements OnInit {
     return loading;
   }
 
-  async navegarComponente(componente: string, reserva: string) {
+  async navegarComponente(componente: string, reserva: string, usuario: string) {
     this.toast.presentToast("Cargando...", 500);
     setTimeout(() => {
-      this.router.navigate(['/',componente], { queryParams: { reserva: reserva } });
+      this.router.navigate(['/',componente], { queryParams: { reserva: reserva, usuario: usuario } });
     }, 500);
   }
   
