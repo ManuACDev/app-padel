@@ -103,8 +103,8 @@ export class EditarReservaPage implements OnInit {
 
     console.log(path + " " + id);
 
-    await this.firestore.deleteDoc<Reserva>(id, path).then(() => {
-      this.navegarComponente('gestion-usuarios');
+    await this.firestore.deleteDoc<Reserva>(path, id).then(() => {
+      this.navegarComponente('gestion-reservas');
       this.toast.presentToast("Reserva cancelada correctamente.", 1000);
     }).catch(error => {
       console.error(error);
