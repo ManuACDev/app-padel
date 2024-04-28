@@ -15,7 +15,6 @@ import { InteractionService } from 'src/app/services/interaction.service';
 export class EditarReservaPage implements OnInit {
 
   uid: string = null;
-  id: string = null;
   usuario: User =  null;
   reserva: Reserva = null;
   pistas: Pista[] = [];
@@ -25,13 +24,10 @@ export class EditarReservaPage implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.uid = params['usuario']; 
-      this.id = params['reserva'];
+      this.reserva = JSON.parse(params['reserva']);
     });
     this.obtenerUsuario();
     this.obtenerPistas();
-    setTimeout(() => {
-      this.obtenerReserva();
-    }, 600);
   }
 
   async obtenerPistas() {
@@ -51,21 +47,6 @@ export class EditarReservaPage implements OnInit {
     usuario.subscribe(usuario => {
       this.usuario = usuario;
     });
-  }
-
-  async obtenerReserva() {    
-
-    for (const pista of this.pistas) {
-      const path = `Pistas/${pista.id}/Reservas`;
-      const reserva = await this.firestore.getDoc<Reserva>(path, this.id);
-
-      if (reserva) {
-        reserva.subscribe(reserva => {
-          this.reserva = reserva;
-        });
-        break;
-      }      
-    }
   }
 
   async presentActionSheet(reserva: Reserva) {
