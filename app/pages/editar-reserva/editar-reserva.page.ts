@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, LoadingController } from '@ionic/angular';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
@@ -19,7 +19,7 @@ export class EditarReservaPage implements OnInit {
   reserva: Reserva = null;
   pistas: Pista[] = [];
 
-  constructor(private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private toast: InteractionService, private router: Router) { }
+  constructor(private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -79,18 +79,32 @@ export class EditarReservaPage implements OnInit {
   }
   
   async borrarReserva(pista: string, reserva: Reserva) {
-    const id = reserva.id;
-    const path = `Pistas/${pista}/Reservas`;
+    const loading = await this.showLoading('Cancelando reserva...');
+    try {
+      const id = reserva.id;
+      const path = `Pistas/${pista}/Reservas`;
 
-    console.log(path + " " + id);
-
-    await this.firestore.deleteDoc<Reserva>(path, id).then(() => {
-      this.navegarComponente('gestion-reservas');
-      this.toast.presentToast("Reserva cancelada correctamente.", 1000);
-    }).catch(error => {
+      await this.firestore.deleteDoc<Reserva>(path, id).then(() => {
+        this.navegarComponente('gestion-reservas');
+        this.toast.presentToast("Reserva cancelada correctamente.", 1000);
+      }).catch(error => {
+        console.error(error);
+        this.toast.presentToast("Error al cancelar la reserva", 1000);
+      });
+    } catch (error) {
       console.error(error);
       this.toast.presentToast("Error al cancelar la reserva", 1000);
+    } finally {
+      loading.dismiss();
+    }
+  }
+
+  async showLoading(mensaje: string) {
+    const loading = await this.loadingCtrl.create({
+      message: mensaje,
     });
+    loading.present();
+    return loading;
   }
 
   async navegarComponente(componente: string) {
