@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController, MenuController } from '@ionic/angular';
 import { Pista } from 'src/app/models/pista.model';
@@ -12,7 +12,7 @@ import { InteractionService } from 'src/app/services/interaction.service';
   templateUrl: './gestion-reservas.page.html',
   styleUrls: ['./gestion-reservas.page.scss'],
 })
-export class GestionReservasPage implements OnInit {
+export class GestionReservasPage {
 
   usuarios: User[] = [];
   pistas: Pista[] = [];
@@ -31,8 +31,9 @@ export class GestionReservasPage implements OnInit {
 
   constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private loadingCtrl: LoadingController, private toast: InteractionService, private router: Router) { }
 
-  async ngOnInit() {
+  async ionViewWillEnter() {
     const loading = await this.showLoading();
+    console.log("ionViewWillEnter inicio");
     try {
       const lastDisplayMode = localStorage.getItem('lastDisplayMode');
       if (lastDisplayMode) {
@@ -81,7 +82,8 @@ export class GestionReservasPage implements OnInit {
     });
   }
   
-  async obtenerReservas() {    
+  async obtenerReservas() {
+    this.reservas = [];    
 
     for (const pista of this.pistas) {
       const path = `Pistas/${pista.id}/Reservas`;
