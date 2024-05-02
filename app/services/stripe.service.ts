@@ -24,9 +24,19 @@ export class StripeService {
   async charge(precio, token) {
     try {
       const response = await lastValueFrom(from(this.functions.httpsCallable('processPayment')({ precio, token })));  
-      return response.success;
+      return { success: response.success, paymentDoc: response.paymentDoc };
     } catch (error) {
       console.error('Error al realizar el cargo:', error.message);
+      throw error;
+    }
+  }
+
+  async refund(chargeId: string) {
+    try {
+      const response = await lastValueFrom(from(this.functions.httpsCallable('processRefund')({ chargeId })));
+      return response.success;
+    } catch (error) {
+      console.error('Error al realizar el reembolso:', error.message);
       throw error;
     }
   }

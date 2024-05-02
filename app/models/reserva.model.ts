@@ -4,5 +4,6 @@ export interface Reserva{
     fecha:string;
     hora:string;
     pista:string;
-    id:string
+    id:string;
+    paymentDoc:string
 }

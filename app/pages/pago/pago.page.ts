@@ -35,7 +35,8 @@ export class PagoPage implements AfterViewInit, OnDestroy {
     fecha:null,
     hora:null,
     pista:null,
-    id:null
+    id:null,
+    paymentDoc:null
   }
 
   hora: string;
@@ -106,8 +107,8 @@ export class PagoPage implements AfterViewInit, OnDestroy {
       this.showLoading();
       try {
         const response = await this.stripeService.charge(this.precio, token.id);
-        if (response == true) {
-          this.cambiarFecha(this.hora);
+        if (response.success == true) {
+          this.cambiarFecha(this.hora, response.paymentDoc);
         } else {
           this.disableButton = false;
           this.loadingCtrl.dismiss();
@@ -135,24 +136,24 @@ export class PagoPage implements AfterViewInit, OnDestroy {
     }
   }
 
-  cambiarFecha(horaSeleccionada) {
+  cambiarFecha(horaSeleccionada, paymentDoc) {
     if (horaSeleccionada != null && this.fechaSeleccionada != null) {
       const fecha = new Date(this.fechaSeleccionada);
       const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
 
       if (fechaFormateada && horaSeleccionada) {
-        this.guardarReserva(fechaFormateada, horaSeleccionada);          
+        this.guardarReserva(fechaFormateada, horaSeleccionada, paymentDoc);          
       }
     } else {
       this.toast.presentToast("Seleccione día y hora para hacer su reserva",1000);
     }
   }
 
-  async guardarReserva(fecha, hora) {
+  async guardarReserva(fecha, hora, paymentDoc) {
     const id = this.uid;
     const path = this.pista;
 
-    this.datos = { uid: id, dni: this.dni, fecha: fecha, hora: hora, pista: this.pista, id: null };
+    this.datos = { uid: id, dni: this.dni, fecha: fecha, hora: hora, pista: this.pista, id: null, paymentDoc: paymentDoc };
 
     try {
       const doc = await this.firestore.createColl(this.datos, path);
