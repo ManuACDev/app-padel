@@ -96,9 +96,17 @@ export class EditarReservaPage implements OnInit {
       const id = reserva.id;
       const path = `Pistas/${pista}/Reservas`;
 
-      await this.firestore.deleteDoc<Reserva>(path, id).then(() => {
-        this.navegarComponente('gestion-reservas');
-        this.toast.presentToast("Reserva cancelada correctamente.", 1000);
+      await this.firestore.deleteDoc<Reserva>(path, id).then(async () => {
+        const path = `Pagos`;
+        const id = this.reserva.paymentDoc;
+
+        await this.firestore.updateDoc<Pago>(path, id, {active: false}).then(() => {
+          this.navegarComponente('gestion-reservas');
+          this.toast.presentToast("Reserva cancelada correctamente.", 1000);
+        }).catch(error => {
+          console.error(error);
+          this.toast.presentToast("Error al desvincular el pago", 1000);
+        });
       }).catch(error => {
         console.error(error);
         this.toast.presentToast("Error al cancelar la reserva", 1000);

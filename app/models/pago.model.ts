@@ -4,4 +4,5 @@ export interface Pago {
     paymentIntentId: string;
     token: string;
     userId: string;
+    active: boolean;
 }
