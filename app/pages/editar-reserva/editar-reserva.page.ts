@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController } from '@ionic/angular';
+import { Pago } from 'src/app/models/pago.model';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
@@ -18,6 +19,7 @@ export class EditarReservaPage implements OnInit {
   usuario: User =  null;
   reserva: Reserva = null;
   pistas: Pista[] = [];
+  pago: Pago = null;
 
   constructor(private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController) { }
 
@@ -28,6 +30,7 @@ export class EditarReservaPage implements OnInit {
     });
     this.obtenerUsuario();
     this.obtenerPistas();
+    this.obtenerPago();
   }
 
   async obtenerPistas() {
@@ -46,6 +49,15 @@ export class EditarReservaPage implements OnInit {
     
     usuario.subscribe(usuario => {
       this.usuario = usuario;
+    });
+  }
+
+  async obtenerPago() {
+    const path = `Pagos`;
+    const pago = this.firestore.getDoc<Pago>(path, this.reserva.paymentDoc);
+
+    pago.subscribe(pago => {
+      this.pago = pago;
     });
   }
 
