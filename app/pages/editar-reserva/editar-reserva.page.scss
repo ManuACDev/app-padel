@@ -57,9 +57,23 @@ ion-card-title img {
 }
 
 .payment-card ion-card-content {
-  padding: 16px;
+  padding: 5px;
 }
 
 .p-payment {
   font-size: small;
+}
+
+.reserva-card {
+  border-radius: 8px;
+}
+
+.reserva-card ion-card-header {
+  background-color: #2b5f32;
+  color: #fff;
+  border-radius: 8px 8px 0 0;
+}
+
+.reserva-card ion-card-content {
+  padding: 5px;
 }

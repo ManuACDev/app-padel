@@ -24,13 +24,31 @@
 
   </ion-card>
 
-  <ion-card *ngIf="reserva">
+  <ion-card *ngIf="reserva" class="reserva-card">
+
+    <ion-card-header>
+      Detalles de la Reserva
+    </ion-card-header>
 
     <ion-card-content>
+      <ion-item>
         <ion-label class="label">
-          <h4>Fecha: {{ reserva.fecha }}</h4>
-          <p>Hora: {{ reserva.hora }}</p>
+          <h4>• Fecha:</h4>
+          <p>{{ reserva.fecha }}</p>
         </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label class="label">
+          <h4>• Hora:</h4>
+          <p>{{ reserva.hora }}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label class="label">
+          <h4>• Pista:</h4>
+          <p>{{ reserva.pista }}</p>
+        </ion-label>
+      </ion-item>
     </ion-card-content>
 
   </ion-card>
@@ -44,14 +62,14 @@
     <ion-card-content>
       <ion-list>
         <ion-item>
-          <ion-label>
+          <ion-label class="label">
             <h4>• Cantidad:</h4>
             <p class="p-payment">{{ pago.amount }} €</p>
           </ion-label>
         </ion-item>
 
         <ion-item>
-          <ion-label>
+          <ion-label class="label">
             <h4>• ID del Pago:</h4>
             <p class="p-payment">{{ pago.paymentIntentId }}</p>
           </ion-label>
