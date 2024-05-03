@@ -31,9 +31,9 @@ export class StripeService {
     }
   }
 
-  async refund(chargeId: string) {
+  async refund(paymentIntentId, userId) {
     try {
-      const response = await lastValueFrom(from(this.functions.httpsCallable('processRefund')({ chargeId })));
+      const response = await lastValueFrom(from(this.functions.httpsCallable('processRefund')({ paymentIntentId, userId })));
       return response.success;
     } catch (error) {
       console.error('Error al realizar el reembolso:', error.message);
