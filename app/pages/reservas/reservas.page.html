@@ -37,6 +37,10 @@
       </ion-item-sliding>
     </ion-list>
 
+    <ion-text *ngIf="!reservasPistas[pista.id] || reservasPistas[pista.id].length === 0">
+      <p class="no-reservas-message">No hay reservas para esta pista.</p>
+    </ion-text>
+
   </ion-card>
 
 </ion-content>

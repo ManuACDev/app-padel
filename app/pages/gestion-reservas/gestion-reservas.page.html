@@ -37,6 +37,10 @@
         <ion-icon id="arrow-icon" name="chevron-forward-outline"></ion-icon>
       </ion-item>
     </ion-list>
+
+    <ion-text *ngIf="!resultsR || resultsR.length === 0">
+      <p class="no-reservas-message">No hay reservas.</p>
+    </ion-text>
   </ion-card>
 
   <div *ngIf="filtroPistas">
@@ -57,7 +61,10 @@
           <ion-icon id="arrow-icon" name="chevron-forward-outline"></ion-icon>
         </ion-item>
       </ion-list>
-  
+
+      <ion-text *ngIf="!reservasPistas[pista.id] || reservasPistas[pista.id].length === 0">
+        <p class="no-reservas-message">No hay reservas para esta pista.</p>
+      </ion-text>
     </ion-card>
   </div>
 
@@ -81,6 +88,9 @@
         </ion-item>
       </ion-list>
   
+      <ion-text *ngIf="!reservasUsuarios[usuario.uid] || reservasUsuarios[usuario.uid].length === 0">
+        <p class="no-reservas-message">No hay reservas para esta pista.</p>
+      </ion-text>
     </ion-card>
   </div>
 
