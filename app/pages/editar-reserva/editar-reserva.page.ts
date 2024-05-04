@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, LoadingController } from '@ionic/angular';
+import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
 import { Pago } from 'src/app/models/pago.model';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
@@ -16,18 +16,22 @@ import { StripeService } from 'src/app/services/stripe.service';
 })
 export class EditarReservaPage implements OnInit {
 
+  @ViewChild('modal') modal: HTMLIonModalElement;
+
   uid: string = null;
   usuario: User =  null;
   reserva: Reserva = null;
   pistas: Pista[] = [];
   pago: Pago = null;
+  reservaOriginal: Reserva = null;
 
-  constructor(private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController, private stripeService: StripeService) { }
+  constructor(private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController, private stripeService: StripeService, private modalCtrl: ModalController) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.uid = params['usuario']; 
       this.reserva = JSON.parse(params['reserva']);
+      this.reservaOriginal = JSON.parse(params['reserva']);
     });
     this.obtenerUsuario();
     this.obtenerPistas();
@@ -60,6 +64,27 @@ export class EditarReservaPage implements OnInit {
     pago.subscribe(pago => {
       this.pago = pago;
     });
+  }
+
+  cerrarModal() {
+    this.reserva = JSON.parse(JSON.stringify(this.reservaOriginal));
+    this.modalCtrl.dismiss();
+  }
+
+  async guardarCambios(reserva: Reserva) {
+    if (!reserva.pista || !reserva.fecha || !reserva.hora) {
+      this.toast.presentToast("Todos los campos son obligatorios", 1500);
+    } else if (reserva.pista == this.reservaOriginal.pista && reserva.fecha == this.reservaOriginal.fecha && reserva.hora == this.reservaOriginal.hora) {
+      this.toast.presentToast("No hay cambios para guardar.", 1500);
+    } else {
+        console.log("Actualizando reserva...");
+        try {
+          
+        } catch (error) {
+          console.log(error);
+          this.toast.presentToast("Error al editar la reserva", 1000);
+        }
+    }
   }
 
   async presentActionSheet(reserva: Reserva, pago: Pago) {
