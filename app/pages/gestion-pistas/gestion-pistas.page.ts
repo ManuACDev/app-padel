@@ -17,6 +17,7 @@ export class GestionPistasPage implements OnInit {
 
   pistas: Pista[] = [];
   pista: Pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: true }
+  pistaOriginal: Pista = null;
 
   apertura: string = null;
   cierre: string = null;
@@ -257,6 +258,8 @@ export class GestionPistasPage implements OnInit {
   }
 
   async edidtarPista(pista: Pista) {
+    this.pistaOriginal = { ...pista };
+
     await this.modalCtrl.create({ 
       component: this.modal.component, 
       componentProps: {
@@ -339,16 +342,26 @@ export class GestionPistasPage implements OnInit {
   }
 
   cerrarModal() {
-    this.modalCtrl.dismiss();
+    this.pista.abierto = this.pistaOriginal.abierto;
+    this.pista.desc = this.pistaOriginal.desc;
+    this.pista.horas = this.pistaOriginal.horas;
+    this.pista.id = this.pistaOriginal.id;
+    this.pista.img = this.pistaOriginal.img;
+    this.pista.precio = this.pistaOriginal.precio;
+    this.pista.titulo = this.pistaOriginal.titulo;
 
-    this.pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: null };
+    this.modalCtrl.dismiss().then(() => {
+      this.modoEdicion ? (this.modoEdicion = false) : null;
 
-    this.apertura = null;
-    this.cierre = null;
-    this.duracion = null;
-
-    this.horaDescanso = false;
-    this.descanso = null;
+      this.pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: null };
+  
+      this.apertura = null;
+      this.cierre = null;
+      this.duracion = null;
+  
+      this.horaDescanso = false;
+      this.descanso = null;
+    });
   }
 
   async showLoading(mensaje: string) {
