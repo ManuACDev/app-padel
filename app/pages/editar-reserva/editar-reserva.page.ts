@@ -1,6 +1,8 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
+import { map } from 'rxjs';
 import { Pago } from 'src/app/models/pago.model';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
@@ -24,6 +26,10 @@ export class EditarReservaPage implements OnInit {
   pistas: Pista[] = [];
   pago: Pago = null;
   reservaOriginal: Reserva = null;
+  fechasDisponibles: string[] = [];
+  horas: string[] = [];
+  horasDisponibles: string[] = [];
+  horasNoDisponibles: string[] = [];
 
   constructor(private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController, private stripeService: StripeService, private modalCtrl: ModalController) { }
 
@@ -36,6 +42,9 @@ export class EditarReservaPage implements OnInit {
     this.obtenerUsuario();
     this.obtenerPistas();
     this.obtenerPago();
+    this.fechasDisponibles = this.obtenerFechas(this.reserva.fecha);
+    this.obtenerHoras();
+    this.obtenerReservas(this.reserva.fecha);
   }
 
   async obtenerPistas() {
@@ -114,6 +123,73 @@ export class EditarReservaPage implements OnInit {
     });
   
     await actionSheet.present();
+  }
+
+  obtenerFechas(fechaReserva: string): string[] {
+    const partesFecha = fechaReserva.split('/');
+    const dia = parseInt(partesFecha[0], 10);
+    const mes = parseInt(partesFecha[1], 10) - 1;
+    const año = parseInt(partesFecha[2], 10);
+    
+    const fechaReservaDate = new Date(año, mes, dia);
+
+    this.fechasDisponibles = [];
+    this.fechasDisponibles.push(this.formatearFecha(fechaReservaDate));
+
+    for (let i = 1; i <= 2; i++) {
+        const fechaSiguiente = new Date(año, mes, dia + i);
+        this.fechasDisponibles.push(this.formatearFecha(fechaSiguiente));
+    }
+
+    return this.fechasDisponibles;
+  }
+  
+  formatearFecha(fecha: Date): string {
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const año = fecha.getFullYear();
+    return `${dia}/${mes}/${año}`;
+  }
+
+  async obtenerHoras() {
+    const path = 'Pistas';
+    const pistaId = this.reserva.pista;
+    this.firestore.getDoc<Pista>(path, pistaId).subscribe(pista => {
+      if (pista && pista.horas) {
+        this.horas = pista.horas;
+      }
+    });
+  }
+
+  async obtenerReservas(event: any) {
+    const fechaSeleccionada: string = event;
+
+    const pista = this.reserva.pista;
+    const path = `Pistas/${pista}/Reservas`;
+    
+    const reservas = await this.firestore.getCollection<Reserva>(path);
+    const reservasFiltradas = reservas.pipe(
+      map(reservas => reservas.filter(reserva => reserva.fecha == fechaSeleccionada))
+    );
+
+    reservasFiltradas.subscribe(data => { 
+      this.horasNoDisponibles = [];
+      data.forEach(reserva => {
+        this.horasNoDisponibles.push(reserva.hora);
+      });
+    });
+
+    const pathPista = `Pistas`;
+    this.firestore.getDoc<Pista>(pathPista, pista).subscribe(pista => {
+      if (pista && pista.horas) {
+        const indiceReserva = this.horasNoDisponibles.indexOf(this.reserva.hora);
+        if (indiceReserva !== -1) {
+          this.horasNoDisponibles.splice(indiceReserva, 1);
+        }
+
+        this.horasDisponibles = pista.horas.filter(hora => !this.horasNoDisponibles.includes(hora));
+    }
+    });
   }
   
   async borrarReserva(reserva: Reserva) {

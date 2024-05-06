@@ -93,7 +93,7 @@
     </ion-row>
   </div>
 
-  <ion-modal #modal trigger="open-modal" backdropDismiss="false" class="reserva-modal">
+  <ion-modal #modal trigger="open-modal" backdropDismiss="false" class="reserva-modal" mode="ios">
     <ng-template>
       <ion-content>
         <ion-toolbar>
@@ -106,15 +106,21 @@
         <ion-list>
           
           <ion-item>
-            <ion-input type="text" label="Pista" labelPlacement="stacked" [(ngModel)]="reserva.pista" required></ion-input>
+            <ion-input labelPlacement="fixed" [(ngModel)]="reserva.pista" readonly class="pista-input">
+              <div slot="label">Pista</div>
+            </ion-input>
           </ion-item>
           
           <ion-item>
-            <ion-input type="text" label="Fecha" labelPlacement="stacked" [(ngModel)]="reserva.fecha" required></ion-input>
+            <ion-select interface="action-sheet" justify="space-between" label="Fecha" [(ngModel)]="reserva.fecha" (ionChange)="obtenerReservas($event)">
+              <ion-select-option *ngFor="let fecha of fechasDisponibles" [value]="fecha">{{ fecha }}</ion-select-option>
+            </ion-select>
           </ion-item>
 
           <ion-item>
-            <ion-input type="text" label="Hora" labelPlacement="stacked" [(ngModel)]="reserva.hora" required></ion-input>
+            <ion-select interface="action-sheet" justify="space-between" label="Hora" [(ngModel)]="reserva.hora">
+              <ion-select-option *ngFor="let hora of horasDisponibles" [value]="hora">{{ hora }}</ion-select-option>
+            </ion-select>
           </ion-item>
 
         </ion-list>
