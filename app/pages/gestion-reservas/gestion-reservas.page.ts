@@ -33,7 +33,6 @@ export class GestionReservasPage {
 
   async ionViewWillEnter() {
     const loading = await this.showLoading();
-    console.log("ionViewWillEnter inicio");
     try {
       const lastDisplayMode = localStorage.getItem('lastDisplayMode');
       if (lastDisplayMode) {

@@ -1,5 +1,4 @@
-import { formatDate } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
 import { map } from 'rxjs';
@@ -86,14 +85,39 @@ export class EditarReservaPage implements OnInit {
     } else if (reserva.pista == this.reservaOriginal.pista && reserva.fecha == this.reservaOriginal.fecha && reserva.hora == this.reservaOriginal.hora) {
       this.toast.presentToast("No hay cambios para guardar.", 1500);
     } else {
-        console.log("Actualizando reserva...");
-        try {
-          
-        } catch (error) {
+      const loading = await this.showLoading('Guardando cambios...');
+      try {
+        const id = reserva.id;
+        const pista = this.reserva.pista;
+        const path = `Pistas/${pista}/Reservas`;
+
+        await this.firestore.updateDoc(path, id , {fecha: reserva.fecha, hora: reserva.hora}).then(() => {
+          this.actualizarReserva(reserva).then(() => {
+            this.cerrarModal();
+            this.toast.presentToast("Reserva editada", 1000);
+          })
+        }).catch(error => {
           console.log(error);
           this.toast.presentToast("Error al editar la reserva", 1000);
-        }
+        });
+      } catch (error) {
+        console.log(error);
+        this.toast.presentToast("Error al editar la reserva", 1000);
+      } finally {
+        loading.dismiss();
+      }
     }
+  }
+
+  async actualizarReserva(reserva: Reserva) {
+    const id = reserva.id;
+    const pista = reserva.pista;
+    const path = `Pistas/${pista}/Reservas`;
+
+    await this.firestore.getDoc<Reserva>(path, id).subscribe(reserva => {
+      this.reservaOriginal = reserva;
+      this.reserva = reserva;
+    });    
   }
 
   async presentActionSheet(reserva: Reserva, pago: Pago) {
