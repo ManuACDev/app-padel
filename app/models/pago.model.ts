@@ -3,6 +3,6 @@ export interface Pago {
     created: string;
     paymentIntentId: string;
     token: string;
-    userId: string;
+    uid: string;
     active: boolean;
 }

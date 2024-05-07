@@ -88,6 +88,10 @@ const routes: Routes = [
     path: 'editar-reserva',
     loadChildren: () => import('./pages/editar-reserva/editar-reserva.module').then( m => m.EditarReservaPageModule)
   },
+  {
+    path: 'gestion-pagos',
+    loadChildren: () => import('./pages/gestion-pagos/gestion-pagos.module').then( m => m.GestionPagosPageModule)
+  },
 ];
 
 @NgModule({
