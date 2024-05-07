@@ -92,6 +92,10 @@ const routes: Routes = [
     path: 'gestion-pagos',
     loadChildren: () => import('./pages/gestion-pagos/gestion-pagos.module').then( m => m.GestionPagosPageModule)
   },
+  {
+    path: 'editar-pago',
+    loadChildren: () => import('./pages/editar-pago/editar-pago.module').then( m => m.EditarPagoPageModule)
+  },
 ];
 
 @NgModule({
