@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { LoadingController, MenuController } from '@ionic/angular';
 import { User } from 'src/app/models/user.model'
 import { Pago } from 'src/app/models/pago.model';;
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './gestion-pagos.page.html',
   styleUrls: ['./gestion-pagos.page.scss'],
 })
-export class GestionPagosPage implements OnInit {
+export class GestionPagosPage {
 
   usuarios: User[] = [];
   resultsU: User[] = [];
@@ -21,13 +21,18 @@ export class GestionPagosPage implements OnInit {
 
   pagosUsuarios: { [usuarioId: string]: Pago[] } = {};
 
-  constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private toast: InteractionService, private router: Router) { }
+  constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController) { }
 
-  ngOnInit() {
-    this.obtenerUsuarios();
-    setTimeout(() => {
-      this.obtenerPagosUsuarios();
-    }, 250);
+  async ionViewWillEnter() {
+    const loading = await this.showLoading();
+    try {
+      this.obtenerUsuarios();
+      setTimeout(() => {
+        this.obtenerPagosUsuarios();
+      }, 250);
+    } finally {
+      loading.dismiss();
+    }
   }
 
   ionViewDidLeave() {
@@ -78,11 +83,19 @@ export class GestionPagosPage implements OnInit {
     }    
   }
 
+  async showLoading() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Cargando...',
+    });
+    loading.present();
+    return loading;
+  }
+
   async navegarComponente(componente: string, pago: Pago, usuario: string) {
     const pagoJson = JSON.stringify(pago);
     this.toast.presentToast("Cargando...", 500);
     setTimeout(() => {
-      this.router.navigate(['/',componente], { queryParams: { reserva: pagoJson, usuario: usuario } });
+      this.router.navigate(['/',componente], { queryParams: { pago: pagoJson, usuario: usuario } });
     }, 500);
   }
 
