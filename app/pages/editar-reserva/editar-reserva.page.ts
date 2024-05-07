@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
@@ -248,7 +249,10 @@ export class EditarReservaPage implements OnInit {
   async reembolsarReserva(reserva: Reserva, pago: Pago) {
     const loading = await this.showLoading('Reembolsando reserva...');
     try {
-      const response = await this.stripeService.refund(pago.paymentIntentId, reserva.uid);
+      const fecha = new Date();
+      const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
+      
+      const response = await this.stripeService.refund(pago.paymentIntentId, reserva.uid, fechaFormateada);
       
       if (response == true) {
         const id = reserva.id;
