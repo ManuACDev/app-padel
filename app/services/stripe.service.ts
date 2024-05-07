@@ -21,9 +21,9 @@ export class StripeService {
       });
   }
 
-  async charge(precio, token) {
+  async charge(precio, token, fecha) {
     try {
-      const response = await lastValueFrom(from(this.functions.httpsCallable('processPayment')({ precio, token })));  
+      const response = await lastValueFrom(from(this.functions.httpsCallable('processPayment')({ precio, token, fecha })));  
       return { success: response.success, paymentDoc: response.paymentDoc };
     } catch (error) {
       console.error('Error al realizar el cargo:', error.message);

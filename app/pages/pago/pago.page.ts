@@ -106,7 +106,10 @@ export class PagoPage implements AfterViewInit, OnDestroy {
       this.disableButton  = true;
       this.showLoading();
       try {
-        const response = await this.stripeService.charge(this.precio, token.id);
+        const fecha = new Date();
+        const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
+
+        const response = await this.stripeService.charge(this.precio, token.id, fechaFormateada);
         if (response.success == true) {
           this.cambiarFecha(this.hora, response.paymentDoc);
         } else {
