@@ -59,11 +59,13 @@ ion-icon {
 .disabled-message {
   display: flex;
   align-items: center;
+  font-size: small;
   color: rgb(255, 126, 126);
 }
 
 .disabled-message ion-icon {
   margin-right: 5px;
+  font-size: small;
 }
 
 #arrow-icon {

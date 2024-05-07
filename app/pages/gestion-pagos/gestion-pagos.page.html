@@ -27,7 +27,8 @@
     <ion-list>
       <ion-item *ngFor="let pago of pagosUsuarios[usuario.uid]" (click)="navegarComponente('editar-pago', pago, pago.uid)" class="recibo">
         <ion-label class="label">
-          <p class="p-payment">{{ pago.paymentIntentId }}</p>
+          <p class="p-payment">Creado: {{ pago.created }}</p>
+          <p class="p-payment">ID: {{ pago.paymentIntentId }}</p>
           <p *ngIf="!pago.active" class="disabled-message"><ion-icon name="alert-circle-outline"></ion-icon>Este pago no tiene reserva.</p>
         </ion-label>
         <ion-icon id="arrow-icon" name="chevron-forward-outline"></ion-icon>
