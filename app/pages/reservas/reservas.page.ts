@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AlertController, LoadingController, MenuController } from '@ionic/angular';
 import { Pago } from 'src/app/models/pago.model';
 import { Pista } from 'src/app/models/pista.model';
@@ -12,7 +12,7 @@ import { InteractionService } from 'src/app/services/interaction.service';
   templateUrl: './reservas.page.html',
   styleUrls: ['./reservas.page.scss'],
 })
-export class ReservasPage implements OnInit {
+export class ReservasPage {
 
   uid: string = null;
   reservasPistas: { [pistaId: string]: Reserva[] } = {};
@@ -22,7 +22,7 @@ export class ReservasPage implements OnInit {
 
   constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private auth: AuthService, private toast: InteractionService, private loadingCtrl: LoadingController, private alertController: AlertController) { }
 
-  ngOnInit() {
+  ionViewWillEnter() {
     this.obtenerPistas();
     this.auth.stateUser().subscribe(res => {
       this.getId();
@@ -149,7 +149,14 @@ export class ReservasPage implements OnInit {
             if (fechaReserva < fechaActual) {
               if (doc.id === reserva.id) {
                 console.log(doc.id); 
-                const deletePromise = this.firestore.deleteDoc(path, doc.id).then().catch(error => {
+                const deletePromise = this.firestore.deleteDoc(path, doc.id).then(async () => {
+                  const id = reserva.paymentDoc;
+                  const path = `Pagos`;
+
+                  await this.firestore.updateDoc<Pago>(path, id, {active: false}).then().catch(error => {
+                    console.error(error);
+                  });  
+                }).catch(error => {
                   console.error(error);
                   this.toast.presentToast("Error al borrar la reserva", 1000);
                 });
