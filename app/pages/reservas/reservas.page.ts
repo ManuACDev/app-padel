@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, LoadingController, MenuController } from '@ionic/angular';
+import { Pago } from 'src/app/models/pago.model';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -106,9 +107,17 @@ export class ReservasPage implements OnInit {
       data.forEach(async (doc) => {
         if (doc.id === reserva.id) {
           console.log(doc.id); 
-          await this.firestore.deleteDoc(path, doc.id).then(() => {
-            this.toast.presentToast("Reserva borrada", 1000);
-            this.obtenerReservasUsuario();
+          await this.firestore.deleteDoc(path, doc.id).then(async () => {
+            const id = reserva.paymentDoc;
+            const path = `Pagos`;
+
+            await this.firestore.updateDoc<Pago>(path, id, {active: false}).then(() => {
+              this.toast.presentToast("Reserva borrada", 1000);
+              this.obtenerReservasUsuario();
+            }).catch(error => {
+              console.error(error);
+              this.toast.presentToast("Error al desvincular el pago", 1000);
+            });            
           }).catch(error => {
             console.error(error);
             this.toast.presentToast("Error al borrar la reserva", 1000);
