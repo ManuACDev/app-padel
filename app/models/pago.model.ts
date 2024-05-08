@@ -5,4 +5,5 @@ export interface Pago {
     token: string;
     uid: string;
     active: boolean;
+    id: string;
 }
