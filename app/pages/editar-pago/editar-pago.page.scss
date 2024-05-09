@@ -12,6 +12,16 @@
   padding: 5px;
 }
 
+.label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.p-payment {
+  font-size: small;
+}
+
 .button-cambios {
   width: 100%;
   height: 85%;
