@@ -13,7 +13,7 @@
 
 <ion-content>
 
-  <ion-searchbar placeholer="Buscar usuario" animated mode="ios" (ionInput)="searchUser($event)"></ion-searchbar>
+  <ion-searchbar placeholder="Buscar usuario" animated mode="ios" (ionInput)="searchUser($event)"></ion-searchbar>
 
   <ion-list>
     <ion-item *ngFor="let usuario of results" (click)="navegarComponente('editar-usuario', usuario.uid)">
