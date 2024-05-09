@@ -63,7 +63,7 @@ export class GestionReembolsosPage {
   async obtenerReembolsos() {
     this.reembolsos = [];
 
-    const path = `Pagos`;
+    const path = `Reembolsos`;
     const reembolsos = await this.firestore.getCollection<Reembolso>(path);
     reembolsos.subscribe(data => {      
       this.reembolsos = data;
@@ -74,7 +74,7 @@ export class GestionReembolsosPage {
   async obtenerReembolsosUsuarios() {
     for (const usuario of this.usuarios) {
       const id = usuario.uid;
-      const path = 'Pagos';
+      const path = 'Reembolsos';
       const reembolsos = await this.firestore.getCollectionId<Reembolso>(id, path);
 
       this.reembolsosUsuarios[usuario.uid] = [];
@@ -129,10 +129,10 @@ export class GestionReembolsosPage {
   }
 
   async navegarComponente(componente: string, reembolso: Reembolso) {
-    const pagoJson = JSON.stringify(reembolso);
+    const reembolsoJson = JSON.stringify(reembolso);
     this.toast.presentToast("Cargando...", 500);
     setTimeout(() => {
-      this.router.navigate(['/',componente], { queryParams: { pago: pagoJson } });
+      this.router.navigate(['/',componente], { queryParams: { reembolso: reembolsoJson } });
     }, 500);
   }
 

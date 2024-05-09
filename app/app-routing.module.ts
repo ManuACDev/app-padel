@@ -100,6 +100,10 @@ const routes: Routes = [
     path: 'gestion-reembolsos',
     loadChildren: () => import('./pages/gestion-reembolsos/gestion-reembolsos.module').then( m => m.GestionReembolsosPageModule)
   },
+  {
+    path: 'editar-reembolso',
+    loadChildren: () => import('./pages/editar-reembolso/editar-reembolso.module').then( m => m.EditarReembolsoPageModule)
+  },
 ];
 
 @NgModule({

@@ -1,0 +1,57 @@
+<ion-header>
+  
+  <ion-toolbar color="dark">
+    <ion-title id="title">Editar Reembolso</ion-title>
+    <ion-buttons slot="start">
+      <div class="ion-align-items-center ion-justify-content-between">
+        <ion-back-button defaultHref="/gestion-reembolsos" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-card *ngIf="reembolso" class="refund-card">
+
+    <ion-card-header>
+      Detalles del Reembolso
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label class="label">
+            <h4>• Fecha:</h4>
+            <p class="p-payment">{{ reembolso.created }}</p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="label">
+            <h4>• ID del Reembolso:</h4>
+            <p class="p-payment">{{ reembolso.refundId }}</p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="label">
+            <h4>• ID del Pago:</h4>
+            <p class="p-payment">{{ reembolso.paymentIntentId }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+    
+  </ion-card>
+
+  <div class="centered-buttons">
+    <ion-row>
+      <ion-col size="12">
+        <ion-button expand="block" class="button-cambios" color="dark" mode="ios" (click)="presentActionSheet(reembolso)">GESTIONAR REEMBOLSO</ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+
+</ion-content>
