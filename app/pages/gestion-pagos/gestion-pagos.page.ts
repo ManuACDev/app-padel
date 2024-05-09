@@ -21,15 +21,25 @@ export class GestionPagosPage {
 
   pagosUsuarios: { [usuarioId: string]: Pago[] } = {};
 
+  filtroUsuarios: boolean = false;
+  filtroPagos: boolean = false;
+
   constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController) { }
 
   async ionViewWillEnter() {
     const loading = await this.showLoading();
     try {
-      this.obtenerUsuarios();
+      const lastDisplayMode = localStorage.getItem('lastDisplayModePay');
+      if (lastDisplayMode) {
+        this.onChangeDisplay(lastDisplayMode);
+      }
       setTimeout(() => {
+        this.obtenerUsuarios();
+      },250);
+      setTimeout(() => {
+        this.obtenerPagos();
         this.obtenerPagosUsuarios();
-      }, 250);
+      }, 500);
     } finally {
       loading.dismiss();
     }
@@ -47,6 +57,17 @@ export class GestionPagosPage {
     usuarios.subscribe(data => {
       this.usuarios = data;
       this.resultsU = data;
+    });
+  }
+
+  async obtenerPagos() {
+    this.pagos = [];
+
+    const path = `Pagos`;
+    const pagos = await this.firestore.getCollection<Pago>(path);
+    pagos.subscribe(data => {      
+      this.pagos = data;
+      this.resultsP = data;
     });
   }
 
@@ -68,19 +89,35 @@ export class GestionPagosPage {
   }
 
   searchPay(event) {
-    const query = event.target.value;
-    if (query.trim() !== '') {
-      this.resultsU = this.usuarios.filter(usuario => {
-        return Object.values(usuario).some(value => {
-          if (typeof value === 'string') {
-            return value.toLowerCase().includes(query);
-          }
-          return false;
-        });
-      });
+    const query = event.target.value.toLowerCase().trim();
+    if (query !== '') {
+      if (this.filtroUsuarios) {
+        this.resultsU = this.usuarios.filter(usuario =>
+          Object.values(usuario).some(value =>
+            typeof value === 'string' && value.toLowerCase().includes(query.toLowerCase())
+          )
+        );
+      } else if (this.filtroPagos) {
+        this.resultsP = this.pagos.filter(pago => 
+          Object.values(pago).some(value => 
+            typeof value === 'string' && value.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+          )
+        )
+      }
     } else {
-      this.resultsU = this.usuarios;
+      if (this.filtroUsuarios) {
+        this.resultsU = this.usuarios; 
+      } else if (this.filtroPagos) {
+        this.resultsP = this.pagos;
+      }
     }    
+  }
+
+  onChangeDisplay(opcion: string) {
+    this.filtroUsuarios = opcion === 'usuarios';
+    this.filtroPagos = opcion === 'pagos';
+
+    localStorage.setItem('lastDisplayModePay', opcion);
   }
 
   async showLoading() {
