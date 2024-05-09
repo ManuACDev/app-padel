@@ -128,11 +128,11 @@ export class GestionReembolsosPage {
     return loading;
   }
 
-  async navegarComponente(componente: string, reembolso: Reembolso, usuario: string) {
+  async navegarComponente(componente: string, reembolso: Reembolso) {
     const pagoJson = JSON.stringify(reembolso);
     this.toast.presentToast("Cargando...", 500);
     setTimeout(() => {
-      this.router.navigate(['/',componente], { queryParams: { pago: pagoJson, usuario: usuario } });
+      this.router.navigate(['/',componente], { queryParams: { pago: pagoJson } });
     }, 500);
   }
 

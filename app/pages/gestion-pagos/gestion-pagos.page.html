@@ -31,7 +31,7 @@
       </ion-card-header>
   
       <ion-list>
-        <ion-item *ngFor="let pago of pagosUsuarios[usuario.uid]" (click)="navegarComponente('editar-pago', pago, pago.uid)" class="recibo">
+        <ion-item *ngFor="let pago of pagosUsuarios[usuario.uid]" (click)="navegarComponente('editar-pago', pago)" class="recibo">
           <ion-label class="label">
             <p class="p-payment">Creado: {{ pago.created }}</p>
             <p class="p-payment">ID: {{ pago.paymentIntentId }}</p>
@@ -57,7 +57,7 @@
     </ion-card-header>
 
     <ion-list>
-      <ion-item *ngFor="let pago of resultsP" (click)="navegarComponente('editar-pago', pago, pago.uid)" class="recibo">
+      <ion-item *ngFor="let pago of resultsP" (click)="navegarComponente('editar-pago', pago)" class="recibo">
         <ion-label class="label">
           <p class="p-payment">Creado: {{ pago.created }}</p>
           <p class="p-payment">ID: {{ pago.paymentIntentId }}</p>

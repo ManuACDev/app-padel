@@ -128,11 +128,11 @@ export class GestionPagosPage {
     return loading;
   }
 
-  async navegarComponente(componente: string, pago: Pago, usuario: string) {
+  async navegarComponente(componente: string, pago: Pago) {
     const pagoJson = JSON.stringify(pago);
     this.toast.presentToast("Cargando...", 500);
     setTimeout(() => {
-      this.router.navigate(['/',componente], { queryParams: { pago: pagoJson, usuario: usuario } });
+      this.router.navigate(['/',componente], { queryParams: { pago: pagoJson } });
     }, 500);
   }
 
