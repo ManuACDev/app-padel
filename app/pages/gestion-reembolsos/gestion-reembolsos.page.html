@@ -31,7 +31,7 @@
       </ion-card-header>
   
       <ion-list>
-        <ion-item *ngFor="let reembolso of reembolsosUsuarios[usuario.uid]" (click)="navegarComponente('editar-pag', reembolso, reembolso.uid)" class="reembolso">
+        <ion-item *ngFor="let reembolso of reembolsosUsuarios[usuario.uid]" (click)="navegarComponente('editar-reembolso', reembolso, reembolso.uid)" class="reembolso">
           <ion-label class="label">
             <p class="p-payment">Creado: {{ reembolso.created }}</p>
             <p class="p-payment">ID: {{ reembolso.paymentIntentId }}</p>
@@ -56,7 +56,7 @@
     </ion-card-header>
 
     <ion-list>
-      <ion-item *ngFor="let reembolso of resultsR" (click)="navegarComponente('editar-pago', reembolso, reembolso.uid)" class="reembolso">
+      <ion-item *ngFor="let reembolso of resultsR" (click)="navegarComponente('editar-reembolso', reembolso, reembolso.uid)" class="reembolso">
         <ion-label class="label">
           <p class="p-payment">Creado: {{ reembolso.created }}</p>
           <p class="p-payment">ID: {{ reembolso.paymentIntentId }}</p>
