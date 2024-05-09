@@ -1,7 +1,7 @@
 <ion-header>
   
   <ion-toolbar color="dark">
-    <ion-title id="title">Gestión Recibos</ion-title>
+    <ion-title id="title">Gestión Reembolsos</ion-title>
     <ion-buttons slot="start">
       <div class="ion-align-items-center ion-justify-content-between">
         <ion-back-button defaultHref="/ajustes" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
@@ -14,12 +14,12 @@
 <ion-content>
 
   <div class="search-filter-container">
-    <ion-searchbar placeholder="Buscar recibo" animated mode="ios" (ionInput)="searchPay($event)"></ion-searchbar>
+    <ion-searchbar placeholder="Buscar reembolso" animated mode="ios" (ionInput)="searchPay($event)"></ion-searchbar>
     <ion-button fill="clear" class="filtro" mode="ios" id="popover-button">
       <ion-icon name="filter-outline"></ion-icon>
     </ion-button>
-  </div>  
-  
+  </div>
+
   <div *ngIf="filtroUsuarios">
     <ion-card *ngFor="let usuario of resultsU">
 
@@ -31,44 +31,42 @@
       </ion-card-header>
   
       <ion-list>
-        <ion-item *ngFor="let pago of pagosUsuarios[usuario.uid]" (click)="navegarComponente('editar-pago', pago, pago.uid)" class="recibo">
+        <ion-item *ngFor="let reembolso of reembolsosUsuarios[usuario.uid]" (click)="navegarComponente('editar-pag', reembolso, reembolso.uid)" class="reembolso">
           <ion-label class="label">
-            <p class="p-payment">Creado: {{ pago.created }}</p>
-            <p class="p-payment">ID: {{ pago.paymentIntentId }}</p>
-            <p *ngIf="!pago.active" class="disabled-message"><ion-icon name="alert-circle-outline"></ion-icon>Este pago no tiene reserva.</p>
+            <p class="p-payment">Creado: {{ reembolso.created }}</p>
+            <p class="p-payment">ID: {{ reembolso.paymentIntentId }}</p>
           </ion-label>
           <ion-icon id="arrow-icon" name="chevron-forward-outline"></ion-icon>
         </ion-item>
       </ion-list>
   
-      <ion-text *ngIf="!pagosUsuarios[usuario.uid] || pagosUsuarios[usuario.uid].length === 0">
-        <p class="no-recibos-message">No hay recibos para este usuario.</p>
+      <ion-text *ngIf="!reembolsosUsuarios[usuario.uid] || reembolsosUsuarios[usuario.uid].length === 0">
+        <p class="no-reembolsos-message">No hay reembolsos para este usuario.</p>
       </ion-text>
   
     </ion-card>
   </div>
 
-  <ion-card *ngIf="filtroPagos">
+  <ion-card *ngIf="filtroReembolsos">
 
     <ion-card-header>
       <ion-card-title>
-        <img alt="reembolsos" src="../../../assets/metodo-pago.png">Pagos
+        <img alt="reembolsos" src="../../../assets/gestion-reembolso.png">Pagos
       </ion-card-title>
     </ion-card-header>
 
     <ion-list>
-      <ion-item *ngFor="let pago of resultsP" (click)="navegarComponente('editar-pago', pago, pago.uid)" class="recibo">
+      <ion-item *ngFor="let reembolso of resultsR" (click)="navegarComponente('editar-pago', reembolso, reembolso.uid)" class="reembolso">
         <ion-label class="label">
-          <p class="p-payment">Creado: {{ pago.created }}</p>
-          <p class="p-payment">ID: {{ pago.paymentIntentId }}</p>
-          <p *ngIf="!pago.active" class="disabled-message"><ion-icon name="alert-circle-outline"></ion-icon>Este pago no tiene reserva.</p>
+          <p class="p-payment">Creado: {{ reembolso.created }}</p>
+          <p class="p-payment">ID: {{ reembolso.paymentIntentId }}</p>
         </ion-label>
         <ion-icon id="arrow-icon" name="chevron-forward-outline"></ion-icon>
       </ion-item>
     </ion-list>
 
-    <ion-text *ngIf="!resultsP || resultsP.length === 0">
-      <p class="no-recibos-message">No hay recibos.</p>
+    <ion-text *ngIf="!resultsR || resultsR.length === 0">
+      <p class="no-reembolsos-message">No hay recibos.</p>
     </ion-text>
 
   </ion-card>
@@ -80,7 +78,7 @@
     <ion-content>
       <ion-list>
         <ion-item button (click)="onChangeDisplay('usuarios')">Usuarios</ion-item>       
-        <ion-item button (click)="onChangeDisplay('pagos')">Pagos</ion-item>   
+        <ion-item button (click)="onChangeDisplay('reembolsos')">Reembolsos</ion-item>   
       </ion-list>
     </ion-content>
   </ng-template>

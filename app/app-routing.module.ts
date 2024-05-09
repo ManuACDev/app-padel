@@ -96,6 +96,10 @@ const routes: Routes = [
     path: 'editar-pago',
     loadChildren: () => import('./pages/editar-pago/editar-pago.module').then( m => m.EditarPagoPageModule)
   },
+  {
+    path: 'gestion-reembolsos',
+    loadChildren: () => import('./pages/gestion-reembolsos/gestion-reembolsos.module').then( m => m.GestionReembolsosPageModule)
+  },
 ];
 
 @NgModule({
