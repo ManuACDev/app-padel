@@ -27,6 +27,12 @@
       </ion-label>
       <ion-icon id="arrow-icon" name="chevron-forward-outline"></ion-icon>
     </ion-item>
+
+    <ion-item lines="none">
+      <ion-label *ngIf="!results || results.length === 0">
+        <p class="no-usuarios-message">No hay usuarios</p>
+      </ion-label>
+    </ion-item>
   </ion-list>
 
 </ion-content>
