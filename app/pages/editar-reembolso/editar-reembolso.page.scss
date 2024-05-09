@@ -1,9 +1,15 @@
+ion-card-header {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dbdbdb;
+}
+
 .refund-card {
   border-radius: 8px;
 }
 
 .refund-card ion-card-header {
-  background-color: #364c63;
+  background-color: #e8af3b;
   color: #fff;
   border-radius: 8px 8px 0 0;
 }
