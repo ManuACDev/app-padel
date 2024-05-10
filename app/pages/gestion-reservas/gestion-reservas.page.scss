@@ -18,24 +18,24 @@ button {
   --color: rgb(90, 90, 90);
 }
 
-ion-card {
+.card {
   border-radius: 8px;
 }
 
-ion-card-header {
+.card ion-card-header {
   display: flex;
   align-items: center;
   border: 1px solid #dbdbdb;
 }
 
-ion-card-title {
+.card ion-card-title {
   display: flex;
   align-items: center;
   text-transform: uppercase;  
   font-size: x-large;
 }
 
-ion-card-title img {
+.card ion-card-title img {
   width: 60px;
   height: 60px;
   object-fit: cover;
@@ -55,42 +55,18 @@ ion-card-title img {
   align-items: flex-start;
 }
 
-h4 {
-  font-size: 18px;
-}
-
-p {
-  color: #666;
-}
-
-ion-icon {
-  margin: 1px;
-  font-size: 20px;
-}
-
-.label h2 {
-  font-weight: bold;
-}
-
 .label h4 {
+  font-size: 18px;
   color: black;
 }
 
-#arrow-icon {
-  color: rgb(42, 42, 42);
-}
-
-.disabled-message {
-  display: flex;
-  align-items: center;
-  color: rgb(255, 126, 126);
-}
-
-.disabled-message ion-icon {
-  margin-right: 5px;
+.label p {
+  color: #666;
 }
 
 #arrow-icon {
+  margin: 1px;
+  font-size: 20px;
   color: rgb(42, 42, 42);
 }
 

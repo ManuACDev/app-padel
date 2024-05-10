@@ -20,7 +20,7 @@
     </ion-button>
   </div>
 
-  <ion-card *ngIf="filtroReservas">
+  <ion-card *ngIf="filtroReservas" class="card">
 
     <ion-card-header>
       <ion-card-title>
@@ -44,7 +44,7 @@
   </ion-card>
 
   <div *ngIf="filtroPistas">
-    <ion-card *ngFor="let pista of resultsP">
+    <ion-card *ngFor="let pista of resultsP" class="card">
 
       <ion-card-header>
         <ion-card-title>
@@ -69,7 +69,7 @@
   </div>
 
   <div *ngIf="filtroUsuarios">
-    <ion-card *ngFor="let usuario of resultsU">
+    <ion-card *ngFor="let usuario of resultsU" class="card">
 
       <ion-card-header>
         <ion-card-title>
