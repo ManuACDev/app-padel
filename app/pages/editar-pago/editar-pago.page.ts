@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController } from '@ionic/angular';
 import { Pago } from 'src/app/models/pago.model';
 import { Reserva } from 'src/app/models/reserva.model';
+import { User } from 'src/app/models/user.model';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { InteractionService } from 'src/app/services/interaction.service';
 
@@ -13,6 +14,7 @@ import { InteractionService } from 'src/app/services/interaction.service';
 })
 export class EditarPagoPage implements OnInit {
 
+  usuario: User =  null;
   pago: Pago = null;
   reserva: Reserva = null;
 
@@ -21,6 +23,16 @@ export class EditarPagoPage implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.pago = JSON.parse(params['pago']);
+    });
+    this.obtenerUsuario();
+  }
+
+  async obtenerUsuario() {
+    const path = `Usuarios`;
+    const usuario = this.firestore.getDoc<User>(path, this.pago.uid);    
+    
+    usuario.subscribe(usuario => {
+      this.usuario = usuario;
     });
   }
 
