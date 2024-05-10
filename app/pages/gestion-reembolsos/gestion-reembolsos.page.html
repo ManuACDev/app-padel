@@ -21,7 +21,7 @@
   </div>
 
   <div *ngIf="filtroUsuarios">
-    <ion-card *ngFor="let usuario of resultsU">
+    <ion-card *ngFor="let usuario of resultsU" class="card">
 
       <ion-card-header>
         <ion-card-title>
@@ -47,7 +47,7 @@
     </ion-card>
   </div>
 
-  <ion-card *ngIf="filtroReembolsos">
+  <ion-card *ngIf="filtroReembolsos" class="card">
 
     <ion-card-header>
       <ion-card-title>
