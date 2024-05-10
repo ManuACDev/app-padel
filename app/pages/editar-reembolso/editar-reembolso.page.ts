@@ -14,6 +14,7 @@ import { InteractionService } from 'src/app/services/interaction.service';
 export class EditarReembolsoPage implements OnInit {
 
   usuario: User =  null;
+  admin: User = null;
   reembolso: Reembolso = null;
 
   constructor(private route: ActivatedRoute, private actionSheetCtrl: ActionSheetController, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController, private firestore: FirestoreService) { }
@@ -31,6 +32,12 @@ export class EditarReembolsoPage implements OnInit {
     
     usuario.subscribe(usuario => {
       this.usuario = usuario;
+    });
+
+    const admin = this.firestore.getDoc<User>(path, this.reembolso.adminId);
+
+    admin.subscribe(admin => {
+      this.admin = admin;
     });
   }
 

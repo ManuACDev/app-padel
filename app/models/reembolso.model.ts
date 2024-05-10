@@ -1,5 +1,5 @@
 export interface Reembolso {
-    adminId: number;
+    adminId: string;
     amount: number;
     created: string;
     paymentIntentId: string;

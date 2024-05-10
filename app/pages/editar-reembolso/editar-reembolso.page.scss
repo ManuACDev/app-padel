@@ -47,6 +47,40 @@
   font-size: small;
 }
 
+.admin-card-card {
+  border-radius: 8px;
+}
+
+.admin-card ion-card-header {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dbdbdb;
+}
+
+.admin-card ion-card-title {
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;  
+  font-size: 0.75rem;
+}
+
+.no-admin-card-card {
+  border-radius: 8px;
+}
+
+.no-admin-card ion-card-header {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dbdbdb;
+}
+
+.no-admin-card ion-card-title {
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;  
+  font-size: 0.65rem;
+}
+
 .centered-buttons {
   position: absolute;
   bottom: 0;
