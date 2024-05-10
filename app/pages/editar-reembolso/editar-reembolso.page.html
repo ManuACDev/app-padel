@@ -13,6 +13,17 @@
 
 <ion-content>
 
+  <ion-card *ngIf="usuario" class="usuario-card">
+
+    <ion-card-header>
+      <ion-card-title>
+        <img alt="{{ usuario.nombre }}" src="../../../assets/usuario.png">{{ usuario.nombre }}
+      </ion-card-title>
+      <ion-card-subtitle>{{ usuario.correo }}</ion-card-subtitle>
+    </ion-card-header>
+
+  </ion-card>
+
   <ion-card *ngIf="reembolso" class="refund-card">
 
     <ion-card-header>

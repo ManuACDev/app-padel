@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController } from '@ionic/angular';
 import { Reembolso } from 'src/app/models/reembolso.model';
+import { User } from 'src/app/models/user.model';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { InteractionService } from 'src/app/services/interaction.service';
 
@@ -12,6 +13,7 @@ import { InteractionService } from 'src/app/services/interaction.service';
 })
 export class EditarReembolsoPage implements OnInit {
 
+  usuario: User =  null;
   reembolso: Reembolso = null;
 
   constructor(private route: ActivatedRoute, private actionSheetCtrl: ActionSheetController, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController, private firestore: FirestoreService) { }
@@ -19,6 +21,16 @@ export class EditarReembolsoPage implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.reembolso = JSON.parse(params['reembolso']);
+    });
+    this.obtenerUsuario();
+  }
+
+  async obtenerUsuario() {
+    const path = `Usuarios`;
+    const usuario = this.firestore.getDoc<User>(path, this.reembolso.uid);    
+    
+    usuario.subscribe(usuario => {
+      this.usuario = usuario;
     });
   }
 
