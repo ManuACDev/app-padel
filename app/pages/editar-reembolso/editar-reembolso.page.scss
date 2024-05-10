@@ -1,16 +1,11 @@
-ion-card-header {
-  display: flex;
-  align-items: center;
-  border: 1px solid #dbdbdb;
-}
-
 .refund-card {
   border-radius: 8px;
 }
 
 .refund-card ion-card-header {
-  background-color: #e8af3b;
+  align-items: center;  
   color: #fff;
+  background-color: #e8af3b;
   border-radius: 8px 8px 0 0;
 }
 
@@ -28,12 +23,6 @@ ion-card-header {
   font-size: small;
 }
 
-.button-cambios {
-  width: 100%;
-  height: 85%;
-  font-size: 80%;
-}
-
 .centered-buttons {
   position: absolute;
   bottom: 0;
@@ -44,4 +33,10 @@ ion-card-header {
 
 .centered-buttons ion-row {
   justify-content: center;
+}
+
+.button-cambios {
+  width: 100%;
+  height: 85%;
+  font-size: 80%;
 }
