@@ -6,4 +6,8 @@ export interface Pista {
     horas: string[];
     precio: number;
     abierto: boolean;
+    descanso: {
+        activo: boolean;
+        hora?: string;
+    };
 }

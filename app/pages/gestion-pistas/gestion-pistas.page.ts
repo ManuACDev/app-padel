@@ -16,7 +16,7 @@ export class GestionPistasPage implements OnInit {
   @ViewChild('modal') modal: HTMLIonModalElement;
 
   pistas: Pista[] = [];
-  pista: Pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: true }
+  pista: Pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: true, descanso: { activo: false, hora: null } }
   pistaOriginal: Pista = null;
 
   apertura: string = null;
@@ -169,6 +169,14 @@ export class GestionPistasPage implements OnInit {
           this.pista.horas = this.calcularHorasDisponibles(apertura, cierre, duracion, descanso);
           this.pista.abierto = true;
 
+          if (this.horaDescanso) {
+            this.pista.descanso.activo = true;
+            this.pista.descanso.hora = descanso;
+          } else {
+            this.pista.descanso.activo = false;
+            this.pista.descanso.hora = null;
+          }
+
           const path = 'Pistas';
           await this.firestore.createDoc(this.pista, path, this.pista.id).then(() => {
             this.pistas = [];
@@ -268,8 +276,8 @@ export class GestionPistasPage implements OnInit {
         horaApertura: this.apertura = this.recuperarHora(pista.horas[0], "primera"),
         horaCierre: this.cierre = this.recuperarHora((pista.horas[pista.horas.length - 1]), "segunda"),
         duracionPista: this.duracion = this.calcularDuracionTotal(pista.horas[0]),
-        tiempoDescanso: this.descanso = null,
-        horaDescanso: this.horaDescanso = false
+        tiempoDescanso: this.descanso = pista.descanso.hora,
+        horaDescanso: this.horaDescanso = pista.descanso.activo
        } 
     });
     
@@ -290,8 +298,16 @@ export class GestionPistasPage implements OnInit {
                 descanso = this.obtenerHora(this.descanso);
 
           pista.horas = this.calcularHorasDisponibles(apertura, cierre, duracion, descanso);
+
+          if (this.horaDescanso) {
+            this.pista.descanso.activo = true;
+            this.pista.descanso.hora = descanso;
+          } else {
+            this.pista.descanso.activo = false;
+            this.pista.descanso.hora = null;
+          }
                     
-          await this.firestore.updateDoc(path, id , {titulo: pista.titulo, desc: pista.desc, precio: pista.precio, horas: pista.horas, img: pista.img}).then(() => {
+          await this.firestore.updateDoc(path, id , {titulo: pista.titulo, desc: pista.desc, precio: pista.precio, horas: pista.horas, img: pista.img, descanso: {activo: pista.descanso.activo, hora: pista.descanso.hora}}).then(() => {
             this.toast.presentToast('Pista editada', 1000);
             this.pistas = [];
             this.cerrarModal();
@@ -349,11 +365,13 @@ export class GestionPistasPage implements OnInit {
     this.pista.img = this.pistaOriginal.img;
     this.pista.precio = this.pistaOriginal.precio;
     this.pista.titulo = this.pistaOriginal.titulo;
+    this.pista.descanso.activo = this.pistaOriginal.descanso.activo;
+    this.pista.descanso.hora = this.pistaOriginal.descanso.hora;
 
     this.modalCtrl.dismiss().then(() => {
       this.modoEdicion ? (this.modoEdicion = false) : null;
 
-      this.pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: null };
+      this.pista = { id: null, titulo: null, desc: null, img: null, horas: null, precio: null, abierto: null, descanso: { activo: false, hora: null} };
   
       this.apertura = null;
       this.cierre = null;
