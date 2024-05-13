@@ -24,14 +24,14 @@
         <ion-card-subtitle class="subtitle">Horario mañana</ion-card-subtitle>
         <ion-row>
           <ng-container *ngFor="let hora of horas.slice(0, showMore ? horas.length : 4)">
-            <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null}" (click)="reservarHora(hora)">{{ hora }}</ion-col>
+            <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null}"><button (click)="reservarHora(hora)" [disabled]="tiempoCarga" style="background-color: transparent;">{{ hora }}</button></ion-col>
           </ng-container>
         </ion-row>
       
         <ion-card-subtitle class="subtitle">Horario tarde</ion-card-subtitle>
         <ion-row>
           <ng-container *ngFor="let hora of horas.slice(4, showMore ? undefined : 12)">
-            <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null}" (click)="reservarHora(hora)">{{ hora }}</ion-col>
+            <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null}"><button (click)="reservarHora(hora)" [disabled]="tiempoCarga" style="background-color: transparent;">{{ hora }}</button></ion-col>
           </ng-container>
         </ion-row>
 

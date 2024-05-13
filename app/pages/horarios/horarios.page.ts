@@ -26,6 +26,8 @@ export class HorariosPage implements OnInit {
   pista: string;
   horasNoDisponibles: string[] = [];
 
+  tiempoCarga: boolean = false;
+
   constructor(private toast: InteractionService, private firestore: FirestoreService, private route: ActivatedRoute, private alertController: AlertController, private router: Router) { }
 
   ngOnInit() {
@@ -48,22 +50,33 @@ export class HorariosPage implements OnInit {
   }
 
   async obtenerReservas(fechaSeleccionada: string) {
-    const fecha = new Date(fechaSeleccionada); 
-    const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
+    try {
+      this.tiempoCarga = true;
 
-    const pista = this.pista;
-    const path = 'Pistas/' + pista +'/Reservas';
+      const fecha = new Date(fechaSeleccionada); 
+      const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
+
+      const pista = this.pista;
+      const path = 'Pistas/' + pista +'/Reservas';
     
-    const reservas = await this.firestore.getCollection<Reserva>(path);
-    const reservasFiltradas = reservas.pipe(
-      map(reservas => reservas.filter(reserva => reserva.fecha == fechaFormateada))
-    );
-    reservasFiltradas.subscribe(data => { 
-      this.horasNoDisponibles = [];
-      data.forEach(reserva => {
-        this.horasNoDisponibles.push(reserva.hora);
+      const reservas = await this.firestore.getCollection<Reserva>(path);
+      const reservasFiltradas = reservas.pipe(
+        map(reservas => reservas.filter(reserva => reserva.fecha == fechaFormateada))
+      );
+      
+      reservasFiltradas.subscribe(data => { 
+        this.horasNoDisponibles = [];
+        data.forEach(reserva => {
+          this.horasNoDisponibles.push(reserva.hora);
+        });
       });
-    });
+    } catch (error) {
+      console.log(error)
+      this.tiempoCarga = true;
+      this.toast.presentToast("Error al obtener las reservas.", 1000);
+    } finally {
+      this.tiempoCarga = false;
+    }
   }
 
   /** Método creado 04/04/2023 */
