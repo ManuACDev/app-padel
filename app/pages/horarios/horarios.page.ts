@@ -32,6 +32,8 @@ export class HorariosPage implements OnInit {
   dni: string;
   datos: Reserva = { uid: null, dni: null, fecha: null, hora: null, pista: null, id: null, paymentDoc: null }
 
+  procesoCompra: boolean = false;
+
   constructor(private toast: InteractionService, private firestore: FirestoreService, private route: ActivatedRoute, private alertController: AlertController, private router: Router, private auth: AuthService) { }
 
   ngOnInit() {
@@ -44,6 +46,10 @@ export class HorariosPage implements OnInit {
       this.getId();
     });
     this.obtenerHoras();
+  }
+
+  ionViewWillEnter() {
+    this.procesoCompra = false;
   }
 
   async getId() {
@@ -140,6 +146,7 @@ export class HorariosPage implements OnInit {
           {
             text: 'Aceptar',
             handler: async () => {
+              this.procesoCompra = true
               await this.cambiarFecha(hora);
             }
           }
