@@ -4,7 +4,7 @@
     <ion-title id="title">Pago</ion-title>
     <ion-buttons slot="start">
       <div class="ion-align-items-center ion-justify-content-between">
-        <ion-back-button defaultHref="/horarios" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
+        <ion-back-button defaultHref="/horarios" (click)="borrarReserva()" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
       </div>
     </ion-buttons>
   </ion-toolbar>
@@ -35,7 +35,7 @@
   </div>
 
   <div class="action-buttons ion-padding">
-    <ion-button class="custom-button" (click)="onClick()" (click)="showLoading()" [disabled]="disableButton">Pagar</ion-button>
+    <ion-button class="custom-button" (click)="onClick()" [disabled]="disabledButton">Pagar</ion-button>
   </div>
 
 </ion-content>

@@ -5,7 +5,6 @@ import { LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs/internal/Observable';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
-import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { InteractionService } from 'src/app/services/interaction.service';
@@ -21,28 +20,17 @@ export class PagoPage implements AfterViewInit, OnDestroy {
   @ViewChild('cardInfo') cardInfo:  ElementRef;
   cardError: string;
   card: any;
+
   pista: string;
   precio: number;
 
   public pista$:Observable<Pista>;
 
-  uid: string;
-  dni: string;
-
-  datos: Reserva = {
-    uid:null,
-    dni:null,
-    fecha:null,
-    hora:null,
-    pista:null,
-    id:null,
-    paymentDoc:null
-  }
-
   hora: string;
   fechaSeleccionada: string;
+  docId: string;
 
-  disableButton: boolean = false;
+  disabledButton: boolean = false;
 
   constructor(private ngZone: NgZone, private stripeService: StripeService, private route: ActivatedRoute, private firestore: FirestoreService, private auth: AuthService, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController) { }
   
@@ -54,31 +42,9 @@ export class PagoPage implements AfterViewInit, OnDestroy {
       this.pista = params['pista'];
       this.hora = params['hora'];
       this.fechaSeleccionada = params['fecha'];
-    });
-    this.auth.stateUser().subscribe(res => {
-      this.getId();
+      this.docId = params['docId'];
     });
     this.obtenerPista();
-  }
-
-  async getId() {
-    const uid = await this.auth.getUid();
-    if (uid) {
-      this.uid = uid;
-      this.getDatosUser(uid);
-    } else {
-      console.log("No existe uid");
-    }
-  }
-
-  getDatosUser(uid: string) {
-    const path = 'Usuarios';
-    const id = uid;
-    this.firestore.getDoc<User>(path, id).subscribe(res => {
-      if (res) {
-        this.dni = res.dni;
-      }
-    });
   }
 
   onChange({ error }) {
@@ -101,36 +67,57 @@ export class PagoPage implements AfterViewInit, OnDestroy {
   }
 
   async onClick() {
+    const loading = await this.showLoading("Procesando...");
     const {token, error} = await stripe.createToken(this.card);
     if (token) {
-      this.disableButton  = true;
-      this.showLoading();
+      this.disabledButton  = true;
       try {
         const fecha = new Date();
         const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
 
         const response = await this.stripeService.charge(this.precio, token.id, fechaFormateada);
         if (response.success == true) {
-          this.cambiarFecha(this.hora, response.paymentDoc);
+          const path = `Pistas/${this.pista}/Reservas`;
+          
+          await this.firestore.updateDoc<Reserva>(path, this.docId, { paymentDoc: response.paymentDoc }).then(() => {
+            this.toast.presentToast("Hora reservada", 1000);            
+            
+            setTimeout(() => {
+              this.toast.presentToast("Cargando...", 1000);
+              this.router.navigate(["/pistas"]);
+              loading.dismiss();
+            }, 1500);
+          });
         } else {
-          this.disableButton = false;
-          this.loadingCtrl.dismiss();
-          this.toast.presentToast('Error al procesar el pago.', 1000);  
+          const path = `Pistas/${this.pista}/Reservas`
+
+          await this.firestore.deleteDoc<Reserva>(path, this.docId).then(() => {
+            this.toast.presentToast('Error al procesar el pago.', 1000);
+            this.router.navigate(["/pistas"]);
+            loading.dismiss();
+          });  
         }
       } catch (error) {
-        this.disableButton = false;
-        this.loadingCtrl.dismiss();
-        console.log('Error al procesar el pago: ' + error);
-        this.toast.presentToast('Error al procesar el pago.', 1000); 
-      } finally {
-        this.disableButton = false;
+        const path = `Pistas/${this.pista}/Reservas`
+
+        await this.firestore.deleteDoc<Reserva>(path, this.docId).then(() => {
+          console.log('Error al procesar el pago: ' + error);
+          this.toast.presentToast('Error al procesar el pago.', 1000);
+          this.router.navigate(["/pistas"]);
+          loading.dismiss();
+        });         
       }
-      
     } else {
-      this.disableButton = false;
-      this.loadingCtrl.dismiss();
+      loading.dismiss();
       this.ngZone.run(() => this.cardError = error.message);
+      this.disabledButton = false;
     }
+  }
+
+  async borrarReserva() {
+    const path = `Pistas/${this.pista}/Reservas`
+  
+    await this.firestore.deleteDoc<Reserva>(path, this.docId);
   }
 
   ngOnDestroy() {
@@ -139,53 +126,12 @@ export class PagoPage implements AfterViewInit, OnDestroy {
     }
   }
 
-  cambiarFecha(horaSeleccionada, paymentDoc) {
-    if (horaSeleccionada != null && this.fechaSeleccionada != null) {
-      const fecha = new Date(this.fechaSeleccionada);
-      const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
-
-      if (fechaFormateada && horaSeleccionada) {
-        this.guardarReserva(fechaFormateada, horaSeleccionada, paymentDoc);          
-      }
-    } else {
-      this.toast.presentToast("Seleccione día y hora para hacer su reserva",1000);
-    }
-  }
-
-  async guardarReserva(fecha, hora, paymentDoc) {
-    const id = this.uid;
-    const path = this.pista;
-
-    this.datos = { uid: id, dni: this.dni, fecha: fecha, hora: hora, pista: this.pista, id: null, paymentDoc: paymentDoc };
-
-    try {
-      const doc = await this.firestore.createColl(this.datos, path);
-
-      if (doc !== null) {
-        this.toast.presentToast('Hora reservada', 1000);
-
-        setTimeout(() => {
-          this.loadingCtrl.dismiss();
-          this.toast.presentToast('Cargando...', 1000);
-          this.router.navigate(['/pistas']);
-          const docId = doc.id;
-          doc.set({ id: docId }, { merge: true });
-        }, 1500);
-      } else {
-        this.toast.presentToast('Error al reservar la hora', 1000);  
-      }
-    } catch (error) {
-      this.toast.presentToast('Error al reservar la hora', 1000);
-    }
-    this.disableButton = false;
-    this.loadingCtrl.dismiss();
-  }
-
-  async showLoading() {
+  async showLoading(mensaje: string) {
     const loading = await this.loadingCtrl.create({
-      message: 'Procesando...',
+      message: mensaje,
     });
     loading.present();
+    return loading;
   }
 
 }
