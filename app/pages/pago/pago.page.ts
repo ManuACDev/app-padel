@@ -106,16 +106,28 @@ export class PagoPage implements AfterViewInit, OnDestroy {
       this.disableButton  = true;
       this.showLoading();
       try {
-        const fecha = new Date();
+        const fecha = new Date(this.fechaSeleccionada);
         const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
 
-        const response = await this.stripeService.charge(this.precio, token.id, fechaFormateada);
-        if (response.success == true) {
-          this.cambiarFecha(this.hora, response.paymentDoc);
-        } else {
-          this.disableButton = false;
+        const disponible = await this.verificarDisponibilidad(this.pista, fechaFormateada, this.hora);
+        if (disponible) {
           this.loadingCtrl.dismiss();
-          this.toast.presentToast('Error al procesar el pago.', 1000);  
+          this.disableButton = false;
+          this.toast.presentToast('La hora seleccionada acaba de ser reservada.', 1000);
+          this.router.navigate(['/horarios'], { queryParams: { pista: this.pista } });
+          return;
+        } else {
+          const fechaPago = new Date();
+          const fechaPagoFormateada = formatDate(fechaPago, 'dd/MM/yyyy', 'en-US');
+
+          const response = await this.stripeService.charge(this.precio, token.id, fechaPagoFormateada);
+          if (response.success == true) {
+            this.cambiarFecha(this.hora, response.paymentDoc);
+          } else {
+            this.disableButton = false;
+            this.loadingCtrl.dismiss();
+            this.toast.presentToast('Error al procesar el pago.', 1000);  
+          }
         }
       } catch (error) {
         this.disableButton = false;
@@ -131,6 +143,24 @@ export class PagoPage implements AfterViewInit, OnDestroy {
       this.loadingCtrl.dismiss();
       this.ngZone.run(() => this.cardError = error.message);
     }
+  }
+
+  async verificarDisponibilidad(pistaId: string, fecha: string, hora: string): Promise<boolean> {
+    const pista = pistaId;
+    const path = 'Pistas/' + pista +'/Reservas';
+    
+    const reservasObservable = await this.firestore.getCollection<Reserva>(path);
+    return new Promise<boolean>((resolve, reject) => {
+      reservasObservable.subscribe({
+        next: (reservas) => {
+          const reservaExistente = reservas.some(reserva => reserva.fecha === fecha && reserva.hora === hora);
+          resolve(reservaExistente);
+        },
+        error: (error) => {
+          reject(error);
+        }
+      });
+    });
   }
 
   ngOnDestroy() {
