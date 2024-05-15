@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs';
+import { Subscription, map } from 'rxjs';
 import { formatDate } from '@angular/common';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -28,13 +28,7 @@ export class HorariosPage implements OnInit {
 
   tiempoCarga: boolean = false;
 
-  uid: string;
-  dni: string;
-  datos: Reserva = { uid: null, dni: null, fecha: null, hora: null, pista: null, id: null, paymentDoc: null }
-
-  procesoCompra: boolean = false;
-
-  constructor(private toast: InteractionService, private firestore: FirestoreService, private route: ActivatedRoute, private alertController: AlertController, private router: Router, private auth: AuthService) { }
+  constructor(private toast: InteractionService, private firestore: FirestoreService, private route: ActivatedRoute, private alertController: AlertController, private router: Router) { }
 
   ngOnInit() {
     this.fechaSeleccionada = null;
@@ -42,34 +36,7 @@ export class HorariosPage implements OnInit {
       this.pista = params['pista'];
       console.log('Pista seleccionada: ', this.pista);
     });
-    this.auth.stateUser().subscribe(res => {
-      this.getId();
-    });
     this.obtenerHoras();
-  }
-
-  ionViewWillEnter() {
-    this.procesoCompra = false;
-  }
-
-  async getId() {
-    const uid = await this.auth.getUid();
-    if (uid) {
-      this.uid = uid;
-      this.getDatosUser(uid);
-    } else {
-      console.log("No existe uid");
-    }
-  }
-
-  getDatosUser(uid: string) {
-    const path = 'Usuarios';
-    const id = uid;
-    this.firestore.getDoc<User>(path, id).subscribe(res => {
-      if (res) {
-        this.dni = res.dni;
-      }
-    });
   }
 
   async obtenerHoras() {
@@ -146,48 +113,13 @@ export class HorariosPage implements OnInit {
           {
             text: 'Aceptar',
             handler: async () => {
-              this.procesoCompra = true
-              await this.cambiarFecha(hora);
+              //await this.cambiarFecha(hora);
+              this.navegarComponente("pago", this.pista, hora, this.fechaSeleccionada);
             }
           }
         ]
       });
       await confirmacion.present();
-    }
-  }
-
-  cambiarFecha(horaSeleccionada) {
-    if (horaSeleccionada != null && this.fechaSeleccionada != null) {
-      const fecha = new Date(this.fechaSeleccionada);
-      const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
-
-      if (fechaFormateada && horaSeleccionada) {
-        this.guardarReserva(fechaFormateada, horaSeleccionada);          
-      }
-    } else {
-      this.toast.presentToast("Seleccione día y hora para hacer su reserva",1000);
-    }
-  }
-
-  async guardarReserva(fecha, hora) {
-    const id = this.uid;
-    const path = this.pista;
-
-    this.datos = { uid: id, dni: this.dni, fecha: fecha, hora: hora, pista: this.pista, id: null, paymentDoc: null };
-
-    try {
-      const doc = await this.firestore.createColl(this.datos, path);
-
-      if (doc !== null) {
-        const docId = doc.id;
-        doc.set({ id: docId }, { merge: true }).then(() => {
-          this.navegarComponente("pago", this.pista, hora, this.fechaSeleccionada, docId);
-        });
-      } else {
-        this.toast.presentToast('Error al reservar la hora', 1000);  
-      }
-    } catch (error) {
-      this.toast.presentToast('Error al reservar la hora', 1000);
     }
   }
 
@@ -210,10 +142,10 @@ export class HorariosPage implements OnInit {
     }
   }
 
-  async navegarComponente(componente: string, pista: string, hora: string, fecha: string, docId: string) {
+  async navegarComponente(componente: string, pista: string, hora: string, fecha: string) {
     this.toast.presentToast("Cargando...", 500);
     setTimeout(() => {
-      this.router.navigate(['/',componente], { queryParams: { pista: pista, hora: hora, fecha: fecha, docId: docId } });
+      this.router.navigate(['/',componente], { queryParams: { pista: pista, hora: hora, fecha: fecha} });
     }, 500);
   }
 
