@@ -101,18 +101,18 @@ export class PagoPage implements AfterViewInit, OnDestroy {
   }
 
   async onClick() {
+    const loading = await this.showLoading('Procesando...');
     const {token, error} = await stripe.createToken(this.card);
     if (token) {
       this.disableButton  = true;
-      this.showLoading();
       try {
         const fecha = new Date(this.fechaSeleccionada);
         const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
 
         const disponible = await this.verificarDisponibilidad(this.pista, fechaFormateada, this.hora);
         if (disponible) {
-          this.loadingCtrl.dismiss();
           this.disableButton = false;
+          loading.dismiss();
           this.toast.presentToast('La hora seleccionada acaba de ser reservada.', 1000);
           this.router.navigate(['/horarios'], { queryParams: { pista: this.pista } });
           return;
@@ -125,13 +125,13 @@ export class PagoPage implements AfterViewInit, OnDestroy {
             this.cambiarFecha(this.hora, response.paymentDoc);
           } else {
             this.disableButton = false;
-            this.loadingCtrl.dismiss();
+            loading.dismiss();
             this.toast.presentToast('Error al procesar el pago.', 1000);  
           }
         }
       } catch (error) {
         this.disableButton = false;
-        this.loadingCtrl.dismiss();
+        loading.dismiss();
         console.log('Error al procesar el pago: ' + error);
         this.toast.presentToast('Error al procesar el pago.', 1000); 
       } finally {
@@ -140,7 +140,7 @@ export class PagoPage implements AfterViewInit, OnDestroy {
       
     } else {
       this.disableButton = false;
-      this.loadingCtrl.dismiss();
+      loading.dismiss();
       this.ngZone.run(() => this.cardError = error.message);
     }
   }
@@ -211,11 +211,12 @@ export class PagoPage implements AfterViewInit, OnDestroy {
     this.loadingCtrl.dismiss();
   }
 
-  async showLoading() {
+  async showLoading(mensaje: string) {
     const loading = await this.loadingCtrl.create({
-      message: 'Procesando...',
+      message: mensaje,
     });
     loading.present();
+    return loading;
   }
 
 }
