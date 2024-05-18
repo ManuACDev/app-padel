@@ -10,6 +10,7 @@ import { formatDate } from '@angular/common';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Pista } from 'src/app/models/pista.model';
+import { Bloqueo } from 'src/app/models/bloqueo.model';
 
 @Component({
   selector: 'app-horarios',
@@ -25,8 +26,10 @@ export class HorariosPage implements OnInit {
 
   pista: string;
   horasNoDisponibles: string[] = [];
+  horasProceso: string[] = [];
 
   tiempoCarga: boolean = false;
+  bloqueo: Bloqueo = { id: null, pista: null, fecha: null, hora: null, tiempo: null };
 
   constructor(private toast: InteractionService, private firestore: FirestoreService, private route: ActivatedRoute, private alertController: AlertController, private router: Router) { }
 
@@ -70,6 +73,36 @@ export class HorariosPage implements OnInit {
           this.horasNoDisponibles.push(reserva.hora);
         });
       });
+
+      const pathBloq = `Pistas/${pista}/Bloqueados`;
+
+      const bloqueos = await this.firestore.getCollection<Bloqueo>(pathBloq);
+
+      bloqueos.subscribe(data => {
+        data.forEach(async (doc) => {
+          const tiempoActual = Date.now();
+          const cincoMinutosEnMilisegundos = (5 * 60 * 1000);
+
+          if ((tiempoActual - doc.tiempo) >= cincoMinutosEnMilisegundos) {
+            const id = doc.id;
+
+            await this.firestore.deleteDoc(pathBloq, id).catch(error => {
+              console.log(error);
+            });
+          }
+        });
+      });
+
+      const bloqueosFiltrados = bloqueos.pipe(
+        map(bloqueos => bloqueos.filter(bloqueo => bloqueo.fecha == fechaFormateada))
+      );
+
+      bloqueosFiltrados.subscribe(data => {
+        this.horasProceso = [];
+        data.forEach(bloqueo => {
+          this.horasProceso.push(bloqueo.hora);
+        });
+      });
     } catch (error) {
       console.log(error)
       this.tiempoCarga = true;
@@ -96,6 +129,9 @@ export class HorariosPage implements OnInit {
     } else if (this.horasNoDisponibles.includes(hora)) {
       this.toast.presentToast('Esta hora ya ha sido reservada', 2000);
       return;
+    } else if (this.horasProceso.includes(hora)) {
+      this.toast.presentToast('Esta hora está siendo reserva.', 2000);
+      return;
     } else {
       const confirmacion = await this.alertController.create({
         header: 'Confirmar reserva',
@@ -114,7 +150,7 @@ export class HorariosPage implements OnInit {
             text: 'Aceptar',
             handler: async () => {
               //await this.cambiarFecha(hora);
-              this.navegarComponente("pago", this.pista, hora, this.fechaSeleccionada);
+              this.bloquearHora(this.pista, hora, this.fechaSeleccionada);
             }
           }
         ]
@@ -142,10 +178,34 @@ export class HorariosPage implements OnInit {
     }
   }
 
-  async navegarComponente(componente: string, pista: string, hora: string, fecha: string) {
+  async bloquearHora(pista: string, hora: string, fechaSeleccionada: string) {
+    const path = `Pistas/${pista}/Bloqueados`;
+    console.log(path);
+
+    const fecha = new Date(fechaSeleccionada);
+    const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
+
+    this.bloqueo = { id: null, pista: pista, fecha: fechaFormateada, hora: hora, tiempo: Date.now() };
+
+    try {
+      const bloq = await this.firestore.createCollv2(this.bloqueo, path);
+
+      if (bloq !== null) {
+        bloq.set({ id: bloq.id }, { merge: true });
+        this.navegarComponente("pago", this.pista, hora, this.fechaSeleccionada, bloq.id);
+      } else {
+        this.toast.presentToast('Error al bloquear la hora', 1000);
+      }
+    } catch (error) {
+      this.toast.presentToast('Error al bloquear la hora', 1000);
+      console.log('Error al bloquear la hora: ', error);
+    }
+  }
+
+  async navegarComponente(componente: string, pista: string, hora: string, fecha: string, bloqueo: string) {
     this.toast.presentToast("Cargando...", 500);
     setTimeout(() => {
-      this.router.navigate(['/',componente], { queryParams: { pista: pista, hora: hora, fecha: fecha} });
+      this.router.navigate(['/',componente], { queryParams: { pista: pista, hora: hora, fecha: fecha, bloqueo: bloqueo } });
     }, 500);
   }
 

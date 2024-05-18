@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFireFunctions } from '@angular/fire/compat/functions';
+import { from, lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +34,11 @@ export class FirestoreService {
 
   createColl(data: any, path: string) {
     const collection = this.firestore.collection('Pistas/'+path+'/Reservas');
+    return collection.add(data);
+  }
+
+  createCollv2(data: any, path: string) {
+    const collection = this.firestore.collection(path);
     return collection.add(data);
   }
 

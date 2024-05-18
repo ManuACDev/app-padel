@@ -41,6 +41,7 @@ export class PagoPage implements AfterViewInit, OnDestroy {
 
   hora: string;
   fechaSeleccionada: string;
+  bloqueo: string;
 
   disableButton: boolean = false;
 
@@ -54,6 +55,7 @@ export class PagoPage implements AfterViewInit, OnDestroy {
       this.pista = params['pista'];
       this.hora = params['hora'];
       this.fechaSeleccionada = params['fecha'];
+      this.bloqueo = params['bloqueo'];
     });
     this.auth.stateUser().subscribe(res => {
       this.getId();
@@ -163,9 +165,18 @@ export class PagoPage implements AfterViewInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  async ngOnDestroy() {
     if (this.card) {
       this.card.destroy();
+    }
+
+    const path = `Pistas/${this.pista}/Bloqueados`;
+    const id = this.bloqueo;
+
+    const bloq = await this.firestore.getDoc(path, id);
+
+    if (bloq !== null) {
+      await this,this.firestore.deleteDoc(path, id);
     }
   }
 
