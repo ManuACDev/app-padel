@@ -29,9 +29,11 @@ export class HorariosPage implements OnInit {
   horasProceso: string[] = [];
 
   tiempoCarga: boolean = false;
-  bloqueo: Bloqueo = { id: null, pista: null, fecha: null, hora: null, tiempo: null };
+  bloqueo: Bloqueo = { id: null, uid: null, pista: null, fecha: null, hora: null, tiempo: null };
 
-  constructor(private toast: InteractionService, private firestore: FirestoreService, private route: ActivatedRoute, private alertController: AlertController, private router: Router) { }
+  uid: string = null;
+
+  constructor(private toast: InteractionService, private firestore: FirestoreService, private route: ActivatedRoute, private alertController: AlertController, private router: Router, private auth: AuthService) { }
 
   ngOnInit() {
     this.fechaSeleccionada = null;
@@ -39,7 +41,19 @@ export class HorariosPage implements OnInit {
       this.pista = params['pista'];
       console.log('Pista seleccionada: ', this.pista);
     });
+    this.auth.stateUser().subscribe(res => {
+      this.getId();
+    });
     this.obtenerHoras();
+  }
+
+  async getId() {
+    const uid = await this.auth.getUid();
+    if (uid) {
+      this.uid = uid;      
+    } else {
+      console.log("No existe uid");
+    }
   }
 
   async obtenerHoras() {
@@ -81,9 +95,10 @@ export class HorariosPage implements OnInit {
       bloqueos.subscribe(data => {
         data.forEach(async (doc) => {
           const tiempoActual = Date.now();
-          const cincoMinutosEnMilisegundos = (5 * 60 * 1000);
+          const unMin = (0.5 * 60 * 1000);
+          const cincoMin = (5 * 60 * 1000);
 
-          if ((tiempoActual - doc.tiempo) >= cincoMinutosEnMilisegundos) {
+          if (((tiempoActual - doc.tiempo) >= cincoMin) || (this.uid === doc.uid && (tiempoActual - doc.tiempo) >= unMin)) {
             const id = doc.id;
 
             await this.firestore.deleteDoc(pathBloq, id).catch(error => {
@@ -180,12 +195,11 @@ export class HorariosPage implements OnInit {
 
   async bloquearHora(pista: string, hora: string, fechaSeleccionada: string) {
     const path = `Pistas/${pista}/Bloqueados`;
-    console.log(path);
 
     const fecha = new Date(fechaSeleccionada);
     const fechaFormateada = formatDate(fecha, 'dd/MM/yyyy', 'en-US');
 
-    this.bloqueo = { id: null, pista: pista, fecha: fechaFormateada, hora: hora, tiempo: Date.now() };
+    this.bloqueo = { id: null, uid: this.uid, pista: pista, fecha: fechaFormateada, hora: hora, tiempo: Date.now() };
 
     try {
       const bloq = await this.firestore.createCollv2(this.bloqueo, path);

@@ -217,9 +217,10 @@ export class PagoPage implements AfterViewInit, OnDestroy {
       }
     } catch (error) {
       this.toast.presentToast('Error al reservar la hora', 1000);
+    } finally {
+      this.disableButton = false;
+      this.loadingCtrl.dismiss();
     }
-    this.disableButton = false;
-    this.loadingCtrl.dismiss();
   }
 
   async showLoading(mensaje: string) {
