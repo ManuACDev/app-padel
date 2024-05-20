@@ -29,6 +29,7 @@ export class HorariosPage implements OnInit {
   horasProceso: string[] = [];
 
   tiempoCarga: boolean = false;
+  horaAceptada: boolean = false;
   bloqueo: Bloqueo = { id: null, uid: null, pista: null, fecha: null, hora: null, tiempo: null };
 
   uid: string = null;
@@ -45,6 +46,10 @@ export class HorariosPage implements OnInit {
       this.getId();
     });
     this.obtenerHoras();
+  }
+
+  ionViewWillEnter() {
+    this.horaAceptada = false;
   }
 
   async getId() {
@@ -165,6 +170,7 @@ export class HorariosPage implements OnInit {
             text: 'Aceptar',
             handler: async () => {
               //await this.cambiarFecha(hora);
+              this.horaAceptada = true;
               this.bloquearHora(this.pista, hora, this.fechaSeleccionada);
             }
           }
