@@ -104,6 +104,10 @@ const routes: Routes = [
     path: 'editar-reembolso',
     loadChildren: () => import('./pages/editar-reembolso/editar-reembolso.module').then( m => m.EditarReembolsoPageModule)
   },
+  {
+    path: 'editar-duplicados',
+    loadChildren: () => import('./pages/editar-duplicados/editar-duplicados.module').then( m => m.EditarDuplicadosPageModule)
+  },
 ];
 
 @NgModule({

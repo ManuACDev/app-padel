@@ -94,6 +94,29 @@
     </ion-card>
   </div>
 
+  <ion-card *ngIf="filtroDuplicados" class="card">
+
+    <ion-card-header>
+      <ion-card-title style="font-size: large;">
+        Reservas Duplicadas
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-list>
+      <ion-item *ngFor="let duplicado of resultsD" (click)="navegarComponente('editar-duplicados', undefined, undefined, duplicado)" class="reserva">
+        <ion-label class="label">
+          <h4>Fecha: {{ duplicado.fecha }}</h4>
+          <p>Hora: {{ duplicado.hora }}</p>
+        </ion-label>
+        <ion-icon id="arrow-icon" name="chevron-forward-outline"></ion-icon>
+      </ion-item>
+    </ion-list>
+
+    <ion-text *ngIf="!resultsD || resultsD.length === 0">
+      <p class="no-reservas-message">No hay reservas duplicadas.</p>
+    </ion-text>
+  </ion-card>
+
 </ion-content>
 
 <ion-popover trigger="popover-button" [dismissOnSelect]="true" mode="ios">
@@ -103,6 +126,7 @@
         <ion-item button (click)="onChangeDisplay('pistas')">Pistas</ion-item>
         <ion-item button (click)="onChangeDisplay('usuarios')">Usuarios</ion-item>       
         <ion-item button (click)="onChangeDisplay('reservas')">Reservas</ion-item>   
+        <ion-item button (click)="onChangeDisplay('duplicadas')">Duplicadas</ion-item>   
       </ion-list>
     </ion-content>
   </ng-template>

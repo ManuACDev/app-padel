@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController, MenuController } from '@ionic/angular';
+import { Duplicado } from 'src/app/models/duplicado.model';
 import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
@@ -17,17 +18,20 @@ export class GestionReservasPage {
   usuarios: User[] = [];
   pistas: Pista[] = [];
   reservas: Reserva[] = [];
+  duplicados: Duplicado[] = [];
 
-  resultsR: Reserva[] = [];
-  resultsP: Pista[] = [];
   resultsU: User[] = [];
+  resultsP: Pista[] = [];
+  resultsR: Reserva[] = [];
+  resultsD: Duplicado[] = [];
 
-  reservasPistas: { [pistaId: string]: Reserva[] } = {};
   reservasUsuarios: { [usuarioId: string]: Reserva[] } = {};
+  reservasPistas: { [pistaId: string]: Reserva[] } = {};
 
-  filtroPistas: boolean = false;
   filtroUsuarios: boolean = false;
+  filtroPistas: boolean = false;
   filtroReservas: boolean = true;
+  filtroDuplicados: boolean = true;
 
   constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private loadingCtrl: LoadingController, private toast: InteractionService, private router: Router) { }
 
@@ -50,6 +54,9 @@ export class GestionReservasPage {
       setTimeout(() => {
         this.obtenerReservasUsuarios();
       }, 700);
+      setTimeout(() => {
+        this.obtenerReservasDuplicadas();
+      }, 850);
     } finally {
       loading.dismiss();
     }
@@ -122,6 +129,35 @@ export class GestionReservasPage {
     }
   }
 
+  async obtenerReservasDuplicadas() {
+    const duplicados = new Map<string, Duplicado>();
+
+    for (const pista of this.pistas) {
+        const path = `Pistas/${pista.id}/Reservas`;
+        const reservas = await this.firestore.getCollection<Reserva>(path);
+
+        reservas.subscribe(data => {
+            data.forEach((reserva) => {
+                const key = `${reserva.pista}_${reserva.fecha}_${reserva.hora}`;
+
+                if (duplicados.has(key)) {
+                    const duplicado = duplicados.get(key);
+                    duplicado.reservas.push(reserva);
+                } else {
+                    duplicados.set(key, {
+                        pista: reserva.pista,
+                        fecha: reserva.fecha,
+                        hora: reserva.hora,
+                        reservas: [reserva]
+                    });
+                }
+            });
+
+            this.resultsD = Array.from(duplicados.values()).filter(dup => dup.reservas.length > 1);
+        });
+    }
+  }
+
   searchReserva(event) {
     const query = event.target.value.toLowerCase().trim();
 
@@ -144,6 +180,12 @@ export class GestionReservasPage {
             typeof value === 'string' && value.toLowerCase().includes(query.toLowerCase())
           )
         );
+      } else if (this.filtroDuplicados) {
+        this.resultsD = this.duplicados.filter(duplicado =>
+          Object.values(duplicado).some(value =>
+            typeof value === 'string' && value.toLowerCase().includes(query.toLowerCase())
+          )
+        );
       }
     } else {
       if (this.filtroReservas) {
@@ -152,6 +194,8 @@ export class GestionReservasPage {
         this.resultsP = this.pistas;
       } else if (this.filtroUsuarios) {
         this.resultsU = this.usuarios;
+      } else if (this.filtroDuplicados) {
+        this.resultsD = this.duplicados
       }
     }   
   }
@@ -160,6 +204,7 @@ export class GestionReservasPage {
     this.filtroPistas = opcion === 'pistas';
     this.filtroUsuarios = opcion === 'usuarios';
     this.filtroReservas = opcion === 'reservas';
+    this.filtroDuplicados = opcion === 'duplicadas';
 
     localStorage.setItem('lastDisplayMode', opcion);
   }
@@ -172,11 +217,12 @@ export class GestionReservasPage {
     return loading;
   }
 
-  async navegarComponente(componente: string, reserva: Reserva, usuario: string) {
+  async navegarComponente(componente: string, reserva?: Reserva, usuario?: string, duplicado?: Duplicado) {
     const reservaJson = JSON.stringify(reserva);
+    const duplicadoJson = JSON.stringify(duplicado);
     this.toast.presentToast("Cargando...", 500);
     setTimeout(() => {
-      this.router.navigate(['/',componente], { queryParams: { reserva: reservaJson, usuario: usuario } });
+      this.router.navigate(['/',componente], { queryParams: { reserva: reservaJson, usuario: usuario, duplicado: duplicadoJson } });
     }, 500);
   }
   
