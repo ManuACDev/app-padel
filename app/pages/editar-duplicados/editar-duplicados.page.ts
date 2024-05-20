@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Duplicado } from 'src/app/models/duplicado.model';
+import { Reserva } from 'src/app/models/reserva.model';
+import { User } from 'src/app/models/user.model';
+import { FirestoreService } from 'src/app/services/firestore.service';
 
 @Component({
   selector: 'app-editar-duplicados',
@@ -7,9 +12,54 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditarDuplicadosPage implements OnInit {
 
-  constructor() { }
+  duplicado: Duplicado = null;
+  duplicadoOriginal: Duplicado = null;
+
+  usuarios: User[] = [];
+  reservasUsuarios: Reserva[] = [];
+
+  constructor(private route: ActivatedRoute, private firestore: FirestoreService) { }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.duplicado = JSON.parse(params['duplicado']);
+    });
+    this.obtenerUsuarios();
+    setTimeout(() => {
+      this.obtenerReservasUsuarios();
+    }, 250);
+  }
+
+  async obtenerUsuarios() {
+    const uids: string[] = [];
+
+    for (const reserva of this.duplicado.reservas) {
+      const uid = reserva.uid;
+      uids.push(uid);
+    }
+
+    this.usuarios = [];
+
+    const path = `Usuarios`;
+    const usuarios = await this.firestore.getCollection<User>(path);
+    usuarios.subscribe(data => {
+      this.usuarios = data.filter(usuario => uids.includes(usuario.uid));
+    });
+  }
+
+  async obtenerReservasUsuarios() {
+    this.reservasUsuarios = [];
+
+    for (const usuario of this.usuarios) {  
+      this.reservasUsuarios[usuario.uid] = [];    
+
+      for (const reserva of this.duplicado.reservas) {
+        if (reserva.uid === usuario.uid) {
+          this.reservasUsuarios[usuario.uid].push(reserva);
+        }
+      }
+      
+    }    
   }
 
 }

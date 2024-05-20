@@ -1,0 +1,51 @@
+.card {
+  border-radius: 8px;
+}
+
+.card ion-card-header {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dbdbdb;
+}
+
+.card ion-card-title {
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;  
+  font-size: x-large;
+}
+
+.card ion-card-title img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.reserva {
+  display: block;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.label h4 {
+  font-size: 18px;
+  color: black;
+}
+
+.label p {
+  color: #666;
+}
+
+#ellipsis-icon {
+  margin: 1px;
+  font-size: 20px;
+  color: rgb(42, 42, 42);
+}
