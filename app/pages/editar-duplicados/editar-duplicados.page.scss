@@ -64,3 +64,25 @@
 .payment-card ion-card-content {
   padding: 5px;
 }
+
+.p-payment {
+  font-size: small;
+}
+
+.centered-buttons {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 95%;
+  margin-left: 5px;
+}
+
+.centered-buttons ion-row {
+  justify-content: center;
+}
+
+.button-cambios {
+  width: 100%;
+  height: 85%;
+  font-size: 80%;
+}

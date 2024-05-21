@@ -36,31 +36,43 @@
   
     </ion-card>
 
-    <ion-card *ngFor="let pago of pagosUsuarios[usuario.uid]" class="payment-card">
+    <ng-container *ngFor="let reserva of reservasUsuarios[usuario.uid]">
 
-      <ion-card-header>
-        Detalles del Pago
-      </ion-card-header>
+      <ion-card *ngIf="reserva.paymentDoc && pagosReservas[reserva.paymentDoc]" class="payment-card">
 
-      <ion-card-content>
-        <ion-list>
-          <ion-item>
-            <ion-label class="label">
-              <h4>• Cantidad:</h4>
-              <p class="p-payment">{{ pago.amount }} €</p>
-            </ion-label>
-          </ion-item>
+        <ion-card-header>
+          Detalles del Pago
+        </ion-card-header>
+  
+        <ion-card-content>
+          <ion-list>
+            <ion-item>
+              <ion-label class="label">
+                <h4>• Cantidad:</h4>
+                <p class="p-payment">{{ pagosReservas[reserva.paymentDoc].amount }} €</p>
+              </ion-label>
+            </ion-item>
+  
+            <ion-item>
+              <ion-label class="label">
+                <h4>• ID del Pago:</h4>
+                <p class="p-payment">{{ pagosReservas[reserva.paymentDoc].paymentIntentId }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+  
+          <div class="centered-buttons">
+            <ion-row>
+              <ion-col size="12">
+                <ion-button expand="block" class="button-cambios" color="dark" mode="ios" (click)="presentActionSheet(reserva, pagosReservas[reserva.paymentDoc])">GESTIONAR PAGO</ion-button>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-card-content>
+  
+      </ion-card>
 
-          <ion-item>
-            <ion-label class="label">
-              <h4>• ID del Pago:</h4>
-              <p class="p-payment">{{ pago.paymentIntentId }}</p>
-            </ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-card-content>
-
-    </ion-card>
+    </ng-container>
 
   </ng-container>
 
