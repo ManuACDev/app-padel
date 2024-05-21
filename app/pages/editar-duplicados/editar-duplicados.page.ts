@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Duplicado } from 'src/app/models/duplicado.model';
+import { Pago } from 'src/app/models/pago.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -10,17 +11,19 @@ import { FirestoreService } from 'src/app/services/firestore.service';
   templateUrl: './editar-duplicados.page.html',
   styleUrls: ['./editar-duplicados.page.scss'],
 })
-export class EditarDuplicadosPage implements OnInit {
+export class EditarDuplicadosPage {
 
   duplicado: Duplicado = null;
   duplicadoOriginal: Duplicado = null;
 
   usuarios: User[] = [];
   reservasUsuarios: Reserva[] = [];
+  pagos: Pago[] = [];
+  pagosUsuarios: Pago[] = [];
 
   constructor(private route: ActivatedRoute, private firestore: FirestoreService) { }
 
-  ngOnInit() {
+  ionViewWillEnter () {
     this.route.queryParams.subscribe(params => {
       this.duplicado = JSON.parse(params['duplicado']);
     });
@@ -28,6 +31,9 @@ export class EditarDuplicadosPage implements OnInit {
     setTimeout(() => {
       this.obtenerReservasUsuarios();
     }, 250);
+    setTimeout(() => {
+      this.obtenerPagosUsuarios();
+    }, 400);
   }
 
   async obtenerUsuarios() {
@@ -60,6 +66,27 @@ export class EditarDuplicadosPage implements OnInit {
       }
       
     }    
+  }
+
+  async obtenerPagosUsuarios() {
+    const payDocs = this.duplicado.reservas.map(reserva => reserva.paymentDoc);
+
+    for (const usuario of this.usuarios) {
+      const id = usuario.uid;
+      const path = 'Pagos';
+      const pagos = await this.firestore.getCollectionId<Pago>(id, path);
+
+      this.pagosUsuarios[usuario.uid] = [];
+
+      pagos.subscribe(data => {
+        data.forEach((doc) => {
+          const pago = doc.data() as Pago;
+          if (payDocs.includes(pago.id)) {
+            this.pagosUsuarios[usuario.uid].push(pago);
+          }
+        });
+      });
+    }
   }
 
 }

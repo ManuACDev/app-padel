@@ -49,3 +49,18 @@
   font-size: 20px;
   color: rgb(42, 42, 42);
 }
+
+.payment-card {
+  border-radius: 8px;
+}
+
+.payment-card ion-card-header {
+  align-items: center;
+  color: #fff;
+  background-color: #364c63;
+  border-radius: 8px 8px 0 0;
+}
+
+.payment-card ion-card-content {
+  padding: 5px;
+}
