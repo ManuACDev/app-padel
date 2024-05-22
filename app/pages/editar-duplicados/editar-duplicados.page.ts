@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
 import { map } from 'rxjs';
+import { Bloqueo } from 'src/app/models/bloqueo.model';
 import { Duplicado } from 'src/app/models/duplicado.model';
 import { Pago } from 'src/app/models/pago.model';
 import { Pista } from 'src/app/models/pista.model';
@@ -158,6 +159,19 @@ export class EditarDuplicadosPage {
       this.horasNoDisponibles = [];
       data.forEach(reserva => {
         this.horasNoDisponibles.push(reserva.hora);
+      });
+    });
+
+    const pathBloq = `Pistas/${pista}/Bloqueados`;
+
+    const bloqueos = await this.firestore.getCollection<Bloqueo>(pathBloq);
+    const bloqueosFiltrados = bloqueos.pipe(
+      map(bloqueos => bloqueos.filter(bloqueo => bloqueo.fecha == fechaSeleccionada))
+    );
+
+    bloqueosFiltrados.subscribe(data => {
+      data.forEach(bloqueo => {
+        this.horasNoDisponibles.push(bloqueo.hora);
       });
     });
 
