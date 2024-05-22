@@ -57,6 +57,7 @@ export class PagoPage implements AfterViewInit, OnDestroy {
       this.fechaSeleccionada = params['fecha'];
       this.bloqueo = params['bloqueo'];
     });
+    this.disableButton = false;
     this.auth.stateUser().subscribe(res => {
       this.getId();
     });
@@ -113,7 +114,6 @@ export class PagoPage implements AfterViewInit, OnDestroy {
 
         const disponible = await this.verificarDisponibilidad(this.pista, fechaFormateada, this.hora);
         if (disponible) {
-          this.disableButton = false;
           loading.dismiss();
           this.toast.presentToast('La hora seleccionada acaba de ser reservada.', 1000);
           this.router.navigate(['/horarios'], { queryParams: { pista: this.pista } });
@@ -136,8 +136,6 @@ export class PagoPage implements AfterViewInit, OnDestroy {
         loading.dismiss();
         console.log('Error al procesar el pago: ' + error);
         this.toast.presentToast('Error al procesar el pago.', 1000); 
-      } finally {
-        this.disableButton = false;
       }
       
     } else {
@@ -213,13 +211,14 @@ export class PagoPage implements AfterViewInit, OnDestroy {
           doc.set({ id: docId }, { merge: true });
         }, 1500);
       } else {
-        this.toast.presentToast('Error al reservar la hora', 1000);  
+        this.disableButton = false;
+        this.loadingCtrl.dismiss();
+        this.toast.presentToast('Error al reservar la hora, contacta con el soporte.', 1000);  
       }
     } catch (error) {
-      this.toast.presentToast('Error al reservar la hora', 1000);
-    } finally {
       this.disableButton = false;
       this.loadingCtrl.dismiss();
+      this.toast.presentToast('Error al reservar la hora, contacta con el soporte.', 1000);
     }
   }
 
