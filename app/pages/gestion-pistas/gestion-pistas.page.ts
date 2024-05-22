@@ -358,15 +358,9 @@ export class GestionPistasPage implements OnInit {
   }
 
   cerrarModal() {
-    this.pista.abierto = this.pistaOriginal.abierto;
-    this.pista.desc = this.pistaOriginal.desc;
-    this.pista.horas = this.pistaOriginal.horas;
-    this.pista.id = this.pistaOriginal.id;
-    this.pista.img = this.pistaOriginal.img;
-    this.pista.precio = this.pistaOriginal.precio;
-    this.pista.titulo = this.pistaOriginal.titulo;
-    this.pista.descanso.activo = this.pistaOriginal.descanso.activo;
-    this.pista.descanso.hora = this.pistaOriginal.descanso.hora;
+    if (this.modoEdicion) {
+      Object.assign(this.pista, this.pistaOriginal);
+    }
 
     this.modalCtrl.dismiss().then(() => {
       this.modoEdicion ? (this.modoEdicion = false) : null;
