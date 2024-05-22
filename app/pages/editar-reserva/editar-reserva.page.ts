@@ -217,6 +217,10 @@ export class EditarReservaPage implements OnInit {
           this.horasDisponibles.push(this.reserva.hora);
         }
       }
+
+      this.horasDisponibles = this.horasDisponibles.sort((a, b) => {
+        return new Date('1970/01/01 ' + a.split(' - ')[0]).getTime() - new Date('1970/01/01 ' + b.split(' - ')[0]).getTime();
+      });
     });
   }
   
