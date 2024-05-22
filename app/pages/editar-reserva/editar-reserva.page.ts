@@ -89,19 +89,33 @@ export class EditarReservaPage implements OnInit {
     } else {
       const loading = await this.showLoading('Guardando cambios...');
       try {
-        const id = reserva.id;
-        const pista = this.reserva.pista;
-        const path = `Pistas/${pista}/Reservas`;
+        const pathRev = `Pistas/${reserva.pista}/Reservas`;
+        const disponible = await this.verificarDisponibilidad(pathRev, reserva.fecha, reserva.hora);
+        
+        if (disponible) {
+          this.toast.presentToast('La hora seleccionada acaba de ser reservada.', 1000);
+        } else {
+          const pathBloq = `Pistas/${reserva.pista}/Bloqueados`;
+          const disponible = await this.verificarDisponibilidad(pathBloq, reserva.fecha, reserva.hora);
 
-        await this.firestore.updateDoc(path, id , {fecha: reserva.fecha, hora: reserva.hora}).then(() => {
-          this.actualizarReserva(reserva).then(() => {
-            this.cerrarModal();
-            this.toast.presentToast("Reserva editada", 1000);
-          })
-        }).catch(error => {
-          console.log(error);
-          this.toast.presentToast("Error al editar la reserva", 1000);
-        });
+          if (disponible) {
+            this.toast.presentToast('La hora seleccionada acaba de ser bloqueada.', 1000);
+          } else {
+            const id = reserva.id;
+            const pista = this.reserva.pista;
+            const path = `Pistas/${pista}/Reservas`;
+
+            await this.firestore.updateDoc(path, id , {fecha: reserva.fecha, hora: reserva.hora}).then(() => {
+              this.actualizarReserva(reserva).then(() => {
+                this.cerrarModal();
+                this.toast.presentToast("Reserva editada", 1000);
+              })
+            }).catch(error => {
+              console.log(error);
+              this.toast.presentToast("Error al editar la reserva", 1000);
+            });
+          }
+        }
       } catch (error) {
         console.log(error);
         this.toast.presentToast("Error al editar la reserva", 1000);
@@ -109,6 +123,23 @@ export class EditarReservaPage implements OnInit {
         loading.dismiss();
       }
     }
+  }
+
+  async verificarDisponibilidad(path: string, fecha: string, hora: string): Promise<boolean> {    
+    const pathDoc = path;
+    
+    const documentosObservable = await this.firestore.getCollection<any>(pathDoc);
+    return new Promise<boolean>((resolve, reject) => {
+      documentosObservable.subscribe({
+        next: (documentos) => {
+          const documentoExistente = documentos.some(documento => documento.fecha === fecha && documento.hora === hora);
+          resolve(documentoExistente);
+        },
+        error: (error) => {
+          reject(error);
+        }
+      });
+    });
   }
 
   async actualizarReserva(reserva: Reserva) {
