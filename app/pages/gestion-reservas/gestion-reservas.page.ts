@@ -153,6 +153,7 @@ export class GestionReservasPage {
                 }
             });
 
+            this.duplicados = Array.from(duplicados.values()).filter(dup => dup.reservas.length > 1);
             this.resultsD = Array.from(duplicados.values()).filter(dup => dup.reservas.length > 1);
         });
     }
