@@ -20,8 +20,7 @@ import { StripeService } from 'src/app/services/stripe.service';
 })
 export class EditarDuplicadosPage {
 
-  duplicado: Duplicado = null;
-  duplicadoOriginal: Duplicado = null;
+  duplicado: Duplicado = null;  
 
   usuarios: User[] = [];
   reservasUsuarios: Reserva[] = [];
@@ -210,6 +209,7 @@ export class EditarDuplicadosPage {
         await this.firestore.updateDoc(path, id , {fecha: reserva.fecha, hora: reserva.hora}).then(() => {
           this.actualizarReserva(reserva).then(() => {
             this.cerrarModal();
+            this.navegarComponente('gestion-reservas');
             this.toast.presentToast("Reserva editada", 1000);
           })
         }).catch(error => {
@@ -231,8 +231,10 @@ export class EditarDuplicadosPage {
     const path = `Pistas/${pista}/Reservas`;
 
     await this.firestore.getDoc<Reserva>(path, id).subscribe(reserva => {
-      this.reservaOriginal = reserva;
-      this.reserva = reserva;
+      const reservaEncontrada = this.duplicado.reservas.find(reserva => reserva.id === id);
+      if (reservaEncontrada) {
+        Object.assign(reservaEncontrada, reserva);
+      }
     });    
   }
 
