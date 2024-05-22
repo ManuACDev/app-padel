@@ -1,9 +1,11 @@
 import { formatDate } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, LoadingController } from '@ionic/angular';
+import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
+import { map } from 'rxjs';
 import { Duplicado } from 'src/app/models/duplicado.model';
 import { Pago } from 'src/app/models/pago.model';
+import { Pista } from 'src/app/models/pista.model';
 import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -25,7 +27,14 @@ export class EditarDuplicadosPage {
   pagos: Pago[] = [];
   pagosReservas: Pago[] = [];
 
-  constructor(private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController, private stripeService: StripeService) { }
+  reserva: Reserva | null = null;
+  reservaOriginal: Reserva = null;
+
+  fechasDisponibles: string[] = [];
+  horasDisponibles: string[] = [];
+  horasNoDisponibles: string[] = [];
+
+  constructor(private route: ActivatedRoute, private firestore: FirestoreService, private actionSheetCtrl: ActionSheetController, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController, private stripeService: StripeService, private modalCtrl: ModalController) { }
 
   ionViewWillEnter () {
     this.route.queryParams.subscribe(params => {
@@ -83,6 +92,130 @@ export class EditarDuplicadosPage {
         this.pagosReservas[pago.id] = pago;
       }
     });
+  }
+
+  openModal(reserva: Reserva) {
+    this.reserva = reserva;
+    this.reservaOriginal = { ...reserva };
+    this.fechasDisponibles = this.obtenerFechas(reserva.fecha);
+    this.obtenerReservas(reserva.fecha);
+
+    const modal = document.querySelector('ion-modal');
+    if (modal) {
+      modal.present();
+    }
+  }
+
+  cerrarModal() {
+    if (this.reserva && this.reservaOriginal) {      
+      Object.assign(this.reserva, this.reservaOriginal);
+    }
+    const modal = document.querySelector('ion-modal');
+    if (modal) {
+      this.modalCtrl.dismiss();
+      this.reservaOriginal = null;
+    }
+  }
+
+  obtenerFechas(fechaReserva: string): string[] {
+    const partesFecha = fechaReserva.split('/');
+    const dia = parseInt(partesFecha[0], 10);
+    const mes = parseInt(partesFecha[1], 10) - 1;
+    const año = parseInt(partesFecha[2], 10);
+    
+    const fechaReservaDate = new Date(año, mes, dia);
+
+    this.fechasDisponibles = [];
+    this.fechasDisponibles.push(this.formatearFecha(fechaReservaDate));
+
+    for (let i = 1; i <= 2; i++) {
+        const fechaSiguiente = new Date(año, mes, dia + i);
+        this.fechasDisponibles.push(this.formatearFecha(fechaSiguiente));
+    }
+
+    return this.fechasDisponibles;
+  }
+  
+  formatearFecha(fecha: Date): string {
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const año = fecha.getFullYear();
+    return `${dia}/${mes}/${año}`;
+  }
+
+  async obtenerReservas(event: any) {
+    const fechaSeleccionada: string = event;
+
+    const pista = this.reserva.pista;
+    const path = `Pistas/${pista}/Reservas`;
+    
+    const reservas = await this.firestore.getCollection<Reserva>(path);
+    const reservasFiltradas = reservas.pipe(
+      map(reservas => reservas.filter(reserva => reserva.fecha == fechaSeleccionada))
+    );
+
+    reservasFiltradas.subscribe(data => { 
+      this.horasNoDisponibles = [];
+      data.forEach(reserva => {
+        this.horasNoDisponibles.push(reserva.hora);
+      });
+    });
+
+    const pathPista = `Pistas`;
+    this.firestore.getDoc<Pista>(pathPista, pista).subscribe(pista => {
+      if (pista && pista.horas) {
+        const indiceReserva = this.horasNoDisponibles.indexOf(this.reserva.hora);
+        if (indiceReserva !== -1) {
+          this.horasNoDisponibles.splice(indiceReserva, 1);
+        }
+
+        this.horasDisponibles = pista.horas.filter(hora => !this.horasNoDisponibles.includes(hora));
+        if (!this.horasDisponibles.includes(this.reserva.hora)) {
+          this.horasDisponibles.push(this.reserva.hora);
+        }
+      }
+    });
+  }
+
+  async guardarCambios(reserva: Reserva) {
+    if (!reserva.pista || !reserva.fecha || !reserva.hora) {
+      this.toast.presentToast("Todos los campos son obligatorios", 1500);
+    } else if (reserva.pista == this.reservaOriginal.pista && reserva.fecha == this.reservaOriginal.fecha && reserva.hora == this.reservaOriginal.hora) {
+      this.toast.presentToast("No hay cambios para guardar.", 1500);
+    } else {
+      const loading = await this.showLoading('Guardando cambios...');
+      try {
+        const id = reserva.id;
+        const pista = this.reserva.pista;
+        const path = `Pistas/${pista}/Reservas`;
+
+        await this.firestore.updateDoc(path, id , {fecha: reserva.fecha, hora: reserva.hora}).then(() => {
+          this.actualizarReserva(reserva).then(() => {
+            this.cerrarModal();
+            this.toast.presentToast("Reserva editada", 1000);
+          })
+        }).catch(error => {
+          console.log(error);
+          this.toast.presentToast("Error al editar la reserva", 1000);
+        });
+      } catch (error) {
+        console.log(error);
+        this.toast.presentToast("Error al editar la reserva", 1000);
+      } finally {
+        loading.dismiss();
+      }
+    }
+  }
+
+  async actualizarReserva(reserva: Reserva) {
+    const id = reserva.id;
+    const pista = reserva.pista;
+    const path = `Pistas/${pista}/Reservas`;
+
+    await this.firestore.getDoc<Reserva>(path, id).subscribe(reserva => {
+      this.reservaOriginal = reserva;
+      this.reserva = reserva;
+    });    
   }
 
   async presentActionSheet(reserva: Reserva, pago: Pago) {

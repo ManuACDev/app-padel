@@ -213,7 +213,10 @@ export class EditarReservaPage implements OnInit {
         }
 
         this.horasDisponibles = pista.horas.filter(hora => !this.horasNoDisponibles.includes(hora));
-    }
+        if (!this.horasDisponibles.includes(this.reserva.hora)) {
+          this.horasDisponibles.push(this.reserva.hora);
+        }
+      }
     });
   }
   
