@@ -20,10 +20,10 @@
       </div>
     </div>
     <div class="action-buttons ion-padding">
-      <ion-button size="large" class="login-button" (click)="login()">Iniciar Sesión</ion-button>
-      <ion-toggle color="warning" [(ngModel)]="sesionActiva">Mantener la sesión iniciada</ion-toggle>
+      <ion-button size="large" class="login-button" mode="ios" (click)="login()">Iniciar Sesión</ion-button>
+      <ion-toggle color="warning" mode="ios" [(ngModel)]="sesionActiva">Mantener la sesión iniciada</ion-toggle>
       <p><a (click)="navegarComponente('forgot-password')">¿Olvidaste tú contraseña?</a></p>
-      <ion-button class="signup-button" size="large" fill="outline" routerLink="/registro">Registrarse</ion-button>
+      <ion-button class="signup-button" size="large" fill="outline" mode="ios" routerLink="/registro">Registrarse</ion-button>
     </div>
   </div>
 </ion-content>
