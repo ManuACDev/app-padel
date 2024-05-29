@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Producto } from 'src/app/models/producto.model';
 import { FirestoreService } from 'src/app/services/firestore.service';
-import { ModalController } from '@ionic/angular';
+import { MenuController, ModalController } from '@ionic/angular';
 import { ModalPage } from 'src/app/pages/modal/modal.page';
 
 @Component({
@@ -13,11 +13,15 @@ export class TiendaPage implements OnInit {
 
   productos: Producto[] = [];
 
-  constructor(private firestore: FirestoreService, private modalController: ModalController) { }
+  constructor(private firestore: FirestoreService, private modalController: ModalController, private menuCtrl: MenuController) { }
 
   ngOnInit() {
     this.obtenerProductos();
   }
+
+  ionViewDidEnter() {
+    this.menuCtrl.enable(false);
+  }  
 
   async obtenerProductos() {
     this.productos = [];

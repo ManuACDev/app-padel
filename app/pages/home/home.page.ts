@@ -25,6 +25,10 @@ export class HomePage implements OnInit {
     })
   }
 
+  ionViewDidEnter() {
+    this.menuCtrl.enable(true);
+  }
+
   async getId() {
     const uid = await this.auth.getUid();
     if (uid) {

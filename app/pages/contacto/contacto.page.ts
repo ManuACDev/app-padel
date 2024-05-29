@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Marker } from 'src/app/models/marker.model';
 import { Router } from '@angular/router';
 import { InteractionService } from 'src/app/services/interaction.service';
-import { ModalController } from '@ionic/angular';
+import { MenuController } from '@ionic/angular';
 
 declare var google;
 
@@ -15,13 +15,17 @@ export class ContactoPage implements OnInit {
 
   map = null;
 
-  constructor(private toast: InteractionService, private router: Router, private modalController: ModalController) { }
+  constructor(private toast: InteractionService, private router: Router, private menuCtrl: MenuController) { }
 
   ngOnInit() {
     this.loadScript(() => {
       this.loadMap();
     });
   }
+
+  ionViewDidEnter() {
+    this.menuCtrl.enable(false);
+  }  
 
   loadScript(callback: () => void) {
     const script = document.createElement('script');

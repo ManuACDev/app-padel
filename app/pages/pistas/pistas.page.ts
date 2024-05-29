@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 import { Pista } from 'src/app/models/pista.model';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { InteractionService } from 'src/app/services/interaction.service';
@@ -13,10 +14,14 @@ export class PistasPage implements OnInit {
 
   pistas: Pista[] = [];
 
-  constructor(private toast: InteractionService, private router: Router, private firestore: FirestoreService) { }
+  constructor(private toast: InteractionService, private router: Router, private firestore: FirestoreService, private menuCtrl: MenuController) { }
 
   ngOnInit() {
     this.obtenerPistas();
+  }
+
+  ionViewDidEnter() {
+    this.menuCtrl.enable(false);
   }
 
   async obtenerPistas() {
