@@ -13,17 +13,19 @@
 
 <ion-content>
 
-  <ion-card *ngIf="pista$ | async as pista">
+  <div class="card-container">
+    <ion-card *ngIf="pista$ | async as pista">
 
-    <img alt="{{ pista.desc }}" src="{{ pista.img }}">
-
-    <ion-card-header>
-      <ion-card-subtitle class="precio-titulo"> El precio de la pista es: {{ pista.precio }}</ion-card-subtitle>
-      <ion-card-title>{{ pista.titulo }}</ion-card-title>
-      <ion-card-subtitle>{{ pista.desc }}</ion-card-subtitle>
-    </ion-card-header>
-
-  </ion-card>
+      <img alt="{{ pista.desc }}" src="{{ pista.img }}">
+  
+      <ion-card-header>
+        <ion-card-subtitle class="precio-titulo"> El precio de la pista es: {{ pista.precio }}</ion-card-subtitle>
+        <ion-card-title>{{ pista.titulo }}</ion-card-title>
+        <ion-card-subtitle>{{ pista.desc }}</ion-card-subtitle>
+      </ion-card-header>
+  
+    </ion-card>
+  </div>  
 
   <div class="credit-card ion-padding">
     <div>
@@ -35,7 +37,7 @@
   </div>
 
   <div class="action-buttons ion-padding">
-    <ion-button class="custom-button" (click)="onClick()" [disabled]="disableButton">Pagar</ion-button>
+    <ion-button class="custom-button" mode="ios" (click)="onClick()" [disabled]="disableButton">Pagar</ion-button>
   </div>
 
 </ion-content>
