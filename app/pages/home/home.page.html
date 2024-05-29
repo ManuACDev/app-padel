@@ -50,22 +50,22 @@
   </ion-header>
 
   <ion-content class="ion-padding">
-
-    <ion-card class="ion-card" (click)="navegarComponente('pistas')">
-      <img id="img" src="../../../assets/reserva-pista.jpg" />
-        <div class="card-title">RESERVA DE PISTAS</div>
-    </ion-card>
-
-    <ion-card class="ion-card" (click)="navegarComponente('tienda')">
-      <img id="img" src="../../../assets/productos-padel.jpg"/>
-        <div class="card-title">PRODUCTOS OFICIALES</div>
-    </ion-card>
-
-    <ion-card class="ion-card" (click)="navegarComponente('contacto')">
-      <img id="img" src="../../../assets/contacto-info.png"/>
-        <div class="card-title">INFO | CONTACTO</div>
-    </ion-card>
-
+    <div class="card-container">
+      <ion-card class="ion-card" (click)="navegarComponente('pistas')">
+        <img id="img" src="../../../assets/reserva-pista.jpg" />
+          <div class="card-title">RESERVA DE PISTAS</div>
+      </ion-card>
+  
+      <ion-card class="ion-card" (click)="navegarComponente('tienda')">
+        <img id="img" src="../../../assets/productos-padel.jpg"/>
+          <div class="card-title">PRODUCTOS OFICIALES</div>
+      </ion-card>
+  
+      <ion-card class="ion-card" (click)="navegarComponente('contacto')">
+        <img id="img" src="../../../assets/contacto-info.png"/>
+          <div class="card-title">INFO | CONTACTO</div>
+      </ion-card>
+    </div>
   </ion-content>
 </div>
 
