@@ -51,8 +51,8 @@ export class GestionUsuariosPage implements OnInit {
   }
 
   searchUser(event) {
-    const query = event.target.value;
-    if (query.trim() !== '') {
+    const query = event.target.value.toLowerCase().trim();
+    if (query !== '') {
       this.results = this.usuarios.filter(usuario => {
         return Object.values(usuario).some(value => {
           if (typeof value === 'string') {
