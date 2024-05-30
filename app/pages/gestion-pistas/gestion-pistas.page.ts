@@ -285,8 +285,15 @@ export class GestionPistasPage implements OnInit {
   }
 
   async guardarCambios(pista: Pista) {
+    const open = this.recuperarHora(this.pistaOriginal.horas[0], "primera");
+    const close =  this.recuperarHora((this.pistaOriginal.horas[pista.horas.length - 1]), "segunda");
+    const time = this.calcularDuracionTotal(this.pistaOriginal.horas[0]);
+    const rest = this.pistaOriginal.descanso.hora;
+
     if (!this.pista.titulo || !this.pista.desc || !this.pista.precio || !this.apertura || !this.cierre || !this.duracion) {
       this.toast.presentToast("Todos los campos son obligatorios", 1500);
+    } else if (this.pistaOriginal.titulo === pista.titulo && this.pistaOriginal.desc === pista.desc && this.pistaOriginal.precio === pista.precio && this.apertura === open && this.cierre === close && this.duracion === time && this.descanso === rest) {
+      this.toast.presentToast("No hay cambios para guardar.", 1500);
     } else {
         try {
           const id = pista.id;
