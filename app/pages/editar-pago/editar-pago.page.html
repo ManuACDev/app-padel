@@ -13,63 +13,67 @@
 
 <ion-content>
 
-  <ion-card *ngIf="usuario" class="usuario-card">
-
-    <ion-card-header>
-      <ion-card-title>
-        <img alt="{{ usuario.nombre }}" src="../../../assets/usuario.png">{{ usuario.nombre }}
-      </ion-card-title>
-      <ion-card-subtitle>{{ usuario.correo }}</ion-card-subtitle>
-    </ion-card-header>
-
-  </ion-card>
-
-  <ion-card *ngIf="pago" class="payment-card">
-
-    <ion-card-header>
-      Detalles del Pago
-    </ion-card-header>
-
-    <ion-card-content>
-      <ion-list>
-        <ion-item>
-          <ion-label class="label">
-            <h4>• Fecha:</h4>
-            <p class="p-payment">{{ pago.created }}</p>
-          </ion-label>
-        </ion-item>
-
-        <ion-item>
-          <ion-label class="label">
-            <h4>• Cantidad:</h4>
-            <p class="p-payment">{{ pago.amount }} €</p>
-          </ion-label>
-        </ion-item>
-
-        <ion-item>
-          <ion-label class="label">
-            <h4>• ID del Pago:</h4>
-            <p class="p-payment">{{ pago.paymentIntentId }}</p>
-          </ion-label>
-        </ion-item>
-
-        <ion-item>
-          <ion-label class="label">
-            <h4>• Reserva:</h4>
-            <p class="p-payment">{{ pago.active ? 'Reserva Existente' : 'Reserva Borrada' }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
+  <div class="container">
     
-  </ion-card>
+    <ion-card *ngIf="usuario" class="usuario-card">
 
-  <div class="centered-buttons">
-    <ion-row>
-      <ion-col size="12">
-        <ion-button expand="block" class="button-cambios" color="dark" mode="ios" (click)="presentActionSheet(pago)">GESTIONAR PAGO</ion-button>
-      </ion-col>
-    </ion-row>
+      <ion-card-header>
+        <ion-card-title>
+          <img alt="{{ usuario.nombre }}" src="../../../assets/usuario.png">{{ usuario.nombre }}
+        </ion-card-title>
+        <ion-card-subtitle>{{ usuario.correo }}</ion-card-subtitle>
+      </ion-card-header>
+  
+    </ion-card>
+  
+    <ion-card *ngIf="pago" class="payment-card">
+  
+      <ion-card-header>
+        Detalles del Pago
+      </ion-card-header>
+  
+      <ion-card-content>
+        <ion-list>
+          <ion-item>
+            <ion-label class="label">
+              <h4>• Fecha:</h4>
+              <p class="p-payment">{{ pago.created }}</p>
+            </ion-label>
+          </ion-item>
+  
+          <ion-item>
+            <ion-label class="label">
+              <h4>• Cantidad:</h4>
+              <p class="p-payment">{{ pago.amount }} €</p>
+            </ion-label>
+          </ion-item>
+  
+          <ion-item>
+            <ion-label class="label">
+              <h4>• ID del Pago:</h4>
+              <p class="p-payment">{{ pago.paymentIntentId }}</p>
+            </ion-label>
+          </ion-item>
+  
+          <ion-item>
+            <ion-label class="label">
+              <h4>• Reserva:</h4>
+              <p class="p-payment">{{ pago.active ? 'Reserva Existente' : 'Reserva Borrada' }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+      
+    </ion-card>
+  
+    <div class="centered-buttons">
+      <ion-row>
+        <ion-col size="12">
+          <ion-button expand="block" class="button-cambios" color="dark" mode="ios" (click)="presentActionSheet(pago)">GESTIONAR PAGO</ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+
   </div>
 
 </ion-content>

@@ -1,4 +1,13 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .usuario-card {
+  width: 95%;
   border-radius: 8px;
 }
 
@@ -23,6 +32,7 @@
 }
 
 .payment-card {
+  width: 95%;
   border-radius: 8px;
 }
 
