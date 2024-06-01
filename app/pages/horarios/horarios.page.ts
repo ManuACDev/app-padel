@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Reserva } from 'src/app/models/reserva.model';
 import { User } from 'src/app/models/user.model';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription, map } from 'rxjs';
+import { Subscription, firstValueFrom, forkJoin, map, tap } from 'rxjs';
 import { formatDate } from '@angular/common';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -81,54 +81,46 @@ export class HorariosPage implements OnInit {
       const pista = this.pista;
       const path = 'Pistas/' + pista +'/Reservas';
     
-      const reservas = await this.firestore.getCollection<Reserva>(path);
-      const reservasFiltradas = reservas.pipe(
+      const reservas$ = this.firestore.getCollection<Reserva>(path).pipe(
         map(reservas => reservas.filter(reserva => reserva.fecha == fechaFormateada))
       );
-      
-      reservasFiltradas.subscribe(data => { 
-        this.horasNoDisponibles = [];
-        data.forEach(reserva => {
-          this.horasNoDisponibles.push(reserva.hora);
-        });
-      });
 
       const pathBloq = `Pistas/${pista}/Bloqueados`;
 
-      const bloqueos = await this.firestore.getCollection<Bloqueo>(pathBloq);
-
-      bloqueos.subscribe(data => {
+      const bloqueos$ = this.firestore.getCollection<Bloqueo>(pathBloq).pipe(tap(data => {
         data.forEach(async (doc) => {
           const tiempoActual = Date.now();
           const unMin = (0.5 * 60 * 1000);
           const cincoMin = (5 * 60 * 1000);
-
+  
           if (((tiempoActual - doc.tiempo) >= cincoMin) || (this.uid === doc.uid && (tiempoActual - doc.tiempo) >= unMin)) {
             const id = doc.id;
-
             await this.firestore.deleteDoc(pathBloq, id).catch(error => {
               console.log(error);
             });
           }
         });
-      });
+      }), map(bloqueos => bloqueos.filter(bloqueo => bloqueo.fecha == fechaFormateada)));
 
-      const bloqueosFiltrados = bloqueos.pipe(
-        map(bloqueos => bloqueos.filter(bloqueo => bloqueo.fecha == fechaFormateada))
-      );
-
-      bloqueosFiltrados.subscribe(data => {
-        this.horasProceso = [];
-        data.forEach(bloqueo => {
-          this.horasProceso.push(bloqueo.hora);
-        });
+      const [reservas, bloqueos] = await Promise.all([
+        firstValueFrom(reservas$),
+        firstValueFrom(bloqueos$)
+      ]);
+  
+      this.horasNoDisponibles = [];
+      reservas.forEach(reserva => {
+        this.horasNoDisponibles.push(reserva.hora);
       });
+  
+      this.horasProceso = [];
+      bloqueos.forEach(bloqueo => {
+        this.horasProceso.push(bloqueo.hora);
+      });        
     } catch (error) {
       console.log(error)
-      this.tiempoCarga = true;
       this.toast.presentToast("Error al obtener las reservas.", 1000);
     } finally {
-      this.tiempoCarga = false;
+      this.tiempoCarga = false; // Se establece en false cuando se completan ambos observables o en caso de error
     }
   }
 
