@@ -1,39 +1,62 @@
-ion-card-header {
-  padding: 10px 15px 1px;
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
 }
 
-ion-card-content {
-  font-size: 1rem;
-  padding-bottom: 0px;
+.producto-card {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.p-precio {
-  font-size: 90%;
-  color: #1f1f1f;
-  margin-bottom: 0;
+.producto-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.producto-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.producto-card ion-card-header {
+  text-align: center;
+  padding: 10px;
+}
+
+.producto-card ion-card-title {
+  font-size: 1.2rem;
   font-weight: bold;
+  color: #333;
+}
+
+.producto-card ion-card-content {
+  padding: 10px;
 }
 
 .price-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 
-.ver-mas {
-  color: #3880ff;
+.p-precio {
+  font-size: 1rem;
+  color: #333;
   font-weight: bold;
-  font-size: 90%;
 }
 
-.header {
-  padding: 10px 15px 1px;
-}
-
-.p-titulo {
-  font-size: 100%;
-}
-
-.m-titulo {
-  font-size: 1.35rem;
+.ver-mas {
+  --background: #5793fa;
+  --color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
 }
