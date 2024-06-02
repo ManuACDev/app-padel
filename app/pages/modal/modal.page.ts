@@ -6,16 +6,13 @@ import { ModalController, NavParams } from '@ionic/angular';
   templateUrl: './modal.page.html',
   styleUrls: ['./modal.page.scss'],
 })
-export class ModalPage implements OnInit {
+export class ModalPage {
 
   @Input() producto: any;
 
   constructor(public modalController: ModalController, private navParams: NavParams) {
     this.producto = this.navParams.get('producto');
-   }
-
-  ngOnInit() {
-  }
+   }  
 
   closeModal() {
     this.modalController.dismiss();
