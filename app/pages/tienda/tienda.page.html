@@ -31,6 +31,9 @@
           </div>
           <ion-button fill="clear" class="ver-mas" mode="ios" (click)="openModal(producto)">Ver más...</ion-button>
         </div>
+        <p class="unidades">
+          {{ producto.unidades > 0 ? '• Unidades disponibles: ' + producto.unidades : '• No hay unidades disponibles' }}
+        </p>
       </ion-card-content>
   
     </ion-card>
