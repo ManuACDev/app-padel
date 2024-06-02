@@ -6,6 +6,10 @@
   padding: 20px;
 }
 
+.ios ion-card {
+  margin-bottom: 0px;
+}
+
 .producto-card {
   width: 100%;
   max-width: 350px;
@@ -46,10 +50,27 @@
   align-items: center;
 }
 
-.p-precio {
-  font-size: 1rem;
-  color: #333;
-  font-weight: bold;
+.icon-wrapper {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.icon-wrapper ion-icon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.icon-label {
+  font-size: 16px;
+}
+
+.price-icon {
+  color: #484848;
+  margin-right: 8px;
+  font-size: 1.2rem;
 }
 
 .ver-mas {

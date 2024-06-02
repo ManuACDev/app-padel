@@ -25,8 +25,11 @@
     
       <ion-card-content>
         <div class="price-container">
-          <p class="p-precio">Precio: {{ producto.precio }} € </p>
-          <ion-button fill="clear" class="ver-mas" (click)="openModal(producto)">Ver más...</ion-button>
+          <div class="icon-wrapper">
+            <ion-icon name="pricetag-outline" class="price-icon"></ion-icon>
+            <span class="icon-label">{{ producto.precio }} €</span>
+          </div>
+          <ion-button fill="clear" class="ver-mas" mode="ios" (click)="openModal(producto)">Ver más...</ion-button>
         </div>
       </ion-card-content>
   
