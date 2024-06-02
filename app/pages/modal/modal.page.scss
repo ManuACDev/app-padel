@@ -1,45 +1,86 @@
-ion-content ion-toolbar {
-  --background: rgb(0, 0, 0);
+ion-content {
+  --background: #f8f8f8;
+}
+
+ion-toolbar {
+  --background: #333;
   --color: white;
 }
 
-ion-toolbar ion-title {
-  margin-top: 5%;
+.product-modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
-ion-toolbar ion-buttons {
-  margin-top: 10%;
+.product-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 15px;
+  object-fit: cover;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-ion-card-content {
-  margin-top: -3%;
+.product-details {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
 }
 
-.m-titulo {
-  margin-top: 2%;
-  margin-left: 3%;
-  font-size: 135%;
-}
-
-.p-precio {
-  font-size: 90%;
-  color: #1f1f1f;
-  margin-bottom: 0;
+.product-title {
+  font-size: 1.5rem;
   font-weight: bold;
+  color: #333;
+  text-align: center;
 }
 
-.p-desc {
+.price-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.price-icon {
+  font-size: 1.5rem;
+  color: #454545;
+  margin-right: 8px;
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.product-description {
+  font-size: 1rem;
   color: #474747;
-  margin-top: 3%;
+  margin: 10px 0;
+  text-align: center;
 }
 
-.p-war {
+.unidades {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  color: #4a4a4a;
+}
+
+.product-warning {
+  font-size: 0.9rem;
   color: #696969;
   font-weight: bold;
-  margin-top: 3%;
+  margin-top: 15px;
+  text-align: center;
 }
 
-.p-war ion-icon {
+.product-warning ion-icon {
   font-size: 1.1rem;
   margin-right: 5px;
   vertical-align: sub;

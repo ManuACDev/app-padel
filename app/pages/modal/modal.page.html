@@ -7,15 +7,24 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <img src="{{ producto.img }}" alt="Pala de padel">
-  <ion-header class="header">
-    <ion-card-title class="m-titulo">{{ producto.titulo }}</ion-card-title>
-  </ion-header>
-        
-  <ion-card-content>
-    <p class="p-precio">Precio: {{ producto.precio }} € </p>
-    <p class="p-desc">{{ producto.desc }}</p>
-    <p class="p-war"><ion-icon name="alert-circle-outline"></ion-icon>Debido a esta versión de la app solo disponible en tienda.</p>
-  </ion-card-content>
+  <div class="product-modal-container">
+    <img src="{{ producto.img }}" alt="{{ producto.titulo }}" class="product-image">
+
+    <ion-card class="product-details">
+      <ion-card-header>
+        <ion-card-title class="product-title">{{ producto.titulo }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="price-container">
+          <ion-icon name="pricetag-outline" class="price-icon"></ion-icon>
+          <span class="price">Precio: {{ producto.precio }} €</span>
+        </div>
+        <p class="product-description">{{ producto.desc }}</p>
+        <p class="unidades">{{ producto.unidades > 0 ? '• Unidades disponibles: ' + producto.unidades : '• No hay unidades disponibles' }}</p>
+        <p class="product-warning"><ion-icon name="storefront-outline"></ion-icon> Este producto está disponible únicamente en nuestra tienda física.</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
 </ion-content>
