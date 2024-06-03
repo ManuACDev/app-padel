@@ -185,8 +185,37 @@ export class GestionProductosPage implements OnInit {
 
   }
 
-  guardarCambios(producto: Producto) {
+  async guardarCambios(producto: Producto) {
+    if (!this.producto.titulo || !this.producto.desc || !this.producto.precio || !this.producto.unidades) {
+      this.toast.presentToast("Todos los campos son obligatorios", 1500);
+    } else if (this.productoOriginal.titulo === producto.titulo && this.productoOriginal.desc === producto.desc && this.productoOriginal.precio === producto.precio && this.productoOriginal.unidades === producto.unidades && this.productoOriginal.img === producto.img) {
+      this.toast.presentToast("No hay cambios para guardar.", 1500);
+    } else {
+        try {
+          const id = producto.id;
+          const path = 'Productos';
 
+          if (this.aplicarDescuento) {
+            this.producto.descuento.activo = true;
+            this.producto.descuento.precio = this.descuento;
+          } else {
+            this.producto.descuento.activo = false;
+            this.producto.descuento.precio = null;
+          }
+                    
+          await this.firestore.updateDoc(path, id , {titulo: producto.titulo, desc: producto.desc, precio: producto.precio, unidades: producto.unidades, img: producto.img, descanso: {activo: producto.descuento.activo, precio: producto.descuento.precio}}).then(() => {
+            this.toast.presentToast('Producto editado', 1000);
+            this.productos = [];
+            this.cerrarModal();
+          }).catch(error => {
+            console.log(error);
+            this.toast.presentToast('Error al editar el producto', 1000);
+          });
+        } catch (error) {
+          console.log(error);
+          this.toast.presentToast('Error al editar el producto', 1000);
+        }
+    }
   }
 
 }
