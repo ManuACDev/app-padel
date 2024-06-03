@@ -76,6 +76,23 @@
     color: black;  
 }
 
+.alert-gestion-productos .alert-title {
+  text-align: center;
+  font-weight: bold; 
+}
+
+.alert-gestion-productos .alert-sub-title {
+  font-size: 13px;    
+  text-align: center;
+  color: black;  
+}
+
+.alert-gestion-productos .alert-message {
+  font-size: 13px;
+  text-align: center;
+  color: black;  
+}
+
 .formulario-modal {
   --height: 70%;
   --border-radius: 16px;

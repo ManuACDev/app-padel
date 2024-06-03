@@ -108,6 +108,10 @@ const routes: Routes = [
     path: 'editar-duplicados',
     loadChildren: () => import('./pages/editar-duplicados/editar-duplicados.module').then( m => m.EditarDuplicadosPageModule)
   },
+  {
+    path: 'gestion-productos',
+    loadChildren: () => import('./pages/gestion-productos/gestion-productos.module').then( m => m.GestionProductosPageModule)
+  },
 ];
 
 @NgModule({

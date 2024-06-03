@@ -1,0 +1,44 @@
+<ion-header>
+  
+  <ion-toolbar color="dark">
+    <ion-title id="title">Gestión Productos</ion-title>
+    <ion-buttons slot="start">
+      <div class="ion-align-items-center ion-justify-content-between">
+        <ion-back-button defaultHref="/ajustes" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <div class="card-container">
+    
+    <ion-card *ngFor="let producto of productos" class="producto-card">
+
+      <img src="{{ producto.img }}" alt="{{ producto.titulo }}">
+  
+      <ion-card-header>
+        <ion-card-title>{{ producto.titulo }}</ion-card-title>
+      </ion-card-header>
+    
+      <ion-card-content>
+        <div class="price-container">
+          <div class="icon-wrapper">
+            <ion-icon name="pricetag-outline" class="price-icon"></ion-icon>
+            <span class="icon-label">{{ producto.precio }} €</span>
+          </div>
+          <ion-button fill="clear" class="ver-mas" mode="ios" (click)="openModal(producto)">Ver más...</ion-button>
+          <ion-button fill="clear" class="opciones" (click)="presentActionSheet(producto)"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
+        </div>
+        <p class="unidades">
+          {{ producto.unidades > 0 ? '• Unidades disponibles: ' + producto.unidades : '• No hay unidades disponibles' }}
+        </p>
+      </ion-card-content>
+  
+    </ion-card>
+
+  </div>
+
+</ion-content>

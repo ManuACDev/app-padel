@@ -1,0 +1,99 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.ios ion-card {
+  margin-bottom: 0px;
+}
+
+.producto-card {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.producto-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.producto-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.producto-card ion-card-header {
+  text-align: center;
+  padding: 10px;
+}
+
+.producto-card ion-card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.producto-card ion-card-content {
+  padding: 10px;
+}
+
+.price-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.icon-wrapper {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.icon-wrapper ion-icon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.icon-label {
+  font-size: 16px;
+}
+
+.price-icon {
+  color: #484848;
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+.ver-mas {
+  --background: #5793fa;
+  --color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.opciones {
+  --background: #eeeeee;
+  --color: rgb(90, 90, 90);  
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  font-weight: bold;   
+}
+
+.unidades {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  color: #4a4a4a;
+}
