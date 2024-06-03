@@ -104,13 +104,14 @@ export class GestionProductosPage implements OnInit {
       const path = `Productos`;
       
       await this.firestore.deleteDoc<Producto>(path, id).then(() => {
-        this.toast.presentToast("Producto borrada", 1000);
-      }).catch(() => {
-        this.toast.presentToast("Error al borrar el producto", 1000);
+        this.toast.presentToast("Producto eliminado", 1000);
+      }).catch((error) => {
+        console.log(error);
+        this.toast.presentToast("Error al eliminar el producto", 1000);
       });
     } catch (error) {
       console.log(error);
-      this.toast.presentToast("Error al borrar el producto", 1000);
+      this.toast.presentToast("Error al eliminar el producto", 1000);
     } finally {
       this.obtenerProductos();
       loading.dismiss();
