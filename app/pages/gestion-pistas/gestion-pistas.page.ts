@@ -292,7 +292,7 @@ export class GestionPistasPage implements OnInit {
 
     if (!this.pista.titulo || !this.pista.desc || !this.pista.precio || !this.apertura || !this.cierre || !this.duracion) {
       this.toast.presentToast("Todos los campos son obligatorios", 1500);
-    } else if (this.pistaOriginal.titulo === pista.titulo && this.pistaOriginal.desc === pista.desc && this.pistaOriginal.precio === pista.precio && this.apertura === open && this.cierre === close && this.duracion === time && this.descanso === rest) {
+    } else if (this.pistaOriginal.titulo === pista.titulo && this.pistaOriginal.desc === pista.desc && this.pistaOriginal.precio === pista.precio && this.pistaOriginal.img === pista.img && this.apertura === open && this.cierre === close && this.duracion === time && this.descanso === rest) {
       this.toast.presentToast("No hay cambios para guardar.", 1500);
     } else {
         try {
