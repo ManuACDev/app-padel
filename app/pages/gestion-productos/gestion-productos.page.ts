@@ -16,7 +16,7 @@ export class GestionProductosPage implements OnInit {
   @ViewChild('modal') modal: HTMLIonModalElement;
 
   productos: Producto[] = [];
-  producto: Producto = null;
+  producto: Producto = { id: null, titulo: null, desc: null, precio: null, unidades: null, img: null, descuento: { activo: false, precio: null } };
   productoOriginal: Producto = null;
   
   modoEdicion: boolean = false;
@@ -41,11 +41,6 @@ export class GestionProductosPage implements OnInit {
     productos.subscribe(data => {
       this.productos = data;
     });
-  }
-
-  ultimaCard(producto: Producto): boolean {
-    const index = this.productos.indexOf(producto);
-    return index === this.productos.length - 1;
   }
 
   async openModal(producto) {
