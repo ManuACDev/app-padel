@@ -230,10 +230,14 @@ export class GestionProductosPage implements OnInit {
           }
 
           const path = 'Productos';
-          await this.firestore.createCollv2(this.producto, path).then(() => {
-            this.productos = [];
-            this.toast.presentToast('Producto creado', 1000);
-            this.cerrarModal();
+          await this.firestore.createCollv2(this.producto, path).then((res) => {
+            if (res !== null) {
+              this.productos = [];
+              this.toast.presentToast('Producto creado', 1000);
+              const docId = res.id;
+              res.set({ id: docId }, { merge: true });
+              this.cerrarModal(); 
+            }
           }).catch(error => {
             console.log(error);
             this.toast.presentToast('Error al añadir el producto', 1000);
