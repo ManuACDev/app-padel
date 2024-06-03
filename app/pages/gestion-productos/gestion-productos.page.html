@@ -15,7 +15,7 @@
 
   <div class="card-container">
     
-    <ion-card *ngFor="let producto of productos" class="producto-card">
+    <ion-card *ngFor="let producto of productos" class="producto-card" [class.last-card]="ultimaCard(producto)">
 
       <img src="{{ producto.img }}" alt="{{ producto.titulo }}">
   
@@ -43,7 +43,13 @@
 
   </div>
 
-  <ion-modal #modal backdropDismiss="false" class="formulario-modal" mode="ios">
+  <ion-fab slot="fixed" vertical="bottom" horizontal="center" (click)="modoEdicion = false">
+    <ion-fab-button class="fab-button" id="open-modal">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-modal #modal trigger="open-modal" backdropDismiss="false" class="formulario-modal" mode="ios">
     <ng-template>
       <ion-content>
         <ion-toolbar>

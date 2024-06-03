@@ -43,6 +43,11 @@ export class GestionProductosPage implements OnInit {
     });
   }
 
+  ultimaCard(producto: Producto): boolean {
+    const index = this.productos.indexOf(producto);
+    return index === this.productos.length - 1;
+  }
+
   async openModal(producto) {
     const modal = await this.modalCtrl.create({
       component: ModalPage,
@@ -181,9 +186,6 @@ export class GestionProductosPage implements OnInit {
     });
   }
 
-  agregarProducto() {
-
-  }
 
   async guardarCambios(producto: Producto) {
     if (!this.producto.titulo || !this.producto.desc || !this.producto.precio || !this.producto.unidades) {
@@ -214,6 +216,38 @@ export class GestionProductosPage implements OnInit {
         } catch (error) {
           console.log(error);
           this.toast.presentToast('Error al editar el producto', 1000);
+        }
+    }
+  }
+
+  async agregarProducto() {
+    if (!this.producto.titulo || !this.producto.desc || !this.producto.precio || !this.producto.unidades || !this.producto.img) {
+      this.toast.presentToast("Todos los campos son obligatorios", 1500);
+    } else {
+        const loading = await this.showLoading('Añadiendo producto...');
+        try {                    
+          if (this.aplicarDescuento) {
+            this.producto.descuento.activo = true;
+            this.producto.descuento.precio = this.descuento;
+          } else {
+            this.producto.descuento.activo = false;
+            this.producto.descuento.precio = null;
+          }
+
+          const path = 'Productos';
+          await this.firestore.createCollv2(this.producto, path).then(() => {
+            this.productos = [];
+            this.toast.presentToast('Producto creado', 1000);
+            this.cerrarModal();
+          }).catch(error => {
+            console.log(error);
+            this.toast.presentToast('Error al añadir el producto', 1000);
+          });
+        } catch (error) {
+          console.log(error);
+          this.toast.presentToast('Error al añadir el producto', 1000);
+        } finally {
+          loading.dismiss();
         }
     }
   }
