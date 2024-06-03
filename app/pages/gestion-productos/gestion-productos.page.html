@@ -30,11 +30,13 @@
             <span class="icon-label">{{ producto.precio }} €</span>
           </div>
           <ion-button fill="clear" class="ver-mas" mode="ios" (click)="openModal(producto)">Ver más...</ion-button>
+        </div>
+        <div class="bottom-container">
+          <p class="unidades">
+            {{ producto.unidades > 0 ? '• Unidades disponibles: ' + producto.unidades : '• No hay unidades disponibles' }}
+          </p>
           <ion-button fill="clear" class="opciones" (click)="presentActionSheet(producto)"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
         </div>
-        <p class="unidades">
-          {{ producto.unidades > 0 ? '• Unidades disponibles: ' + producto.unidades : '• No hay unidades disponibles' }}
-        </p>
       </ion-card-content>
   
     </ion-card>
