@@ -188,7 +188,7 @@ export class GestionProductosPage implements OnInit {
   async guardarCambios(producto: Producto) {
     if (!this.producto.titulo || !this.producto.desc || !this.producto.precio || !this.producto.unidades) {
       this.toast.presentToast("Todos los campos son obligatorios", 1500);
-    } else if (this.productoOriginal.titulo === producto.titulo && this.productoOriginal.desc === producto.desc && this.productoOriginal.precio === producto.precio && this.productoOriginal.unidades === producto.unidades && this.productoOriginal.img === producto.img) {
+    } else if (this.productoOriginal.titulo === producto.titulo && this.productoOriginal.desc === producto.desc && this.productoOriginal.precio === producto.precio && this.productoOriginal.unidades === producto.unidades && this.productoOriginal.img === producto.img && this.productoOriginal.descuento.precio === this.descuento) {
       this.toast.presentToast("No hay cambios para guardar.", 1500);
     } else {
         try {
@@ -203,7 +203,7 @@ export class GestionProductosPage implements OnInit {
             this.producto.descuento.precio = null;
           }
                     
-          await this.firestore.updateDoc(path, id , {titulo: producto.titulo, desc: producto.desc, precio: producto.precio, unidades: producto.unidades, img: producto.img, descanso: {activo: producto.descuento.activo, precio: producto.descuento.precio}}).then(() => {
+          await this.firestore.updateDoc(path, id , {titulo: producto.titulo, desc: producto.desc, precio: producto.precio, unidades: producto.unidades, img: producto.img, descuento: {activo: producto.descuento.activo, precio: producto.descuento.precio}}).then(() => {
             this.toast.presentToast('Producto editado', 1000);
             this.productos = [];
             this.cerrarModal();
