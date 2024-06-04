@@ -20,8 +20,23 @@
       <img alt="{{ pista.desc }}" src="{{ pista.img }}">
   
       <ion-card-header>
-        <ion-card-title>{{ pista.titulo }}</ion-card-title>
-        <ion-card-subtitle>{{ pista.desc }}</ion-card-subtitle>      
+        <div class="header-content">
+
+          <div>
+            <ion-card-title>{{ pista.titulo }}</ion-card-title>
+            <ion-card-subtitle>{{ pista.desc }}</ion-card-subtitle>
+          </div>
+
+          <div class="price-container">
+            <div class="icon-wrapper">
+              <ion-icon name="pricetag-outline" class="price-icon"></ion-icon>
+              <span class="icon-label">
+                {{ pista.precio }} €         
+              </span>
+            </div>
+          </div>
+
+        </div>      
       </ion-card-header>
   
       <ion-card-content>
