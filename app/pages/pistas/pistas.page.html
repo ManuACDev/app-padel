@@ -14,9 +14,10 @@
 <ion-content>
 
   <div class="card-container">
+
     <ng-container *ngFor="let pista of pistas">
 
-      <ion-card *ngIf="pista.abierto" (click)="navegarHorarios(pista.id)">
+      <ion-card *ngIf="pista.abierto" (click)="navegarHorarios(pista.id)" class="pista-card">
 
         <img alt="{{ pista.desc }}" src="{{ pista.img }}">
   
@@ -28,6 +29,7 @@
       </ion-card>
 
     </ng-container>
+
   </div>
   
 </ion-content>
