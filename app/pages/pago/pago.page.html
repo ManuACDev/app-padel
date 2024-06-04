@@ -14,17 +14,33 @@
 <ion-content>
 
   <div class="card-container">
-    <ion-card *ngIf="pista$ | async as pista">
+
+    <ion-card *ngIf="pista$ | async as pista" class="pista-card">
 
       <img alt="{{ pista.desc }}" src="{{ pista.img }}">
   
       <ion-card-header>
-        <ion-card-subtitle class="precio-titulo"> El precio de la pista es: {{ pista.precio }}</ion-card-subtitle>
-        <ion-card-title>{{ pista.titulo }}</ion-card-title>
-        <ion-card-subtitle>{{ pista.desc }}</ion-card-subtitle>
+        <div class="header-content">
+
+          <div>
+            <ion-card-title>{{ pista.titulo }}</ion-card-title>
+            <ion-card-subtitle>{{ pista.desc }}</ion-card-subtitle>
+          </div>
+
+          <div class="price-container">
+            <div class="icon-wrapper">
+              <ion-icon name="pricetag-outline" class="price-icon"></ion-icon>
+              <span class="icon-label">
+                {{ pista.precio }} €         
+              </span>
+            </div>
+          </div>
+          
+        </div>
       </ion-card-header>
   
     </ion-card>
+
   </div>  
 
   <div class="credit-card ion-padding">
