@@ -33,11 +33,6 @@ export class FirestoreService {
   }
 
   createColl(data: any, path: string) {
-    const collection = this.firestore.collection('Pistas/'+path+'/Reservas');
-    return collection.add(data);
-  }
-
-  createCollv2(data: any, path: string) {
     const collection = this.firestore.collection(path);
     return collection.add(data);
   }

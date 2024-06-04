@@ -230,7 +230,7 @@ export class GestionProductosPage implements OnInit {
           }
 
           const path = 'Productos';
-          await this.firestore.createCollv2(this.producto, path).then((res) => {
+          await this.firestore.createColl(this.producto, path).then((res) => {
             if (res !== null) {
               this.productos = [];
               this.toast.presentToast('Producto creado', 1000);

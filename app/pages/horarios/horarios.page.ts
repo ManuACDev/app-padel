@@ -200,7 +200,7 @@ export class HorariosPage implements OnInit {
     this.bloqueo = { id: null, uid: this.uid, pista: pista, fecha: fechaFormateada, hora: hora, tiempo: Date.now() };
 
     try {
-      const bloq = await this.firestore.createCollv2(this.bloqueo, path);
+      const bloq = await this.firestore.createColl(this.bloqueo, path);
 
       if (bloq !== null) {
         bloq.set({ id: bloq.id }, { merge: true });

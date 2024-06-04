@@ -193,7 +193,7 @@ export class PagoPage implements AfterViewInit, OnDestroy {
 
   async guardarReserva(fecha, hora, paymentDoc) {
     const id = this.uid;
-    const path = this.pista;
+    const path = `Pistas/${this.pista}/Reservas`;
 
     this.datos = { uid: id, dni: this.dni, fecha: fecha, hora: hora, pista: this.pista, id: null, paymentDoc: paymentDoc };
 
