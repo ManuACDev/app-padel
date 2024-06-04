@@ -148,11 +148,6 @@ export class GestionPistasPage implements OnInit {
     }
   }
 
-  ultimaCard(pista: Pista): boolean {
-    const index = this.pistas.indexOf(pista);
-    return index === this.pistas.length - 1;
-  }
-
   async agregarPista() {
     if (!this.pista.titulo || !this.pista.desc || !this.pista.precio || !this.pista.img || !this.apertura || !this.cierre || !this.duracion) {
       this.toast.presentToast("Todos los campos son obligatorios", 1500);

@@ -1,15 +1,76 @@
-ion-card img {
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 80px;
+}
+
+.ios ion-card {
+  margin-bottom: 0px;
+}
+
+.pista-card {
   width: 100%;
-  height: 100px;
+  max-width: 350px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s
+}
+
+.pista-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.pista-card img {
+  width: 100%;
+  height: 150px;
   object-fit: cover;
-  position: relative;
+}
+
+.pista-card ion-card-header {
+  text-align: left;
+  padding: 10px;
+}
+
+.pista-card ion-card-title {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.pista-card ion-card-subtitle {
+  font-size: 0.9rem;
+}
+
+.bottom-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;  
+}
+
+.p-info {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;  
+  font-size: 13px;
+  margin: 0;
+}
+
+.p-info ion-icon {
+  margin-right: 5px;
+  font-size: 18px;
 }
 
 .opciones {
-  --color: rgb(90, 90, 90);
-  position: absolute;
-  bottom: 2px;
-  right: 0px;    
+  --background: #eeeeee;
+  --color: rgb(90, 90, 90);  
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-left: auto;      
 }
 
 .fab-button {
@@ -21,8 +82,12 @@ ion-card img {
   --color: black;
 }
 
-.last-card {
-  margin-bottom: 80px;
+.checkbox {
+  margin-right: 20px;
+}
+
+.hora-null::part(native) {
+  background-color: #ff9595;
 }
 
 .custom-file {
@@ -40,24 +105,6 @@ ion-card img {
   border-radius: 5px;
 }
 
-.p-info {
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  margin-top: 0;
-  margin-bottom: 20px;
-  margin-left: 8px;  
-}
-
-.p-info ion-icon {
-  margin-right: 5px;
-  font-size: 18px;
-}
-
-.checkbox {
-  margin-right: 20px;
-}
-
 .modal-hora {
   --background: transparent;
 }
@@ -68,8 +115,4 @@ ion-datetime {
   border-color: black;
   border-radius: 15px;
   background-color: white;
-}
-
-.hora-null::part(native) {
-  background-color: #ff9595;
 }

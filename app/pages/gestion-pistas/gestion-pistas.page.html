@@ -4,7 +4,7 @@
     <ion-title id="title">Gestión Pistas</ion-title>
     <ion-buttons slot="start">
       <div class="ion-align-items-center ion-justify-content-between">
-        <ion-back-button defaultHref="" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
+        <ion-back-button defaultHref="/ajustes" class="back-button-icon-only" style="text-indent: -9999px;"></ion-back-button>          
       </div>
     </ion-buttons>
   </ion-toolbar>
@@ -13,20 +13,27 @@
 
 <ion-content>
 
-  <ion-card *ngFor="let pista of pistas" [class.last-card]="ultimaCard(pista)">
+  <div class="card-container">
 
-    <img alt="{{ pista.desc }}" src="{{ pista.img }}">
+    <ion-card *ngFor="let pista of pistas" class="pista-card">
 
-    <ion-card-header>
-      <ion-card-title>{{ pista.titulo }}</ion-card-title>
-      <ion-card-subtitle>{{ pista.desc }}</ion-card-subtitle>      
-    </ion-card-header>
+      <img alt="{{ pista.desc }}" src="{{ pista.img }}">
+  
+      <ion-card-header>
+        <ion-card-title>{{ pista.titulo }}</ion-card-title>
+        <ion-card-subtitle>{{ pista.desc }}</ion-card-subtitle>      
+      </ion-card-header>
+  
+      <ion-card-content>
+        <div class="bottom-container">
+          <ng-container *ngIf="!pista.abierto"><p class="p-info"><ion-icon name="alert-circle-outline"></ion-icon>Pista cerrada por mantenimiento.</p></ng-container>
+          <ion-button fill="clear" class="opciones" (click)="presentActionSheet(pista)"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
+        </div>
+      </ion-card-content>
+      
+    </ion-card>
 
-    <ion-button fill="clear" class="opciones" (click)="presentActionSheet(pista)"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
-
-    <ng-container *ngIf="!pista.abierto"><p class="p-info"><ion-icon name="alert-circle-outline"></ion-icon>Pista cerrada por mantenimiento.</p></ng-container>
-    
-  </ion-card>
+  </div>
   
   <ion-fab slot="fixed" vertical="bottom" horizontal="center" (click)="modoEdicion = false" (click)="horaDescanso = false" (click)="descanso = null">
     <ion-fab-button class="fab-button" id="open-modal">
