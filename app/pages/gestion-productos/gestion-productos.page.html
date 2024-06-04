@@ -25,9 +25,15 @@
     
       <ion-card-content>
         <div class="price-container">
-          <div class="icon-wrapper">
+          <div class="icon-wrapper" [ngClass]="{ 'discount-active': producto.descuento.activo }">
             <ion-icon name="pricetag-outline" class="price-icon"></ion-icon>
-            <span class="icon-label">{{ producto.precio }} €</span>
+            <span class="icon-label" *ngIf="producto.descuento.activo">
+              <span class="original-price">{{ producto.precio }} €</span>
+              <span class="discounted-price">{{ producto.descuento.precio }} €</span>
+            </span>
+            <span class="icon-label" *ngIf="!producto.descuento.activo">
+              {{ producto.precio }} €
+            </span>
           </div>
           <ion-button fill="clear" class="ver-mas" mode="ios" (click)="openModal(producto)">Ver más...</ion-button>
         </div>

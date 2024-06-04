@@ -58,6 +58,10 @@
   align-items: center;
 }
 
+.icon-wrapper.discount-active {
+  background-color: #fbe0b6;
+}
+
 .icon-wrapper ion-icon {
   font-size: 24px;
   margin-right: 10px;
@@ -65,6 +69,18 @@
 
 .icon-label {
   font-size: 16px;
+}
+
+.original-price {
+  font-size: 16px;
+  text-decoration: line-through;
+  color: #ff6f61;
+  margin-right: 8px;
+}
+
+.discounted-price {
+  font-size: 18px;
+  color: #4caf50;
 }
 
 .price-icon {

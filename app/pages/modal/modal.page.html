@@ -18,7 +18,8 @@
       <ion-card-content>
         <div class="price-container">
           <ion-icon name="pricetag-outline" class="price-icon"></ion-icon>
-          <span class="price">Precio: {{ producto.precio }} €</span>
+          <span class="price" *ngIf="!producto.descuento.activo">Precio: {{ producto.precio }} €</span>
+          <span class="price" *ngIf="producto.descuento.activo">Precio: {{ producto.descuento.precio }} €</span>
         </div>
         <p class="product-description">{{ producto.desc }}</p>
         <p class="unidades">{{ producto.unidades > 0 ? '• Unidades disponibles: ' + producto.unidades : '• No hay unidades disponibles' }}</p>
