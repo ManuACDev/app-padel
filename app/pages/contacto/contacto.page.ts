@@ -26,47 +26,51 @@ export class ContactoPage implements OnInit {
     this.menuCtrl.enable(false);
   }  
 
-  loadMap() {
+  async loadMap() {
     const loader = new Loader({
-      apiKey: 'AIzaSyA3mLrpJZdM9H6JmGaZZWhtf-Vnb2no3yQ',
+      apiKey: 'AIzaSyCJjzxG9Nf2sAcYdSQGgripQCr46AWCM_8',
       version: 'weekly',
     });
 
-    loader.importLibrary('maps').then(() => {
+    loader.importLibrary('marker').then(async () => {
+      const { Map } = await loader.importLibrary('maps') as google.maps.MapsLibrary;
+      const { AdvancedMarkerElement } = await loader.importLibrary('marker') as google.maps.MarkerLibrary;
+
       const mapEle: HTMLElement = document.getElementById('map');
-      const myLatLng = {lat: 40.317347, lng: -3.7243753};
-      this.map = new google.maps.Map(mapEle, {
+      const myLatLng = { lat: 40.317347, lng: -3.7243753 };
+      this.map = new Map(mapEle, {
         center: myLatLng,
-        zoom: 13.5
+        zoom: 13.5,
+        mapId: 'map'
       });
 
       const infoWindow = new google.maps.InfoWindow({
-        content: '<div><strong>Padel Center X4</strong><br>Av. de las Ciudades, 10</div>'
+        content: '<div><strong>Padel Center X4</strong><br>Av. de las Ciudades, 10</div>',
       });
-    
+  
       google.maps.event.addListenerOnce(this.map, 'idle', () => {
         mapEle.classList.add('show-map');
         const marker = {
           position: {
             lat: 40.317347,
-            lng: -3.7243753
+            lng: -3.7243753,
           },
-          title: 'Padel Center X4'
+          title: 'Padel Center X4',
         };
-        const gMarker = this.addMarker(marker);
+        const gMarker = this.addMarker(AdvancedMarkerElement, marker);
   
         gMarker.addListener('click', () => {
           infoWindow.open(this.map, gMarker);
         });
       });
-    });    
+    });
   }
 
-  addMarker(marker: Marker) {
-    return new google.maps.Marker({
+  addMarker(AdvancedMarkerElement: any, marker: any) {
+    return new AdvancedMarkerElement({
       position: marker.position,
       map: this.map,
-      title: marker.title
+      title: marker.title,
     });
   }
 
