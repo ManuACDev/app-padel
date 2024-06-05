@@ -32,13 +32,12 @@ export class ContactoPage implements OnInit {
       version: 'weekly',
     });
 
-    loader.importLibrary('marker').then(async () => {
-      const { Map } = await loader.importLibrary('maps') as google.maps.MapsLibrary;
-      const { AdvancedMarkerElement } = await loader.importLibrary('marker') as google.maps.MarkerLibrary;
+    const { AdvancedMarkerElement } = await loader.importLibrary('marker') as google.maps.MarkerLibrary;
 
+    loader.importLibrary('maps').then(() => {
       const mapEle: HTMLElement = document.getElementById('map');
       const myLatLng = { lat: 40.317347, lng: -3.7243753 };
-      this.map = new Map(mapEle, {
+      this.map = new google.maps.Map(mapEle, {
         center: myLatLng,
         zoom: 13.5,
         mapId: 'map'
@@ -55,8 +54,8 @@ export class ContactoPage implements OnInit {
             lat: 40.317347,
             lng: -3.7243753,
           },
-          title: 'Padel Center X4',
-        };
+            title: 'Padel Center X4',
+          };
         const gMarker = this.addMarker(AdvancedMarkerElement, marker);
   
         gMarker.addListener('click', () => {
@@ -66,7 +65,7 @@ export class ContactoPage implements OnInit {
     });
   }
 
-  addMarker(AdvancedMarkerElement: any, marker: any) {
+  addMarker(AdvancedMarkerElement: any, marker: Marker) {
     return new AdvancedMarkerElement({
       position: marker.position,
       map: this.map,
