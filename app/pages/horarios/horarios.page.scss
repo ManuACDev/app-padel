@@ -54,6 +54,13 @@ ion-col {
   background-color: transparent;
 }
 
+.leyenda-container {
+  display: grid;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5%;
+}
+
 .leyenda {
   display: flex;
   justify-content: space-between;
