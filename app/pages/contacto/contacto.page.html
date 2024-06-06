@@ -46,16 +46,19 @@
     </div>
   </div>
 
-  <ion-modal #modal trigger="open-modal">
+  <ion-modal #modal trigger="open-modal" class="custom-modal">
     <ng-template>
-      <ion-content>
+      <ion-header>
         <ion-toolbar>
           <ion-title>Menú</ion-title>
           <ion-buttons slot="end">
             <ion-button color="light" (click)="modal.dismiss()">Cerrar</ion-button>
           </ion-buttons>
         </ion-toolbar>
-        <img src="../../../assets/menu-padel.PNG" id="menu" alt="Menú de la cafetería">
+      </ion-header>
+
+      <ion-content>
+        
       </ion-content>
     </ng-template>
   </ion-modal>

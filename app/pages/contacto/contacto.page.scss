@@ -65,28 +65,28 @@
   text-decoration: none;
 }
 
-ion-modal {
-  --height: 75%;
-  --width: 90%;
-  --border-radius: 16px;
-  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+.custom-modal {
+  --width: 335px;
+  --height: 475px;
+  --border-radius: 16px;    
+  ion-content {
+    --background: none;
+  }
 }
 
-ion-modal:part(backdrop) {
+.custom-modal:part(backdrop) {
   background: rgba(209, 213, 219);
   opacity: 1;
 }
 
-ion-modal ion-toolbar {
+.custom-modal ion-toolbar {
   --background: rgb(0, 0, 0);
   --color: white;
 }
 
-ion-modal ion-content {
-  --background: rgb(22, 22, 22);
-}
-
-#menu{
-  height: 90%;
-  width: 100%;
+.custom-modal ion-content {
+  width: 100%;  
+  background: url('/assets/menu-padel.PNG');
+  background-size: contain;
+  background-repeat: round;
 }
