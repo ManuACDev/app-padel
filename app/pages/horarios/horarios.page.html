@@ -13,58 +13,83 @@
 
 <ion-content>
 
-  <div>
-    <ion-list>
+  <div class="card-container">   
 
-      <div class="datetime">
-        <ion-datetime presentation="month-year-date" [firstDayOfWeek]="1" mode="ios" [(ngModel)]="fechaSeleccionada" (click)="obtenerReservas(fechaSeleccionada)"></ion-datetime>
-      </div>
+    <div class="datetime">
+      <ion-datetime class="ion-datetime" presentation="month-year-date" [firstDayOfWeek]="1" mode="ios" [(ngModel)]="fechaSeleccionada" (click)="obtenerReservas(fechaSeleccionada)"></ion-datetime>
+    </div>
       
-      <div class="lista-pistas">
+    <div class="lista-pistas">
+
+      <div class="section">
         <ion-card-subtitle class="subtitle">Horario mañana</ion-card-subtitle>
         <ion-row>
           <ng-container *ngFor="let hora of horas.slice(0, showMore ? horas.length : 4)">
-            <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora) && !horasProceso.includes(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null, 'hora-proceso': horasProceso.includes(hora) && !horasNoDisponibles.includes(hora), 'hora-aceptada': horaAceptada}"><button (click)="reservarHora(hora)" [disabled]="tiempoCarga || horaAceptada" class="button-hora">{{ hora }}</button></ion-col>
+            <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora) && !horasProceso.includes(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null, 'hora-proceso': horasProceso.includes(hora) && !horasNoDisponibles.includes(hora), 'hora-aceptada': horaAceptada}">
+              <button (click)="reservarHora(hora)" [disabled]="tiempoCarga || horaAceptada" class="button-hora">{{ hora }}</button>
+            </ion-col>
           </ng-container>
         </ion-row>
+      </div>
       
+      <div class="section">
         <ion-card-subtitle class="subtitle">Horario tarde</ion-card-subtitle>
         <ion-row>
           <ng-container *ngFor="let hora of horas.slice(4, showMore ? undefined : 12)">
-            <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora) && !horasProceso.includes(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null, 'hora-proceso': horasProceso.includes(hora) && !horasNoDisponibles.includes(hora), 'hora-aceptada': horaAceptada}"><button (click)="reservarHora(hora)" [disabled]="tiempoCarga || horaAceptada" class="button-hora">{{ hora }}</button></ion-col>
+            <ion-col class="ion-text-center ion-text-wrap" [ngClass]="{'dia-no-seleccionado': fechaSeleccionada === null, 'hora-disponible': !horasNoDisponibles.includes(hora) && !horaPasada(hora) && !horasProceso.includes(hora), 'hora-no-disponible': horasNoDisponibles.includes(hora), 'hora-pasada': horaPasada(hora) && fechaSeleccionada !== null, 'hora-proceso': horasProceso.includes(hora) && !horasNoDisponibles.includes(hora), 'hora-aceptada': horaAceptada}">
+              <button (click)="reservarHora(hora)" [disabled]="tiempoCarga || horaAceptada" class="button-hora">{{ hora }}</button>
+            </ion-col>
           </ng-container>
         </ion-row>
+      </div>
 
-        <div class="leyenda">
-          <div class="columna">
-            <div class="leyenda-item">
-              <div class="color-indicador dia-no-seleccionado"></div>
-              <div class="descripcion">No seleccionado</div>
-            </div>
-            <div class="leyenda-item">
-              <div class="color-indicador hora-disponible"></div>
-              <div class="descripcion">Hora disponible</div>
-            </div>
-            <div class="leyenda-item">
-              <div class="color-indicador hora-proceso"></div>
-              <div class="descripcion">En proceso de reserva</div>
-            </div>
+    </div>
+
+    <div>
+
+      <div class="leyenda">
+
+        <div class="columna">
+  
+          <div class="leyenda-item">
+            <div class="color-indicador dia-no-seleccionado"></div>
+            <div class="descripcion">No seleccionado</div>
           </div>
-          <div class="columna">
-            <div class="leyenda-item">
-              <div class="color-indicador hora-no-disponible"></div>
-              <div class="descripcion">Hora no disponible</div>
-            </div>
-            <div class="leyenda-item">
-              <div class="color-indicador hora-pasada"></div>
-              <div class="descripcion">Hora pasada</div>
-            </div>
+  
+          <div class="leyenda-item">
+            <div class="color-indicador hora-disponible"></div>
+            <div class="descripcion">Hora disponible</div>
           </div>
+  
+          <div class="leyenda-item">
+            <div class="color-indicador hora-proceso"></div>
+            <div class="descripcion">En proceso de reserva</div>
+          </div>
+  
         </div>
-        <p class="p-war"><ion-icon name="alert-circle-outline"></ion-icon>Las horas se bloquean durante cinco o un minuto para completar el pago.</p>
-      </div>     
+  
+        <div class="columna">
+  
+          <div class="leyenda-item">
+            <div class="color-indicador hora-no-disponible"></div>
+            <div class="descripcion">Hora no disponible</div>
+          </div>
+  
+          <div class="leyenda-item">
+            <div class="color-indicador hora-pasada"></div>
+            <div class="descripcion">Hora pasada</div>
+          </div>
+  
+        </div>
+        
+      </div>
 
-    </ion-list>
+      <div>
+        <p class="p-war"><ion-icon name="alert-circle-outline"></ion-icon>Las horas se bloquean durante cinco o un minuto para completar el pago.</p>
+      </div>
+
+    </div>    
+
   </div>
 
 </ion-content>
