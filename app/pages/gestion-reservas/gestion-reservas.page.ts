@@ -31,7 +31,7 @@ export class GestionReservasPage {
   filtroUsuarios: boolean = false;
   filtroPistas: boolean = false;
   filtroReservas: boolean = true;
-  filtroDuplicados: boolean = true;
+  filtroDuplicados: boolean = false;
 
   constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private loadingCtrl: LoadingController, private toast: InteractionService, private router: Router) { }
 
