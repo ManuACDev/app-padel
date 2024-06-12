@@ -21,7 +21,7 @@ export class GestionPagosPage {
 
   pagosUsuarios: { [usuarioId: string]: Pago[] } = {};
 
-  filtroUsuarios: boolean = false;
+  filtroUsuarios: boolean = true;
   filtroPagos: boolean = false;
 
   constructor(private menuCtrl: MenuController, private firestore: FirestoreService, private toast: InteractionService, private router: Router, private loadingCtrl: LoadingController) { }
